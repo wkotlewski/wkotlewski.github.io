@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="106px" height="84px" viewBox="0 0 106 84" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
     <title>logo-whitney</title>
-    <desc>Created with Sketch.</desc>
     <g id="logo-whitney" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="undraw_hologram_fjwp" transform="translate(11.000000, 0.000000)" fill="#FAAE43" fill-rule="nonzero">
             <path d="M84,42 C84,62.5213151 69.2815994,79.6055342 49.8246575,83.2716164 C49.7487227,83.2865753 49.6716072,83.3003836 49.5945205,83.3141918 C48.3851507,83.536274 47.1577534,83.7046575 45.9123288,83.8193425 C45.8352421,83.8273973 45.7592785,83.8343014 45.6821918,83.8400548 C44.4693653,83.9459178 43.241968,84 42,84 C41.9229133,84 41.8469497,84 41.769863,83.9988493 C40.5294247,83.9930959 39.3020274,83.9332603 38.0876712,83.8193425 C38.0105845,83.813589 37.9346209,83.8055342 37.8575342,83.7974795 C36.6136369,83.6766575 35.3862397,83.5013699 34.1753425,83.2716164 C34.0982558,83.2578082 34.0211403,83.2428493 33.9452055,83.2278904 C14.6021803,79.4709041 0,62.4407671 0,42 C0,18.8044932 18.8044839,0 42,0 C65.1955161,0 84,18.8044932 84,42 Z" id="Path"></path>
         </g>
-        <g id="Group-2" transform="translate(32.000000, 19.000000)" fill="#FFFFFF">
-            <text id="UX" font-family="LucidaGrande, Lucida Grande" font-size="24" font-weight="normal" letter-spacing="5">
-                <tspan x="0" y="23">UX</tspan>
+        <g id="Group-3" transform="translate(31.000000, 14.000000)" fill="#FFFFFF">
+            <text id="UX" font-family="LucidaGrande-Bold, Lucida Grande" font-size="32" font-weight="bold">
+                <tspan x="0" y="31">UX</tspan>
             </text>
-            <text id="SKI" font-family="BigCaslon-Medium, Big Caslon" font-size="22" font-weight="400" line-spacing="23" letter-spacing="-0.366666667">
-                <tspan x="0" y="45">SKI</tspan>
+            <text id="‘SKI" font-family="LucidaGrande, Lucida Grande" font-size="22" font-weight="normal" line-spacing="23">
+                <tspan x="2" y="54">‘SKI</tspan>
             </text>
         </g>
     </g>
