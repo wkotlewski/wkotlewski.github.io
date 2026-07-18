@@ -147,6 +147,19 @@
       transition: transform 0.25s var(--ease), background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
     }
 
+    .cta-row .btn .arrow {
+      display: inline-block;
+      opacity: 0;
+      transform: translateX(-0.15em);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .cta-row .btn:hover .arrow,
+    .cta-row .btn:focus-visible .arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
     .btn-primary {
       background: var(--accent);
       color: #061014;
@@ -812,10 +825,10 @@
           This page is a leadership impact map—where I’ve led, what scaled, and how to reach me.
         </p>
         <div class="cta-row">
-          <a class="btn btn-primary" href="Whitney_Kotlewski_Resume_VP_Product.pdf" download="Whitney_Kotlewski_Resume_VP_Product.pdf">Download resume →</a>
-          <a class="btn btn-ghost" href="https://docs.google.com/document/d/1_dT6v9iVSLd8YCXAOVCxgGgZmhXCpbX5Dsxyqa5Gp_U/edit?tab=t.0" target="_blank" rel="noopener noreferrer">Publications ↗</a>
-          <a class="btn btn-ghost" href="https://www.linkedin.com/in/whitney-k-phd" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
-          <a class="btn btn-ghost" href="#contact">Contact me ↓</a>
+          <a class="btn btn-primary" href="Whitney_Kotlewski_Resume_VP_Product.pdf" target="_blank" rel="noopener noreferrer">Download resume <span class="arrow" aria-hidden="true">↗</span></a>
+          <a class="btn btn-ghost" href="https://docs.google.com/document/d/1_dT6v9iVSLd8YCXAOVCxgGgZmhXCpbX5Dsxyqa5Gp_U/edit?tab=t.0" target="_blank" rel="noopener noreferrer">Publications <span class="arrow" aria-hidden="true">↗</span></a>
+          <a class="btn btn-ghost" href="https://www.linkedin.com/in/whitney-k-phd" target="_blank" rel="noopener noreferrer">LinkedIn <span class="arrow" aria-hidden="true">↗</span></a>
+          <a class="btn btn-ghost" href="#contact">Contact me <span class="arrow" aria-hidden="true">↓</span></a>
         </div>
       </div>
       <div class="portrait">
@@ -1150,8 +1163,7 @@
           systems: "Hardened design systems, accessibility, and API/SDK-backed workflows so analytics and developer tooling scaled for large organizations; built an inclusive brand and design system for People for the People apps on Esri platforms.",
           growth: "Matured enterprise spatial/developer experiences across R&D and flagship lines; delivered 24 maps, 24 layers, 59 apps, and 10 research-backed civic products—recognized with the 2021 AAG Diversity & Inclusion Award and national press.",
           links: [
-            { href: "https://www.esri.com/en-us/home", label: "Visit esri.com →", primary: true },
-            { href: "https://wk-portfolio.webflow.io/work/p4tp", label: "P4TP case study →", primary: false }
+            { href: "https://www.esri.com/en-us/home", label: "Visit esri.com →", primary: true }
           ]
         },
         sonara: {
