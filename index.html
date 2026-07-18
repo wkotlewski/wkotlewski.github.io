@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Whitney Kotlewski — Leadership Impact</title>
+  <meta name="description" content="Product leadership impact across AI, data, spatial, and digital twin platforms. Scale, experiences, design systems, and growth." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #eef2f5;
+      --ink-soft: #b4c0ca;
+      --muted: #7a8b99;
+      --line: rgba(238, 242, 245, 0.12);
+      --paper: #0c1116;
+      --paper-2: #151c24;
+      --panel: rgba(21, 28, 36, 0.85);
+      --accent: #3ecfc4;
+      --accent-deep: #2aa89f;
+      --radius-btn: 0.5rem;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; color-scheme: dark; }
+
+    body {
+      font-family: "IBM Plex Sans", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse 80% 55% at 85% 5%, rgba(62, 207, 196, 0.12), transparent 50%),
+        radial-gradient(ellipse 70% 50% at 5% 20%, rgba(90, 120, 160, 0.1), transparent 45%),
+        linear-gradient(165deg, #10161d 0%, var(--paper) 50%, #080c10 100%);
+      min-height: 100vh;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .spatial-backdrop {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+    }
+
+    a { color: inherit; }
+
+    .wrap {
+      width: min(1080px, calc(100% - clamp(1.5rem, 5vw, 3rem)));
+      margin: 0 auto;
+    }
+
+    header.hero {
+      padding: clamp(2.5rem, 8vh, 6.5rem) 0 clamp(1.75rem, 4vh, 2.5rem);
+      animation: rise 0.9s var(--ease) both;
+    }
+
+    .hero-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: clamp(1.25rem, 4vw, 3.5rem);
+      align-items: center;
+    }
+
+    .portrait {
+      width: clamp(8.5rem, 22vw, 13.5rem);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+      border: 2px solid rgba(62, 207, 196, 0.35);
+      box-shadow:
+        0 0 0 8px rgba(62, 207, 196, 0.06),
+        0 24px 48px rgba(0, 0, 0, 0.45);
+      animation: rise 0.9s var(--ease) 0.08s both;
+    }
+
+    .portrait img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 68% 58%;
+      transform: scale(1.55);
+      transform-origin: center center;
+      display: block;
+    }
+
+    .eyebrow {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.15rem, 7vw, 4.4rem);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      max-width: 14ch;
+      margin-bottom: 1.25rem;
+      overflow-wrap: anywhere;
+    }
+
+    .lede {
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: var(--ink-soft);
+      max-width: 34rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem 0.9rem;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      border-radius: var(--radius-btn);
+      cursor: pointer;
+      min-height: 2.75rem;
+      transition: transform 0.25s var(--ease), background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #061014;
+      padding: 0.85rem 1.35rem;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-deep);
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      color: var(--ink-soft);
+      padding: 0.85rem 0.25rem;
+      border-radius: 0;
+      border-bottom: 1px solid transparent;
+      min-height: auto;
+    }
+
+    .btn-ghost:hover {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .btn-company {
+      background: var(--accent);
+      color: #061014;
+      padding: 0.8rem 1.25rem;
+      border-radius: var(--radius-btn);
+    }
+
+    .btn-company:hover {
+      background: var(--accent-deep);
+      transform: translateY(-1px);
+    }
+
+    section.impact {
+      padding: 1rem 0 clamp(2.5rem, 6vw, 4rem);
+      animation: rise 0.9s var(--ease) 0.12s both;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-head h2 {
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-size: clamp(1.05rem, 2.5vw, 1.15rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .section-head p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      max-width: 22rem;
+      text-align: right;
+    }
+
+    .company-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(1.25rem, 3vw, 1.75rem) clamp(1rem, 2.5vw, 1.5rem);
+    }
+
+    .company {
+      --card-border: rgba(238, 242, 245, 0.08);
+      --card-bg: rgba(238, 242, 245, 0.02);
+      position: relative;
+      text-align: left;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: clamp(0.9rem, 2vw, 1.15rem);
+      padding: 0.7rem;
+      cursor: pointer;
+      font: inherit;
+      color: inherit;
+      width: 100%;
+      min-width: 0;
+      isolation: isolate;
+      overflow: hidden;
+      transition:
+        opacity 0.45s var(--ease),
+        transform 0.45s var(--ease),
+        border-color 0.4s var(--ease),
+        background 0.4s var(--ease),
+        box-shadow 0.45s var(--ease);
+    }
+
+    .company::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background:
+        linear-gradient(145deg, rgba(62, 207, 196, 0.14), transparent 42%),
+        rgba(18, 25, 32, 0.35);
+      opacity: 0;
+      transform: scale(0.985);
+      transition: opacity 0.45s var(--ease), transform 0.5s var(--ease);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .company::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      box-shadow: inset 0 0 0 1px rgba(62, 207, 196, 0);
+      opacity: 0;
+      transition: opacity 0.45s var(--ease), box-shadow 0.45s var(--ease);
+      pointer-events: none;
+    }
+
+    .company:hover {
+      --card-border: rgba(62, 207, 196, 0.28);
+      --card-bg: rgba(62, 207, 196, 0.05);
+      transform: translateY(-2px);
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.22);
+    }
+
+    .company:hover::before {
+      opacity: 0.55;
+      transform: scale(1);
+    }
+
+    .company:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .company.is-active {
+      --card-border: rgba(62, 207, 196, 0.55);
+      --card-bg: rgba(62, 207, 196, 0.08);
+      transform: translateY(-3px);
+      box-shadow:
+        0 0 0 1px rgba(62, 207, 196, 0.2),
+        0 18px 44px rgba(0, 0, 0, 0.28),
+        0 0 40px rgba(62, 207, 196, 0.08);
+      animation: cardSelect 0.55s var(--ease) both;
+    }
+
+    .company.is-active::before {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .company.is-active::after {
+      opacity: 1;
+      box-shadow: inset 0 0 0 1px rgba(62, 207, 196, 0.35);
+    }
+
+    .company-grid.is-selecting .company:not(.is-active) {
+      opacity: 0.38;
+      transform: scale(0.985);
+      filter: saturate(0.75);
+    }
+
+    @keyframes cardSelect {
+      from {
+        opacity: 0.82;
+        transform: translateY(4px) scale(0.985);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(-3px) scale(1);
+      }
+    }
+
+    .thumb {
+      position: relative;
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+      margin-bottom: 0.85rem;
+      background: var(--paper-2);
+      border-radius: calc(clamp(0.9rem, 2vw, 1.15rem) - 0.25rem);
+      transition: box-shadow 0.4s var(--ease);
+    }
+
+    .company.is-active .thumb {
+      box-shadow: 0 0 0 1px rgba(62, 207, 196, 0.2);
+    }
+
+    .thumb-bg {
+      position: absolute;
+      inset: 0;
+      transition: transform 0.6s var(--ease);
+    }
+
+    .thumb-photo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      transition: transform 0.65s var(--ease), filter 0.45s ease;
+    }
+
+    .thumb-shade {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(4, 8, 12, 0.28) 0%,
+          rgba(4, 8, 12, 0.18) 35%,
+          rgba(4, 8, 12, 0.55) 62%,
+          rgba(4, 8, 12, 0.88) 100%
+        );
+      pointer-events: none;
+      z-index: 1;
+      transition: opacity 0.4s ease;
+    }
+
+    .company:hover .thumb-photo {
+      transform: scale(1.035);
+    }
+
+    .company.is-active .thumb-photo {
+      transform: scale(1.05);
+      filter: saturate(1.08) brightness(1.04);
+    }
+
+    .thumb-mark {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 0.3rem;
+      padding: 1.65rem 1.1rem 1.15rem;
+      color: rgba(247, 244, 239, 0.98);
+      background: linear-gradient(
+        180deg,
+        rgba(4, 8, 12, 0) 0%,
+        rgba(4, 8, 12, 0.72) 38%,
+        rgba(4, 8, 12, 0.92) 100%
+      );
+    }
+
+    .thumb-mark .role {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.85;
+      order: 1;
+    }
+
+    .thumb-mark .name {
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-size: clamp(1.25rem, 2.8vw, 1.6rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      text-shadow: 0 1px 10px rgba(0, 0, 0, 0.45);
+      order: 2;
+    }
+
+    .thumb-mark .years {
+      font-size: 0.78rem;
+      opacity: 0.78;
+      order: 3;
+    }
+
+    .company-meta {
+      position: relative;
+      padding: 0 0.2rem 0.25rem;
+      transition: transform 0.4s var(--ease);
+    }
+
+    .company.is-active .company-meta {
+      transform: translateY(-1px);
+    }
+
+    .company-meta h3 {
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-size: clamp(1rem, 2.4vw, 1.05rem);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.35rem;
+      transition: color 0.35s ease;
+    }
+
+    .company.is-active .company-meta h3 {
+      color: #dff8f5;
+    }
+
+    .company-meta .blurb {
+      font-size: clamp(0.86rem, 2vw, 0.9rem);
+      color: var(--ink-soft);
+      margin-bottom: 0.5rem;
+      line-height: 1.55;
+      max-width: 36rem;
+      transition: color 0.35s ease;
+    }
+
+    .open-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-top: 0.15rem;
+      opacity: 0.85;
+      transition: color 0.25s ease, transform 0.35s var(--ease), opacity 0.35s ease;
+    }
+
+    .company:hover .open-hint,
+    .company:focus-visible .open-hint,
+    .company.is-active .open-hint {
+      color: #6ee7de;
+      opacity: 1;
+      transform: translateX(3px);
+    }
+
+    .company.is-active .open-hint::after {
+      content: " · Selected";
+      letter-spacing: 0.04em;
+      opacity: 0.7;
+      animation: hintFade 0.45s var(--ease) both;
+    }
+
+    @keyframes hintFade {
+      from { opacity: 0; transform: translateX(-4px); }
+      to { opacity: 0.7; transform: translateX(0); }
+    }
+
+    /* —— Modal —— */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: max(0.85rem, env(safe-area-inset-top)) max(0.85rem, env(safe-area-inset-right)) max(0.85rem, env(safe-area-inset-bottom)) max(0.85rem, env(safe-area-inset-left));
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .modal.is-open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(4, 8, 12, 0.72);
+      backdrop-filter: blur(6px);
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .modal-dialog {
+      position: relative;
+      z-index: 1;
+      width: min(760px, 100%);
+      max-height: min(88vh, 88dvh, 900px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      background: #121920;
+      border: 1px solid rgba(238, 242, 245, 0.14);
+      border-radius: clamp(0.85rem, 2vw, 1.1rem);
+      padding: clamp(1.15rem, 3.5vw, 2.15rem);
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.55);
+      transform: translateY(18px) scale(0.98);
+      transition: transform 0.35s var(--ease);
+    }
+
+    .modal.is-open .modal-dialog {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: start;
+      gap: 0.85rem 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .modal-top > div {
+      min-width: 0;
+      flex: 1 1 12rem;
+    }
+
+    .modal-kicker {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+
+    .modal-top h3 {
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-size: clamp(1.2rem, 3.5vw, 1.7rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+
+    .modal-top .subtitle {
+      font-size: clamp(0.82rem, 2vw, 0.9rem);
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+
+    .close-detail {
+      background: rgba(238, 242, 245, 0.04);
+      border: 1px solid var(--line);
+      color: var(--ink-soft);
+      font: inherit;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.5rem 0.85rem;
+      cursor: pointer;
+      border-radius: var(--radius-btn);
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+      flex-shrink: 0;
+      min-height: 2.5rem;
+    }
+
+    .close-detail:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(62, 207, 196, 0.08);
+    }
+
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem 1.15rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .pillar {
+      padding: 0.85rem 0.95rem;
+      background: rgba(238, 242, 245, 0.03);
+      border: 1px solid var(--line);
+      border-radius: 0.75rem;
+      min-width: 0;
+    }
+
+    .pillar h4 {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+
+    .pillar p {
+      font-size: clamp(0.84rem, 2vw, 0.88rem);
+      color: var(--ink-soft);
+      line-height: 1.45;
+    }
+
+    .detail-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1rem;
+      align-items: center;
+    }
+
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    footer.reach {
+      border-top: 1px solid var(--line);
+      padding: clamp(2rem, 5vw, 2.5rem) 0 clamp(2.5rem, 6vw, 3.5rem);
+      animation: rise 0.9s var(--ease) 0.22s both;
+    }
+
+    footer.reach h2 {
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-size: clamp(1.35rem, 4vw, 2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+
+    footer.reach p {
+      color: var(--ink-soft);
+      max-width: 28rem;
+      margin-bottom: 1.25rem;
+      font-size: clamp(0.92rem, 2vw, 1rem);
+    }
+
+    .footer-meta {
+      margin-top: 2.5rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.25rem;
+    }
+
+    .footer-meta a {
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .footer-meta a:hover {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition-duration: 0.01ms !important;
+      }
+
+      .spatial-backdrop {
+        opacity: 0.35;
+      }
+
+      .company.is-active {
+        animation: none;
+        transform: none;
+      }
+    }
+
+    /* —— Responsive breakpoints —— */
+    @media (max-width: 900px) {
+      .company-grid {
+        gap: 1.35rem 1.15rem;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .hero-layout {
+        grid-template-columns: 1fr;
+        justify-items: start;
+      }
+
+      .portrait {
+        order: -1;
+        width: clamp(7.5rem, 34vw, 10.5rem);
+        box-shadow:
+          0 0 0 6px rgba(62, 207, 196, 0.06),
+          0 16px 36px rgba(0, 0, 0, 0.4);
+      }
+
+      .company-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-head {
+        flex-direction: column;
+        align-items: start;
+      }
+
+      .section-head p {
+        text-align: left;
+        max-width: none;
+      }
+
+      .thumb-mark {
+        padding: 1.35rem 0.9rem 0.95rem;
+      }
+
+      .thumb-mark .name {
+        font-size: clamp(1.15rem, 5vw, 1.4rem);
+      }
+
+      .pillars {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .cta-row .btn-primary,
+      .detail-links .btn-company {
+        width: 100%;
+      }
+
+      .cta-row {
+        width: 100%;
+      }
+
+      .thumb {
+        aspect-ratio: 16 / 11;
+      }
+
+      .thumb-mark .role {
+        font-size: 0.62rem;
+        letter-spacing: 0.1em;
+      }
+
+      .modal {
+        align-items: flex-end;
+        padding: 0;
+      }
+
+      .modal-dialog {
+        width: 100%;
+        max-height: min(92vh, 92dvh);
+        border-radius: 1rem 1rem 0 0;
+        padding: 1.15rem 1.1rem calc(1.15rem + env(safe-area-inset-bottom));
+      }
+
+      .modal-top {
+        align-items: center;
+      }
+
+      .close-detail {
+        margin-left: auto;
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .wrap {
+        width: min(1120px, calc(100% - 4rem));
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas class="spatial-backdrop" id="spatial-backdrop" aria-hidden="true"></canvas>
+  <div class="page">
+  <header class="hero">
+    <div class="wrap hero-layout">
+      <div class="hero-copy">
+        <p class="eyebrow">Product leadership · Southern California</p>
+        <h1>Whitney Kotlewski</h1>
+        <p class="lede">
+          VP of Product Experiences building AI, data, and spatial platforms.
+          This page is a leadership impact map—where I’ve led, what scaled, and how to reach me.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="Whitney_Kotlewski_Resume_VP_Product.pdf" download="Whitney_Kotlewski_Resume_VP_Product.pdf">Download resume →</a>
+          <a class="btn btn-ghost" href="https://docs.google.com/document/d/1_dT6v9iVSLd8YCXAOVCxgGgZmhXCpbX5Dsxyqa5Gp_U/edit?tab=t.0" target="_blank" rel="noopener noreferrer">Publications ↗</a>
+          <a class="btn btn-ghost" href="https://www.linkedin.com/in/whitney-k-phd" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+          <a class="btn btn-ghost" href="#contact">Contact me ↓</a>
+        </div>
+      </div>
+      <div class="portrait">
+        <img
+          src="assets/whitney-headshot.png"
+          alt="Whitney Kotlewski"
+          width="432"
+          height="432"
+        />
+      </div>
+    </div>
+  </header>
+
+  <section class="impact" aria-labelledby="impact-heading">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="impact-heading">Leadership impact</h2>
+        <p>Select a company to open more detail—scale, experiences, design systems, and growth.</p>
+      </div>
+
+      <div class="company-grid" id="company-grid" role="list">
+        <button type="button" class="company" data-company="slingshot" aria-expanded="false" aria-controls="impact-modal" role="listitem">
+          <div class="thumb" aria-hidden="true">
+            <img class="thumb-photo" src="assets/thumb-slingshot.png" alt="" width="1024" height="699" loading="lazy" style="object-position: center 40%;" />
+            <div class="thumb-shade"></div>
+            <div class="thumb-mark">
+              <span class="role">VP of Product</span>
+              <span class="name">Slingshot<br />Aerospace</span>
+              <span class="years">2024 – Present</span>
+            </div>
+          </div>
+          <div class="company-meta">
+            <h3>Slingshot Aerospace</h3>
+            <p class="blurb">As VP of Product reporting to the CTO, scaled the product org 3→19 across PM, strategy &amp; design, research, CX, and space data (US/UK). Led the 2026 launch of Slingshot Portal / SOIA—an AI-native Sense → Fuse → Decide → Act platform—while standing up Nebula and Rocket Fuel design systems and an AI strategy knowledge base that turned research into board-ready roadmaps through a ~$124M capital and $96M+ USSF wins window.</p>
+            <span class="open-hint">More details →</span>
+          </div>
+        </button>
+
+        <button type="button" class="company" data-company="matterport" aria-expanded="false" aria-controls="impact-modal" role="listitem">
+          <div class="thumb" aria-hidden="true">
+            <img class="thumb-photo" src="assets/thumb-matterport.png" alt="" width="800" height="450" loading="lazy" style="object-position: center;" />
+            <div class="thumb-shade"></div>
+            <div class="thumb-mark">
+              <span class="role">Director, Product Design</span>
+              <span class="name">Matterport</span>
+              <span class="years">2021 – 2023</span>
+            </div>
+          </div>
+          <div class="company-meta">
+            <h3>Matterport</h3>
+            <p class="blurb">Joined through Matterport’s ~$2.9B SPAC IPO and led post-IPO product design across 8 platform experiences—web, marketplace, eCommerce, cloud, and developer. Scaled design 1→8 (co-led org 6→20), evolved the design system, accessibility, and research practice, and brought AI/ML into 3D digital-twin experiences as revenue grew ~$111M→~$158M and subscribers ~503K→~$938K.</p>
+            <span class="open-hint">More details →</span>
+          </div>
+        </button>
+
+        <button type="button" class="company" data-company="esri" aria-expanded="false" aria-controls="impact-modal" role="listitem">
+          <div class="thumb" aria-hidden="true">
+            <img class="thumb-photo" src="assets/thumb-esri.png" alt="" width="800" height="450" loading="lazy" style="object-position: center 40%;" />
+            <div class="thumb-shade"></div>
+            <div class="thumb-mark">
+              <span class="role">Head of UX Innovation</span>
+              <span class="name">Esri</span>
+              <span class="years">2014 – 2021</span>
+            </div>
+          </div>
+          <div class="company-meta">
+            <h3>Esri</h3>
+            <p class="blurb">Head of UX Innovation across a category-defining GIS franchise (~$1.1B→$1.3B+)—evolving flagship spatial analytics and developer platforms into enterprise-ready experiences: Insights big-data analytics, Site Scan cloud drone-to-map with AI, mobile navigation, and desktop 2D/3D, with API/SDK and accessibility rigor for large organizations. Also co-founded and directed Black Girls MAPP / People for the People—a 150+ person initiative that shipped 24 maps, 24 layers, 59 apps, and 10 civic products (2021 AAG Diversity &amp; Inclusion Award).</p>
+            <span class="open-hint">More details →</span>
+          </div>
+        </button>
+
+        <button type="button" class="company" data-company="sonara" aria-expanded="false" aria-controls="impact-modal" role="listitem">
+          <div class="thumb" aria-hidden="true">
+            <img class="thumb-photo" src="assets/thumb-sonara.png" alt="" width="800" height="420" loading="lazy" style="object-position: center 20%;" />
+            <div class="thumb-shade"></div>
+            <div class="thumb-mark">
+              <span class="role">Executive Design Advisor</span>
+              <span class="name">Sonara</span>
+              <span class="years">2022 – 2023</span>
+            </div>
+          </div>
+          <div class="company-meta">
+            <h3>Sonara</h3>
+            <p class="blurb">Served on the advisory board as Executive Design Advisor to the CEO and CIO—guiding experience strategy, product innovation, and design talent/agency partnerships through ~80× subscription growth (~50 → ~4,000 purchases). Helped leadership keep experience quality and operating models coherent while the product scaled under rapid demand.</p>
+            <span class="open-hint">More details →</span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <div
+    class="modal"
+    id="impact-modal"
+    hidden
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="detail-title"
+  >
+    <button type="button" class="modal-backdrop" id="modal-backdrop" aria-label="Close details"></button>
+    <div class="modal-dialog" role="document">
+      <div class="modal-top">
+        <div>
+          <p class="modal-kicker">Leadership impact</p>
+          <h3 id="detail-title"></h3>
+          <p class="subtitle" id="detail-subtitle"></p>
+        </div>
+        <button type="button" class="close-detail" id="close-detail">Close</button>
+      </div>
+      <div class="pillars">
+        <div class="pillar">
+          <h4>Scale</h4>
+          <p id="detail-scale"></p>
+        </div>
+        <div class="pillar">
+          <h4>Experiences</h4>
+          <p id="detail-experiences"></p>
+        </div>
+        <div class="pillar">
+          <h4>Design systems</h4>
+          <p id="detail-systems"></p>
+        </div>
+        <div class="pillar">
+          <h4>Growth</h4>
+          <p id="detail-growth"></p>
+        </div>
+      </div>
+      <div class="detail-links" id="detail-links"></div>
+    </div>
+  </div>
+
+  <footer class="reach" id="contact">
+    <div class="wrap">
+      <h2>Let’s talk leadership, product, or what’s next.</h2>
+      <p>Portfolio deep-dives stay offline for now—reach out and I’ll share the right view for the conversation.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="mailto:wkotlewski3@gmail.com">wkotlewski3@gmail.com</a>
+        <a class="btn btn-ghost" href="tel:+19092685698">+1 (909) 268-5698</a>
+      </div>
+      <div class="footer-meta">
+        <span>© Whitney Kotlewski</span>
+      </div>
+    </div>
+  </footer>
+  </div>
+
+  <script>
+    (function () {
+      const canvas = document.getElementById("spatial-backdrop");
+      if (!canvas) return;
+
+      const ctx = canvas.getContext("2d", { alpha: true });
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      let width = 0;
+      let height = 0;
+      let nodes = [];
+      let orbits = [];
+      let raf = 0;
+      let last = 0;
+
+      function resize() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = Math.floor(width * dpr);
+        canvas.height = Math.floor(height * dpr);
+        canvas.style.width = width + "px";
+        canvas.style.height = height + "px";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        seed();
+      }
+
+      function seed() {
+        const count = Math.round(Math.min(56, Math.max(28, (width * height) / 28000)));
+        nodes = Array.from({ length: count }, () => ({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.12,
+          vy: (Math.random() - 0.5) * 0.12,
+          r: 1 + Math.random() * 1.6,
+          pulse: Math.random() * Math.PI * 2
+        }));
+
+        orbits = [
+          { cx: width * 0.78, cy: height * 0.22, rx: Math.min(160, width * 0.18), ry: Math.min(70, height * 0.1), a: 0, speed: 0.00018 },
+          { cx: width * 0.18, cy: height * 0.72, rx: Math.min(120, width * 0.14), ry: Math.min(52, height * 0.08), a: 1.2, speed: -0.00014 }
+        ];
+      }
+
+      function drawGrid(t) {
+        const drift = (t * 0.004) % 48;
+        ctx.save();
+        ctx.strokeStyle = "rgba(62, 207, 196, 0.035)";
+        ctx.lineWidth = 1;
+        for (let x = -48 + drift; x < width + 48; x += 48) {
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, height);
+          ctx.stroke();
+        }
+        for (let y = -48 + drift * 0.6; y < height + 48; y += 48) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(width, y);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      function drawFrame(t, dt) {
+        ctx.clearRect(0, 0, width, height);
+        drawGrid(t);
+
+        // soft vignette wash so the field stays behind content
+        const wash = ctx.createRadialGradient(width * 0.5, height * 0.35, 40, width * 0.5, height * 0.4, Math.max(width, height) * 0.75);
+        wash.addColorStop(0, "rgba(12, 17, 22, 0)");
+        wash.addColorStop(1, "rgba(12, 17, 22, 0.25)");
+        ctx.fillStyle = wash;
+        ctx.fillRect(0, 0, width, height);
+
+        const linkDist = Math.min(140, width * 0.14);
+        const linkDist2 = linkDist * linkDist;
+
+        for (let i = 0; i < nodes.length; i++) {
+          const a = nodes[i];
+          if (!reduceMotion) {
+            a.x += a.vx * dt;
+            a.y += a.vy * dt;
+            a.pulse += 0.0012 * dt;
+            if (a.x < -20) a.x = width + 20;
+            if (a.x > width + 20) a.x = -20;
+            if (a.y < -20) a.y = height + 20;
+            if (a.y > height + 20) a.y = -20;
+          }
+
+          for (let j = i + 1; j < nodes.length; j++) {
+            const b = nodes[j];
+            const dx = a.x - b.x;
+            const dy = a.y - b.y;
+            const d2 = dx * dx + dy * dy;
+            if (d2 < linkDist2) {
+              const alpha = 0.11 * (1 - Math.sqrt(d2) / linkDist);
+              ctx.strokeStyle = `rgba(62, 207, 196, ${alpha})`;
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.stroke();
+            }
+          }
+
+          const glow = 0.35 + Math.sin(a.pulse) * 0.15;
+          ctx.fillStyle = `rgba(190, 230, 226, ${0.28 + glow * 0.25})`;
+          ctx.beginPath();
+          ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        orbits.forEach((o) => {
+          if (!reduceMotion) o.a += o.speed * dt;
+          ctx.strokeStyle = "rgba(62, 207, 196, 0.08)";
+          ctx.beginPath();
+          ctx.ellipse(o.cx, o.cy, o.rx, o.ry, 0.35, 0, Math.PI * 2);
+          ctx.stroke();
+
+          const sx = o.cx + Math.cos(o.a) * o.rx;
+          const sy = o.cy + Math.sin(o.a) * o.ry;
+          ctx.fillStyle = "rgba(62, 207, 196, 0.55)";
+          ctx.beginPath();
+          ctx.arc(sx, sy, 2.2, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = "rgba(62, 207, 196, 0.18)";
+          ctx.beginPath();
+          ctx.arc(sx, sy, 7, 0, Math.PI * 2);
+          ctx.stroke();
+        });
+      }
+
+      function loop(ts) {
+        if (!last) last = ts;
+        const dt = Math.min(48, ts - last);
+        last = ts;
+        drawFrame(ts, dt);
+        if (!reduceMotion) raf = requestAnimationFrame(loop);
+      }
+
+      resize();
+      drawFrame(0, 16);
+      if (!reduceMotion) raf = requestAnimationFrame(loop);
+
+      window.addEventListener("resize", () => {
+        cancelAnimationFrame(raf);
+        last = 0;
+        resize();
+        drawFrame(0, 16);
+        if (!reduceMotion) raf = requestAnimationFrame(loop);
+      }, { passive: true });
+    })();
+  </script>
+
+  <script>
+    (function () {
+      const impacts = {
+        slingshot: {
+          title: "Slingshot Aerospace",
+          subtitle: "VP of Product · reporting to the CTO · Windsor, CO",
+          scale: "Grew the product org from 3 to 19 roles across Product Management (Space, Platform, Growth), Product Strategy & Design, UX Research, Customer Experience, and Space Data—directors, managers, and senior ICs across the US and UK.",
+          experiences: "Owned SOIA product vision and multi-quarter roadmaps; led the cross-functional launch of Slingshot Portal for real-time SDA, data fusion, analytics, and mission decision support for defense and commercial operators.",
+          systems: "Established the company’s first unified design systems: Nebula (product)—~240 tokens and 1,200+ mission-ops components—and Rocket Fuel (marketing) for Portal / SOIA GTM. Built an AI strategy knowledge base (~250 docs → scored opportunities → regenerable roadmaps).",
+          growth: "Product leadership through ~$124M capital raised and landmark USSF wins totaling $96M+ during tenure—including a $27M AI training award and company-record $69.2M MENTAT SBIR Phase III—plus sales and demo enablement.",
+          links: [
+            { href: "https://www.slingshot.space/product-portal", label: "Visit Slingshot Portal →", primary: true }
+          ]
+        },
+        matterport: {
+          title: "Matterport",
+          subtitle: "Director, Product Design · Platform & Services",
+          scale: "Scaled design 1→8 and co-led broader org expansion 6→20 through the post-IPO period following Matterport’s ~$2.9B SPAC listing.",
+          experiences: "Drove product design innovation across 8 business experiences—web, marketplace, eCommerce, cloud, and developer—integrating AI/ML into 3D digital-twin workflows for visualization and engagement insights.",
+          systems: "Evolved the design system, accessibility standards, and research practice as platform surface area grew; partnered with Marketing on launches, positioning, and experience quality.",
+          growth: "Design leadership through revenue ~$111M→~$158M (~42%) and subscribers ~503K→~$938K (~86%) by FY2023—tying platform experience work to measurable company growth.",
+          links: [
+            { href: "https://matterport.com/", label: "Visit matterport.com →", primary: true }
+          ]
+        },
+        esri: {
+          title: "Esri",
+          subtitle: "Head of UX Innovation · Spatial analytics, developer platforms & special programs",
+          scale: "Led UX innovation inside a category-defining GIS franchise growing ~$1.1B→$1.3B+ (~40%+ global software share). Also mobilized a 150+ person cross-functional org for Black Girls MAPP / People for the People (1,200+ hours).",
+          experiences: "Evolved flagship spatial analytics and developer platforms for enterprise readiness—Insights big-data analytics, Site Scan (cloud drone-to-map + AI), mobile navigation, and desktop 2D/3D—plus civic products that turned complex geospatial systems into actionable public experiences.",
+          systems: "Hardened design systems, accessibility, and API/SDK-backed workflows so analytics and developer tooling scaled for large organizations; built an inclusive brand and design system for People for the People apps on Esri platforms.",
+          growth: "Matured enterprise spatial/developer experiences across R&D and flagship lines; delivered 24 maps, 24 layers, 59 apps, and 10 research-backed civic products—recognized with the 2021 AAG Diversity & Inclusion Award and national press.",
+          links: [
+            { href: "https://www.esri.com/en-us/home", label: "Visit esri.com →", primary: true },
+            { href: "https://wk-portfolio.webflow.io/work/p4tp", label: "P4TP case study →", primary: false }
+          ]
+        },
+        sonara: {
+          title: "Sonara",
+          subtitle: "Executive Design Advisor · Advisory Board",
+          scale: "Counsel during ~80× subscription growth (~50 → ~4,000 purchases), advising design talent models and agency partnerships as the org stretched.",
+          experiences: "Experience strategy and product innovation guidance for a consumer-facing subscription product under rapid demand—keeping journeys coherent as features and volume scaled.",
+          systems: "Advised design quality and operating partnerships so external and internal design capacity stayed aligned to product standards as the brand grew.",
+          growth: "Helped leadership connect design investment to subscription momentum—clarity on where experience work unlocked conversion, retention, and trust at scale.",
+          links: [
+            { href: "https://www.sonara.ai/", label: "Visit sonara.ai →", primary: true }
+          ]
+        }
+      };
+
+      const grid = document.getElementById("company-grid");
+      const modal = document.getElementById("impact-modal");
+      const companies = [...grid.querySelectorAll(".company")];
+      let lastFocus = null;
+
+      const els = {
+        title: document.getElementById("detail-title"),
+        subtitle: document.getElementById("detail-subtitle"),
+        scale: document.getElementById("detail-scale"),
+        experiences: document.getElementById("detail-experiences"),
+        systems: document.getElementById("detail-systems"),
+        growth: document.getElementById("detail-growth"),
+        links: document.getElementById("detail-links")
+      };
+
+      function closeModal() {
+        companies.forEach((btn) => {
+          btn.classList.remove("is-active");
+          btn.setAttribute("aria-expanded", "false");
+        });
+        grid.classList.remove("is-selecting");
+        modal.classList.remove("is-open");
+        document.body.classList.remove("modal-open");
+        window.setTimeout(() => {
+          if (!modal.classList.contains("is-open")) modal.hidden = true;
+        }, 300);
+        if (lastFocus) lastFocus.focus();
+      }
+
+      function renderLinks(links) {
+        els.links.innerHTML = "";
+        links.forEach((link) => {
+          const a = document.createElement("a");
+          a.href = link.href;
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+          a.className = link.primary ? "btn btn-company" : "btn btn-ghost";
+          a.textContent = link.label;
+          els.links.appendChild(a);
+        });
+      }
+
+      function openCompany(id, trigger) {
+        const btn = trigger || grid.querySelector(`[data-company="${id}"]`);
+        const data = impacts[id];
+        if (!btn || !data) return;
+
+        lastFocus = btn;
+
+        companies.forEach((b) => {
+          const active = b === btn;
+          b.classList.toggle("is-active", active);
+          b.setAttribute("aria-expanded", active ? "true" : "false");
+        });
+        grid.classList.add("is-selecting");
+
+        els.title.textContent = data.title;
+        els.subtitle.textContent = data.subtitle;
+        els.scale.textContent = data.scale;
+        els.experiences.textContent = data.experiences;
+        els.systems.textContent = data.systems;
+        els.growth.textContent = data.growth;
+        renderLinks(data.links);
+
+        modal.hidden = false;
+        document.body.classList.add("modal-open");
+        requestAnimationFrame(() => {
+          modal.classList.add("is-open");
+          document.getElementById("close-detail").focus();
+        });
+      }
+
+      companies.forEach((btn) => {
+        btn.setAttribute("aria-haspopup", "dialog");
+        btn.addEventListener("click", () => openCompany(btn.dataset.company, btn));
+      });
+
+      document.getElementById("close-detail").addEventListener("click", closeModal);
+      document.getElementById("modal-backdrop").addEventListener("click", closeModal);
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && modal.classList.contains("is-open")) closeModal();
+      });
+    })();
+  </script>
+</body>
+</html>
