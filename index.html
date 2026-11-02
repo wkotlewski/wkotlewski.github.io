@@ -1361,7 +1361,7 @@
       }
 
       // thumbnails only; the YouTube player loads when someone clicks play
-      function renderVideos(videos) {
+      function renderVideos(videos, fallbackThumb) {
         els.videos.innerHTML = "";
         els.videosWrap.hidden = !videos || !videos.length;
         (videos || []).forEach((video) => {
@@ -1376,8 +1376,11 @@
           const img = document.createElement("img");
           img.src = `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`;
           img.alt = "";
-          img.loading = "lazy";
           img.decoding = "async";
+          // fall back to the company card image if YouTube's thumbnail can't load
+          img.addEventListener("error", () => {
+            if (fallbackThumb && img.src !== fallbackThumb) img.src = fallbackThumb;
+          }, { once: true });
 
           const play = document.createElement("span");
           play.className = "play material-symbols-rounded";
@@ -1438,7 +1441,7 @@
         els.experiences.textContent = data.experiences;
         els.systems.textContent = data.systems;
         els.growth.textContent = data.growth;
-        renderVideos(data.videos);
+        renderVideos(data.videos, btn.querySelector(".thumb-photo")?.src);
         renderLinks(data.links);
 
         modal.hidden = false;
