@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20,500,0,0&icon_names=arrow_downward,arrow_outward&display=block" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20,500,0,0&icon_names=arrow_downward,arrow_outward,play_arrow&display=block" rel="stylesheet" />
   <link rel="preload" as="image" href="assets/whitney-headshot.jpg" fetchpriority="high" />
   <style>
     :root {
@@ -650,6 +650,104 @@
       line-height: 1.45;
     }
 
+    .videos {
+      margin-bottom: 1.5rem;
+    }
+
+    .videos[hidden] {
+      display: none;
+    }
+
+    .videos-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+      gap: 1rem 1.15rem;
+    }
+
+    .video-card {
+      margin: 0;
+      min-width: 0;
+    }
+
+    .video-frame {
+      position: relative;
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      padding: 0;
+      border: 1px solid var(--line);
+      border-radius: 0.75rem;
+      overflow: hidden;
+      background: var(--paper-2);
+      cursor: pointer;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .video-frame:hover,
+    .video-frame:focus-visible {
+      border-color: rgba(179, 157, 255, 0.55);
+      box-shadow: 0 0 0 1px rgba(179, 157, 255, 0.2);
+      outline: none;
+    }
+
+    .video-frame img,
+    .video-frame iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .video-frame img {
+      object-fit: cover;
+      filter: saturate(0.9) brightness(0.85);
+      transition: filter 0.3s ease, transform 0.45s var(--ease);
+    }
+
+    .video-frame:hover img {
+      filter: saturate(1) brightness(1);
+      transform: scale(1.03);
+    }
+
+    .video-frame .play {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: grid;
+      place-items: center;
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #0e0a1a;
+      font-size: 1.75rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      transition: transform 0.25s var(--ease), background 0.25s ease;
+    }
+
+    .video-frame:hover .play {
+      background: var(--accent-deep);
+      transform: translate(-50%, -50%) scale(1.06);
+    }
+
+    .video-card figcaption {
+      margin-top: 0.5rem;
+      font-size: 0.82rem;
+      color: var(--ink-soft);
+      line-height: 1.4;
+    }
+
     .detail-links {
       display: flex;
       flex-wrap: wrap;
@@ -971,6 +1069,10 @@
           <p id="detail-growth"></p>
         </div>
       </div>
+      <div class="videos" id="detail-videos-wrap" hidden>
+        <h4 class="videos-label">Product experience</h4>
+        <div class="video-grid" id="detail-videos"></div>
+      </div>
       <div class="detail-links" id="detail-links"></div>
     </div>
   </div>
@@ -1174,6 +1276,9 @@
           experiences: "Slingshot helps operators make sense of congested and contested space. I own vision and roadmaps for space operations intelligence and autonomy, and led delivery of Slingshot Portal’s reusable platform in 2 months so defense and commercial teams can detect activity, fuse data, analyze it, and support mission decisions. It grew users 3x within 4 months of general availability. A biweekly release cadence made adoption, usage, and customer feedback measurable inputs to roadmap decisions. Work also included strategic technology planning for air-gapped and FedRAMP deployments.",
           systems: "Built Product Superbase, an AI-enabled framework connecting strategy, user research, decisions, and delivery evidence to team workflows, improving transparency, traceability, and roadmap alignment. Also established the company’s first shared product and marketing design systems (about 240 design tokens and more than 1,200 mission-operations components) so Portal and go-to-market stayed consistent.",
           growth: "Product leadership through about $124M in capital raised and more than $96M in U.S. Space Force awards during my tenure, including a $27M AI training award and a company-record $69.2M Phase III contract, plus sales and demo enablement for growth.",
+          videos: [
+            { id: "70Y_q-U73KE", title: "Slingshot Portal: The Future of Space Operations Starts Here" }
+          ],
           links: [
             { href: "https://www.slingshot.space/product-portal", label: "Visit Slingshot Portal", primary: true }
           ]
@@ -1185,6 +1290,9 @@
           experiences: "Matterport turns physical places into interactive 3D digital twins. I led product design across eight platform experiences (web, marketplace, commerce, cloud, and developer) and integrated AI/ML into 3D digital twins for visualization and engagement insight.",
           systems: "Strengthened the design system, accessibility standards, and research practice as the platform grew, and partnered with Marketing on customer journeys, positioning, and launches.",
           growth: "Design leadership as company revenue grew from about $111M to $158M and subscribers nearly doubled (~1.9x), tying platform experience work to measurable growth.",
+          videos: [
+            { id: "vhgN5wc3DKA", title: "Matterport: Ordering Capture Services" }
+          ],
           links: [
             { href: "https://matterport.com/", label: "Visit matterport.com", primary: true }
           ]
@@ -1196,6 +1304,10 @@
           experiences: "Esri’s software helps the world map, analyze, and act on location data. I evolved major products (big-data map analytics, cloud drone-to-map, mobile navigation, and desktop 2D/3D mapping), including applied machine learning, for enterprise use, and shipped civic tools that make complex map systems useful to the public.",
           systems: "Hardened design systems, accessibility, and developer-friendly workflows so analytics and mapping tools could scale for large organizations. Built an inclusive brand and design system for People for the People apps on Esri platforms.",
           growth: "Matured enterprise mapping and developer experiences across research and flagship product lines; delivered 24 maps, 24 data layers, 59 apps, and 10 civic products, recognized with the 2021 American Association of Geographers Diversity and Inclusion Award.",
+          videos: [
+            { id: "4V4rB7gYg8Y", title: "Reality Capture & Site Scan for ArcGIS" },
+            { id: "zL6NqjrbOt8", title: "Insights for ArcGIS" }
+          ],
           links: [
             { href: "https://www.esri.com/en-us/home", label: "Visit esri.com", primary: true },
             { href: "https://www.esri.com/en-us/arcgis/products/arcgis-location-platform/overview", label: "Spatial Analytics", primary: false },
@@ -1227,7 +1339,9 @@
         experiences: document.getElementById("detail-experiences"),
         systems: document.getElementById("detail-systems"),
         growth: document.getElementById("detail-growth"),
-        links: document.getElementById("detail-links")
+        links: document.getElementById("detail-links"),
+        videosWrap: document.getElementById("detail-videos-wrap"),
+        videos: document.getElementById("detail-videos")
       };
 
       function closeModal() {
@@ -1239,9 +1353,57 @@
         modal.classList.remove("is-open");
         document.body.classList.remove("modal-open");
         window.setTimeout(() => {
-          if (!modal.classList.contains("is-open")) modal.hidden = true;
+          if (!modal.classList.contains("is-open")) {
+            modal.hidden = true;
+            els.videos.innerHTML = "";
+          }
         }, 300);
         if (lastFocus) lastFocus.focus();
+      }
+
+      // thumbnails only; the YouTube player loads when someone clicks play
+      function renderVideos(videos) {
+        els.videos.innerHTML = "";
+        els.videosWrap.hidden = !videos || !videos.length;
+        (videos || []).forEach((video) => {
+          const card = document.createElement("figure");
+          card.className = "video-card";
+
+          const frame = document.createElement("button");
+          frame.type = "button";
+          frame.className = "video-frame";
+          frame.setAttribute("aria-label", `Play video: ${video.title}`);
+
+          const img = document.createElement("img");
+          img.src = `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`;
+          img.alt = "";
+          img.loading = "lazy";
+          img.decoding = "async";
+
+          const play = document.createElement("span");
+          play.className = "play material-symbols-rounded";
+          play.setAttribute("aria-hidden", "true");
+          play.textContent = "play_arrow";
+
+          frame.append(img, play);
+          frame.addEventListener("click", () => {
+            const player = document.createElement("iframe");
+            player.src = `https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&rel=0`;
+            player.title = video.title;
+            player.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+            player.allowFullscreen = true;
+            const holder = document.createElement("div");
+            holder.className = "video-frame";
+            holder.appendChild(player);
+            frame.replaceWith(holder);
+          });
+
+          const caption = document.createElement("figcaption");
+          caption.textContent = video.title;
+
+          card.append(frame, caption);
+          els.videos.appendChild(card);
+        });
       }
 
       function renderLinks(links) {
@@ -1277,6 +1439,7 @@
         els.experiences.textContent = data.experiences;
         els.systems.textContent = data.systems;
         els.growth.textContent = data.growth;
+        renderVideos(data.videos);
         renderLinks(data.links);
 
         modal.hidden = false;
