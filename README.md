@@ -1,22 +1,17 @@
 # wkotlewski.github.io
 
-Personal leadership-impact site for Whitney Kotlewski.
+Source for [wkotlewski.github.io](https://wkotlewski.github.io/), the portfolio site of Whitney Kotlewski, PhD, a product experience leader working across AI, data, and spatial platforms.
 
-**Live:** https://wkotlewski.github.io/
+The site is a single static page served by GitHub Pages.
 
-## Docs
+- `index.html`: the site
+- `assets/`: headshot and company images
+- `Whitney_Kotlewski_Resume_VP_Product.pdf`: resume
 
-See **[SITE_PLAN.md](./SITE_PLAN.md)** for:
+## Use it for your own site
 
-- What files are published
-- How to keep local and GitHub in sync
-- How to edit from GitHub only (no local files)
-- Image size / performance rules
-- Resume download behavior
-- Deploy checklist
+Feel free to clone or fork this repo as a starting point for your own portfolio. The code (HTML, CSS, and JavaScript) is available under the [MIT License](./LICENSE).
 
-## Quick structure
+Please swap in your own content: the headshot, company images, resume, and written copy are personal to Whitney Kotlewski and aren't covered by the license.
 
-- `index.html` — site
-- `Whitney_Kotlewski_Resume_VP_Product.pdf` — resume (opens in new tab)
-- `assets/` — optimized JPEGs (headshot + company thumbs)
+Connect on [LinkedIn](https://www.linkedin.com/in/whitney-k-phd).
