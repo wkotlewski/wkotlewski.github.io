@@ -231,6 +231,94 @@
       text-align: right;
     }
 
+    section.builds {
+      padding: 0 0 clamp(2.5rem, 6vw, 4rem);
+    }
+
+    .build {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      gap: clamp(1rem, 3vw, 1.75rem);
+      align-items: center;
+      background: rgba(238, 242, 245, 0.02);
+      border: 1px solid rgba(238, 242, 245, 0.08);
+      border-radius: clamp(0.9rem, 2vw, 1.15rem);
+      padding: 0.7rem;
+    }
+
+    .build-shot {
+      display: block;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      aspect-ratio: 16 / 10;
+      max-width: 100%;
+      background: #0a0f24;
+    }
+
+    .build-shot img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s var(--ease);
+    }
+
+    .build-shot:hover img {
+      transform: scale(1.02);
+    }
+
+    .build-meta {
+      min-width: 0;
+      padding: 0.4rem 0.4rem 0.6rem;
+    }
+
+    .build-meta h3 {
+      font-family: "Inter", sans-serif;
+      font-size: clamp(1rem, 2.4vw, 1.05rem);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.35rem;
+    }
+
+    .build-meta .blurb {
+      font-size: clamp(0.86rem, 2vw, 0.9rem);
+      color: var(--ink-soft);
+      line-height: 1.55;
+      margin-bottom: 0.75rem;
+    }
+
+    .build-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      list-style: none;
+      margin: 0 0 1rem;
+      padding: 0;
+    }
+
+    .build-tags li {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--ink-soft);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.25rem 0.6rem;
+    }
+
+    .build-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.1rem;
+      align-items: center;
+    }
+
+    @media (max-width: 720px) {
+      .build {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .company-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1030,6 +1118,35 @@
           </div>
         </button>
       </div>
+    </div>
+  </section>
+
+  <section class="builds" aria-labelledby="builds-heading">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="builds-heading">Recent builds</h2>
+        <p>Products I’m designing and shipping hands-on with AI.</p>
+      </div>
+
+      <article class="build">
+        <a class="build-shot" href="https://wkotlewski.github.io/star-knight-league/" target="_blank" rel="noopener" aria-label="Play Star Knight League">
+          <img src="assets/thumb-star-knight.jpg" alt="Star Knight League: an asteroid baseball field with a Star Knight at bat" width="960" height="600" loading="lazy" decoding="async" />
+        </a>
+        <div class="build-meta">
+          <h3>Star Knight League</h3>
+          <p class="blurb">An adaptive learning game I designed and built with AI for my 3rd grader. Kids bat, pitch, and catch their way through a five-team space baseball league, and math problems aligned to California Common Core power up each play. Missed skills come back more often, and a grown-ups view tracks accuracy by skill. It runs in any phone, tablet, or desktop browser and works offline.</p>
+          <ul class="build-tags">
+            <li>Product design</li>
+            <li>AI-assisted build</li>
+            <li>Adaptive learning</li>
+            <li>Mobile web</li>
+          </ul>
+          <div class="build-links">
+            <a class="btn btn-company" href="https://wkotlewski.github.io/star-knight-league/" target="_blank" rel="noopener">Play the current build</a>
+            <a class="btn btn-ghost" href="https://github.com/wkotlewski/star-knight-league" target="_blank" rel="noopener">View source</a>
+          </div>
+        </div>
+      </article>
     </div>
   </section>
 
