@@ -1,0 +1,10 @@
+{
+  "name": "Star Knight League",
+  "short_name": "Star Knight",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0A0F24",
+  "theme_color": "#0A0F24",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
