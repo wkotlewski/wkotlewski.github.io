@@ -220,6 +220,8 @@ p{margin:0}
 .qtext b.vw{color:var(--gold)}
 .qtext .blank{display:inline-block;min-width:4ch;border-bottom:4px solid var(--cyan);margin:0 4px;vertical-align:-2px}
 .ctlrow.two{grid-template-columns:1fr 1fr}
+#hLanePad{right:calc(clamp(92px,24vw,120px) + 22px)}
+#hLanePad .ctlrow button{min-height:58px}
 .resetrow{display:flex;flex-wrap:wrap;gap:10px}
 
 /* results */
@@ -497,11 +499,12 @@ textarea.text-in{min-height:120px;font-size:17px;font-weight:600;resize:vertical
         <div id="hToast" role="status"></div>
         <div id="hBadge" hidden></div>
         <button id="hActBtn" hidden>Shoot</button>
-        <div class="ctlpanel" id="hPad" hidden>
-          <span class="ctl-l">Pick your shot</span>
-          <div class="ctlrow two">
-            <button data-n="2">2 points<small>Close · easier</small></button>
-            <button data-n="3">3 points<small>Far · harder</small></button>
+        <div class="ctlpanel" id="hLanePad" hidden>
+          <span class="ctl-l" id="hLaneLabel">Move to an open spot</span>
+          <div class="ctlrow">
+            <button data-l="-1" aria-pressed="false">3 pts</button>
+            <button data-l="0" aria-pressed="true">2 pts</button>
+            <button data-l="1" aria-pressed="false">Close</button>
           </div>
         </div>
       </div>
@@ -2357,15 +2360,23 @@ function hResize(){
   const r=hcv.getBoundingClientRect(), d=Math.min(2,window.devicePixelRatio||1);
   HW=Math.max(200,r.width); HH=Math.max(180,r.height);
   hcv.width=Math.round(HW*d); hcv.height=Math.round(HH*d); hctx.setTransform(d,0,0,d,0,0);
-  const wide=HW/HH>1.3, floor=HH*(wide?.82:.7);
-  C={floor,k:Math.min(HW*.12,HH*.13),hx:HW*(wide?.7:.84),hy:HH*(wide?.32:.3),x2:HW*(wide?.44:.5),x3:HW*(wide?.2:.24)};
+  const wide=HW/HH>1.3, floor=Math.min(HH*(wide?.74:.66),HH-118), k=Math.min(HW*.1,HH*.12,floor*.2);
+  const hx=HW*(wide?.7:.86), xc=hx-k*2.3, x3=HW*(wide?.16:.13);
+  C={floor,k,hx,hy:Math.min(HH*.26,floor-k*2.6),spots:[x3,(x3+xc)/2,xc]};
 }
 window.addEventListener('resize',()=>{if(cur==='hoops') hResize();});
+const SPX=l=>C.spots[l+1];
+const SPOT_PTS=[3,2,2], SPOT_NAME=['3-point spot','middle','close to the hoop'];
 function rim(){ return {x:C.hx-C.k*.55,y:C.hy+Math.sin(HG.clock*1.1)*HH*.05}; }
 function hPad(m){
-  $('#hPad').hidden=m!=='pick'; const b=$('#hActBtn'); b.hidden=!(m==='shoot'||m==='block'||m==='steal');
-  b.textContent=m==='block'?'Block':m==='steal'?'Steal':'Shoot'; HG.ctl=m;
+  const lp=$('#hLanePad'); lp.hidden=!(m==='move'||m==='block'||m==='steal');
+  const off=m==='move'; const labels=off?['3 pts','2 pts','Close']:['◀ Left','Middle','Right ▶'];
+  $$('#hLanePad button').forEach((b,i)=>b.textContent=labels[i]);
+  $('#hLaneLabel').textContent=off?'Move to an open spot':'Stay in front of them';
+  const b=$('#hActBtn'); b.hidden=!(m==='move'||m==='meter'||m==='block'||m==='steal');
+  b.textContent=m==='block'?'Block':m==='steal'?'Steal':'Shoot'; HG.ctl=m; hMark();
 }
+function hMark(){ const v=HG.half==='off'?HG.lane:HG.ml; $$('#hLanePad button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.l===v)); }
 function htoast(text,cls='',tip=''){
   const t=$('#hToast'); t.innerHTML=esc(text)+(tip?`<span class="tip">${esc(tip)}</span>`:''); t.className='show '+cls;
   clearTimeout(htoast.h); htoast.h=setTimeout(()=>{t.className=''},tip?2600:1500);
@@ -2379,7 +2390,8 @@ function hHUD(){
 function qDue(){ if(!HG.qUsed&&(HG.turn>=HG.qAt||HG.turn>=HG.turns-1)) return true; return HG.qUsed&&Math.random()<EXTRA[S.settings.freq]; }
 function hMatch(t){
   Object.assign(HG,{active:true,team:t,half:'off',role:null,us:0,them:0,turn:0,turns:3,phase:'idle',paused:false,ot:false,otRound:0,
-    clock:0,last:0,parts:[],ball:null,meter:null,laser:false,boost:false,earned:0,made:0,blocks:0,steals:0,right:0,asked:0,id:(HG.id||0)+1});
+    clock:0,last:0,parts:[],ball:null,meter:null,laser:false,boost:false,earned:0,made:0,blocks:0,steals:0,right:0,asked:0,
+    lane:0,mx:null,dl:0,dx:null,dtgt:null,ml:0,mex:null,oL:0,ox:null,otgt:null,id:(HG.id||0)+1});
   $('#hUsName').textContent=(S.profile&&S.profile.name)?S.profile.name+"'s Knights":'Star Knights';
   $('#hThemName').textContent=TEAMS[t].short; S.progress.lastCh=3; save();
   hPad('none'); show('hoops'); HG.active=true;
@@ -2387,38 +2399,63 @@ function hMatch(t){
     hlater(()=>{htoast(`vs ${TEAMS[t].name}`,'gold','You shoot first!'); hlater(hOffHalf,2000);},300); });
 }
 function hNewHalf(){ HG.turn=0; HG.qUsed=false; HG.qAt=R(0,2); }
+function setHLane(l){
+  if(!HG.active||HG.paused) return;
+  if(HG.half==='off'&&(HG.phase==='move'||HG.phase==='ready')) HG.lane=l;
+  else if(HG.half==='def'&&(HG.phase==='dmove'||HG.phase==='dblock'||HG.phase==='dsteal'||HG.phase==='dintro')) HG.ml=l;
+  else return;
+  sfx.tap(); hMark();
+}
+function hNudge(d){ const v=HG.half==='off'?HG.lane:HG.ml; setHLane(Math.max(-1,Math.min(1,v+d))); }
 /* offense */
 function hOffHalf(){ HG.half='off'; HG.role=null; hNewHalf(); hHUD(); hOffTurn(); }
 function hOffTurn(){
   if(!HG.active) return;
-  HG.laser=false; HG.ball=null; HG.meter=null; HG.spot=null; HG.phase='pick'; hHUD();
+  HG.laser=false; HG.ball=null; HG.meter=null; HG.phase='ready'; HG.lane=0; HG.dl=0; HG.dtgt=null; hHUD();
   const due=qDue(); HG.plan=due?(Math.random()<.35?'double':'laser'):null;
-  const go=()=>{ hPad('pick'); htoast(HG.ot?'Overtime shot':`Shot ${HG.turn+1} of 3`,'gold','Pick a 2-pointer or a 3-pointer.'); };
-  if(HG.plan==='double'){ HG.qUsed=true; HG.spot=2; HG.phase='q';
+  const startMove=()=>{
+    const L=S.settings.level, T=hSkill();
+    HG.shotEnd=HG.clock+(L==='easy'?9:L==='hard'?6:7.5); HG.dHopAt=HG.clock+.9; HG.phase='move'; hPad('move');
+    htoast(HG.ot?'Overtime shot':`Shot ${HG.turn+1} of 3`,'gold','Move to an open spot, then tap SHOOT.');
+  };
+  if(HG.plan==='double'){ HG.qUsed=true; HG.phase='q';
     hlater(()=>openVocab('double',ok=>{ if(ok){ HG.phase='layup'; htoast('Pass to your teammate!','gold'); hlater(()=>hShootBall(2,'swish',true),700); } else { htoast('The double-team stole it!','coral'); sfx.strike(); hNextOff(1800); } }),500); return; }
-  go();
+  if(HG.plan==='laser'){ HG.qUsed=true; HG.phase='q'; hlater(()=>openVocab('laser',ok=>{HG.laser=!!ok; hHUD(); startMove();}),500); return; }
+  hlater(startMove,400);
 }
-function pickSpot(n){
-  if(HG.phase!=='pick') return; sfx.tap(); HG.spot=n; hPad('none');
-  const start=()=>{ const L=S.settings.level, T=hSkill();
-    let w=(n===2?.22:.14)*(L==='easy'?1.3:L==='hard'?.8:1)*(1-(T-.3)*.4); if(HG.laser) w*=1.7;
-    HG.meter={t:0,spd:(n===2?.8:1.0)*(L==='easy'?.75:L==='hard'?1.2:1),c:.3+Math.random()*.4,w};
-    HG.phase='meter'; hPad('shoot'); };
-  if(HG.plan==='laser'){ HG.qUsed=true; HG.phase='q'; openVocab('laser',ok=>{HG.laser=!!ok; hHUD(); start();}); }
-  else start();
+function offMoveUpdate(){
+  const T=hSkill(), L=S.settings.level, warn=L==='easy'?.6:L==='hard'?.38:.48;
+  if(HG.dtgt===null&&HG.clock>=HG.dHopAt){
+    let tgt; if(HG.lane!==HG.dl&&Math.random()<.45+T*.4) tgt=HG.dl+Math.sign(HG.lane-HG.dl); else tgt=pick([-1,0,1].filter(l=>Math.abs(l-HG.dl)===1));
+    HG.dtgt=tgt; HG.dWarn=HG.clock;
+  }
+  if(HG.dtgt!==null&&HG.clock-HG.dWarn>=warn){ HG.dl=HG.dtgt; HG.dtgt=null; HG.dHopAt=HG.clock+(R(9,17)/10)/(.6+T); }
+  if(HG.clock>=HG.shotEnd){ htoast('Shot clock!','coral','Shoot before the clock runs out.'); hStartMeter(); }
+}
+function hStartMeter(){
+  const L=S.settings.level, T=hSkill(), pts=SPOT_PTS[HG.lane+1], guarded=HG.dl===HG.lane;
+  let w=[.14,.2,.26][HG.lane+1]*(L==='easy'?1.3:L==='hard'?.8:1)*(1-(T-.3)*.4);
+  if(guarded) w*=.5; else w*=1.15; if(HG.laser) w*=1.7;
+  HG.spot=pts; HG.guarded=guarded;
+  HG.meter={t:0,spd:(pts===3?1:.8)*(L==='easy'?.75:L==='hard'?1.2:1),c:.3+Math.random()*.4,w};
+  HG.phase='meter'; hPad('meter');
+  if(guarded) htoast('Guarded!','coral','The defender is in your face. The green zone is smaller.');
+  else htoast('Wide open!','gold','Tap SHOOT in the green.');
 }
 const meterV=()=>{const x=(HG.meter.t*HG.meter.spd)%2; return x<1?x:2-x;};
 function hAct(){
   if(HG.paused) return;
+  if(HG.phase==='move'){ sfx.tap(); hStartMeter(); return; }
   if(HG.phase==='meter'){ const v=meterV(), m=HG.meter, d=Math.abs(v-m.c);
     hPad('none'); let res;
     if(d<=m.w/2) res=d<=m.w/6?'swish':'bank'; else if(d<=m.w/2+.1) res=Math.random()<.5?'rimin':'rimout'; else res=v<m.c?'short':'long';
     hShootBall(HG.spot,res,false); return; }
   if(HG.phase==='dblock'){ hTryBlock(); return; }
   if(HG.phase==='dsteal'){ hTrySteal(); return; }
+  if(HG.phase==='dmove'){ htoast('Wait for it!','',HG.role==='block'?'Block when they shoot.':'Steal when they dribble.'); }
 }
 function hShootBall(pts,res,layup){
-  HG.phase='flight'; const x0=layup?C.hx-C.k*2.2:(pts===2?C.x2:C.x3);
+  HG.phase='flight'; const x0=layup?C.hx-C.k*2.2:(HG.mx||SPX(HG.lane));
   HG.ball={x0:x0+C.k*.3,y0:C.floor-C.k*1.9,t:0,dur:layup?.55:pts===3?1.15:.95,res,pts,mine:true}; sfx.hit();
 }
 function ballPos(b){
@@ -2426,10 +2463,9 @@ function ballPos(b){
   let tx=r.x, ty=r.y;
   if(b.res==='short'){ tx=r.x-C.k*1.4; ty=r.y+C.k*.6; } else if(b.res==='long'){ tx=C.hx+C.k*.2; ty=r.y-C.k*.9; }
   else if(b.res==='rimout'||b.res==='rimin'){ tx=r.x+C.k*.35; }
-  else if(b.res==='blocked'){ tx=b.x0+C.k*1.2; ty=b.y0-C.k*1.2; }
-  const peak=Math.min(b.y0,ty)-HH*(b.res==='blocked'?.02:.22);
-  const x=b.x0+(tx-b.x0)*t;
-  const y=(1-t)*(1-t)*b.y0+2*(1-t)*t*peak+t*t*ty;
+  else if(b.res==='blocked'){ tx=b.x0-C.k*1.4; ty=b.y0-C.k*1.2; }
+  const peak=Math.min(b.y0,ty)-HH*(b.res==='blocked'?.02:.2);
+  const x=b.x0+(tx-b.x0)*t, y=(1-t)*(1-t)*b.y0+2*(1-t)*t*peak+t*t*ty;
   return {x,y,t};
 }
 function hBallDone(){
@@ -2437,12 +2473,12 @@ function hBallDone(){
   if(b.mine){
     if(made){ HG.us+=b.pts; HG.made++; const cr=b.pts===3?12:8; addCredits(cr); HG.earned+=cr; sfx.hr();
       htoast(b.res==='swish'?'SWISH!':b.res==='rimin'?'It rolls in!':'Bucket!','gold',`+${b.pts} points`); const r=rim(); for(let i=0;i<3;i++) hlater(()=>hBurst(r.x,r.y,18,['#FFC547','#FF6F59','#43E5B0','#5FD8FF']),i*180); }
-    else { sfx.strike(); htoast(b.res==='rimout'?'Rim out!':b.res==='short'?'Too short!':'Too far!','coral',b.res==='short'?'Tap a little later next time.':b.res==='long'?'Tap a little sooner next time.':'So close!'); }
+    else { sfx.strike(); htoast(b.res==='rimout'?'Rim out!':b.res==='short'?'Too short!':'Too far!','coral',b.res==='short'?'Tap a little later next time.':b.res==='long'?'Tap a little sooner next time.':(HG.guarded?'Find an open spot first.':'So close!')); }
     hHUD(); HG.ball=null;
     if(HG.ot){ hlater(hOtDefend,1800); return; }
     hNextOff(made?2000:1700);
   } else {
-    if(made){ HG.them+=2; sfx.strike(); htoast(`${TEAMS[HG.team].short} scored`,'coral','+2 for them'); }
+    if(made){ HG.them+=2; sfx.strike(); htoast(`${TEAMS[HG.team].short} scored`,'coral',b.open?'You weren\'t in front of them.':'+2 for them'); }
     else htoast('They missed!','gold');
     hHUD(); HG.ball=null; if(HG.ot){ hlater(hOtCheck,1800); return; } hNextDef(1800);
   }
@@ -2458,17 +2494,24 @@ function hOffEnd(){
 }
 /* defense */
 function hDefHalf(role){ HG.half='def'; HG.role=role; hNewHalf(); hHUD();
-  htoast(role==='block'?'You\'re blocking!':'You\'re stealing!','gold',role==='block'?'Tap BLOCK right when the ball leaves their hands. Watch for fakes!':'Tap STEAL when the ball hits the glowing ring on the floor.');
-  hlater(hDefTurn,2400); }
+  htoast(role==='block'?'You\'re blocking!':'You\'re stealing!','gold',role==='block'?'Stay in front of them. Tap BLOCK when the ball leaves their hands.':'Stay in front of them. Tap STEAL when the ball hits the glowing ring.');
+  hlater(hDefTurn,2600); }
 function hDefTurn(){
   if(!HG.active) return;
-  HG.boost=false; HG.ball=null; HG.tried=false; HG.phase='dintro'; hHUD(); hPad('none');
-  const go=()=>hlater(()=>{ if(HG.role==='block') hStartShot(); else hStartDribble(); },500);
+  HG.boost=false; HG.ball=null; HG.tried=false; HG.phase='dintro'; HG.oL=pick([-1,0,1]); HG.otgt=null; HG.ml=0; hHUD(); hPad('none');
+  const go=()=>hlater(()=>{ HG.phase='dmove'; HG.dEnd=HG.clock+R(25,40)/10; HG.oHopAt=HG.clock+.8; hPad(HG.role); },500);
   if(qDue()){ HG.qUsed=true;
     if(Math.random()<.3){ openVocab('loose',ok=>{ if(ok){ HG.steals++; addCredits(5); HG.earned+=5; htoast('Ball is yours!','gold','+5 credits'); hNextDef(1700);} else { htoast('They picked it back up.','coral'); go(); } }); }
     else openVocab(HG.role,ok=>{HG.boost=!!ok; hHUD(); go();});
   } else { htoast(`Their turn ${HG.turn+1} of 3`); go(); }
 }
+function defMoveUpdate(){
+  const T=hSkill(), L=S.settings.level, warn=L==='easy'?.6:L==='hard'?.38:.48;
+  if(HG.otgt===null&&HG.clock>=HG.oHopAt){ HG.otgt=pick([-1,0,1].filter(l=>Math.abs(l-HG.oL)===1)); HG.oWarn=HG.clock; }
+  if(HG.otgt!==null&&HG.clock-HG.oWarn>=warn){ HG.oL=HG.otgt; HG.otgt=null; HG.oHopAt=HG.clock+(R(8,15)/10)/(.6+T); }
+  if(HG.clock>=HG.dEnd&&HG.otgt===null){ if(HG.role==='block') hStartShot(); else hStartDribble(); }
+}
+const inFront=()=>HG.ml===HG.oL;
 function hStartShot(){
   const T=hSkill(), L=S.settings.level;
   const crouch=(R(7,13)/10)*(L==='easy'?1.15:1);
@@ -2476,17 +2519,20 @@ function hStartShot(){
   HG.release=HG.clock+crouch+(HG.fake?.55:0); HG.phase='dblock'; hPad('block');
 }
 function hTryBlock(){
-  if(HG.tried) return; HG.tried=true; hPad('none');
+  if(HG.tried) return;
+  if(!inFront()){ htoast('Get in front first!','coral','Move to the same spot as the shooter.'); return; }
+  HG.tried=true;
   const L=S.settings.level, win=(L==='easy'?.24:L==='hard'?.13:.18)*(HG.boost?1.8:1), d=HG.clock-HG.release;
   const inFake=HG.fake&&HG.clock>=HG.fake.at&&HG.clock<=HG.fake.at+HG.fake.dur;
-  if(inFake){ HG.tried=false; hPad('block'); htoast('Pump fake!','coral','They faked it. Wait for the real shot!'); sfx.strike(); HG.missT=HG.clock; return; }
+  if(inFake){ HG.tried=false; htoast('Pump fake!','coral','They faked it. Wait for the real shot!'); sfx.strike(); HG.missT=HG.clock; return; }
+  hPad('none');
   if(Math.abs(d)<=win){ HG.phase='result'; HG.blocks++; addCredits(5); HG.earned+=5; sfx.hit(); htoast('BLOCKED!','gold','+5 credits');
-    HG.ball={x0:HW*.38+C.k*.3,y0:C.floor-C.k*2.3,t:0,dur:.6,res:'blocked',pts:2,mine:false,blk:true}; hBurst(HW*.47,C.floor-C.k*2.3,16,[knightBlade(),'#fff']); return; }
+    const ox=HG.ox||SPX(HG.oL); HG.ball={x0:ox+C.k*.3,y0:C.floor-C.k*2.3,t:0,dur:.6,res:'blocked',pts:2,mine:false,blk:true}; hBurst(ox+C.k,C.floor-C.k*2.3,16,[knightBlade(),'#fff']); return; }
   htoast(d<0?'Too early!':'Too late!','coral'); sfx.strike(); HG.missT=HG.clock;
 }
 function hOppShoot(){
-  const T=hSkill(), made=Math.random()<.35+T*.45;
-  HG.ball={x0:HW*.38+C.k*.3,y0:C.floor-C.k*2.1,t:0,dur:1,res:made?(Math.random()<.5?'swish':'bank'):pick(['rimout','short','long']),pts:2,mine:false};
+  const T=hSkill(), open=!inFront(), made=Math.random()<(open?.6+T*.3:.35+T*.45), ox=HG.ox||SPX(HG.oL);
+  HG.ball={x0:ox+C.k*.3,y0:C.floor-C.k*2.1,t:0,dur:1,res:made?(Math.random()<.5?'swish':'bank'):pick(['rimout','short','long']),pts:2,mine:false,open};
   HG.phase='flight'; hPad('none'); sfx.hit();
 }
 function hStartDribble(){
@@ -2494,15 +2540,17 @@ function hStartDribble(){
   HG.drib={t0:HG.clock,period:(L==='easy'?.95:L==='hard'?.62:.78)-T*.18,end:HG.clock+R(40,55)/10};
   HG.phase='dsteal'; hPad('steal');
 }
-function dribPhase(){ const d=HG.drib; return ((HG.clock-d.t0)/d.period)%1; } // 0 = hand, .5 = floor
+function dribPhase(){ const d=HG.drib; return ((HG.clock-d.t0)/d.period)%1; }
 function hTrySteal(){
-  if(HG.tried) return; HG.tried=true; hPad('none');
+  if(HG.tried) return;
+  if(!inFront()){ htoast('Get in front first!','coral','Move to the same spot as the dribbler.'); return; }
+  HG.tried=true; hPad('none');
   const L=S.settings.level, win=(L==='easy'?.14:L==='hard'?.08:.11)*(HG.boost?1.7:1), ph=dribPhase();
-  if(Math.abs(ph-.5)<=win){ HG.phase='result'; HG.steals++; addCredits(5); HG.earned+=5; sfx.right(); htoast('STOLEN!','gold','+5 credits'); HG.stolen=HG.clock; hBurst(HW*.45,C.floor-C.k*.2,14,[knightBlade(),'#fff']); hNextDef(1700); return; }
+  if(Math.abs(ph-.5)<=win){ HG.phase='result'; HG.steals++; addCredits(5); HG.earned+=5; sfx.right(); htoast('STOLEN!','gold','+5 credits'); HG.stolen=HG.clock; hBurst((HG.ox||SPX(HG.oL))+C.k*.6,C.floor-C.k*.2,14,[knightBlade(),'#fff']); hNextDef(1700); return; }
   htoast('Missed the steal!','coral',ph<.5?'Too early: wait for the floor ring.':'Too late: tap as it hits the floor.'); sfx.strike(); HG.missT=HG.clock;
   hlater(hDrive,700);
 }
-function hDrive(){ if(HG.phase!=='dsteal') return; HG.phase='drive'; HG.driveT=HG.clock; hlater(hOppShoot,700); }
+function hDrive(){ if(HG.phase!=='dsteal') return; HG.phase='drive'; HG.driveT=HG.clock; hPad('none'); hlater(hOppShoot,700); }
 function hNextDef(ms){ HG.turn++; hHUD(); if(HG.turn>=HG.turns) hlater(hDefEnd,ms); else hlater(hDefTurn,ms); }
 function hDefEnd(){
   hPad('none'); HG.ball=null;
@@ -2510,8 +2558,11 @@ function hDefEnd(){
   showMsg({title:'Tie game!',art:person(knightOf()),body:'Overtime! You take one shot, then you play defense once.',btn:'Let\'s go',cb:hOtRound});
 }
 /* overtime */
-function hOtRound(){ HG.ot=true; HG.otRound++; HG.half='off'; HG.role=null; HG.plan=null; HG.laser=false; hHUD(); HG.phase='pick'; hPad('pick'); htoast(`Overtime ${HG.otRound}`,'gold','Pick a 2 or a 3.'); }
-function hOtDefend(){ HG.half='def'; HG.role='block'; HG.boost=false; HG.tried=false; hHUD(); htoast('Block their shot!','gold'); hlater(hStartShot,1200); }
+function hOtRound(){ HG.ot=true; HG.otRound++; HG.half='off'; HG.role=null; HG.plan=null; hHUD(); hOffTurnOT(); }
+function hOffTurnOT(){ HG.laser=false; HG.ball=null; HG.meter=null; HG.lane=0; HG.dl=0; HG.dtgt=null; const L=S.settings.level;
+  HG.shotEnd=HG.clock+(L==='easy'?9:L==='hard'?6:7.5); HG.dHopAt=HG.clock+.9; HG.phase='move'; hPad('move'); htoast(`Overtime ${HG.otRound}`,'gold','Find an open spot and shoot!'); }
+function hOtDefend(){ HG.half='def'; HG.role='block'; HG.boost=false; HG.tried=false; HG.oL=pick([-1,0,1]); HG.otgt=null; HG.ml=0; hHUD(); htoast('Block their shot!','gold','Stay in front of them.');
+  hlater(()=>{ HG.phase='dmove'; HG.dEnd=HG.clock+2.5; HG.oHopAt=HG.clock+.8; hPad('block'); },1200); }
 function hOtCheck(){ if(HG.us!==HG.them||HG.otRound>=3){ hEnd(); return; } htoast('Still tied!','gold'); hlater(hOtRound,1800); }
 function hEnd(){
   HG.active=false; hPad('none');
@@ -2547,14 +2598,20 @@ function hEnd(){
   show('results');
 }
 /* controls */
-$('#hPad').addEventListener('click',e=>{const b=e.target.closest('button[data-n]'); if(b) pickSpot(+b.dataset.n);});
+$('#hLanePad').addEventListener('pointerdown',e=>{const b=e.target.closest('button[data-l]'); if(b){e.preventDefault(); setHLane(+b.dataset.l);}});
+$('#hLanePad').addEventListener('click',e=>{const b=e.target.closest('button[data-l]'); if(b&&e.detail===0) setHLane(+b.dataset.l);});
 $('#hActBtn').addEventListener('pointerdown',e=>{e.preventDefault(); e.stopPropagation(); hAct();});
 $('#hActBtn').addEventListener('click',e=>{if(e.detail===0) hAct();});
-hcv.addEventListener('pointerdown',e=>{e.preventDefault(); if(HG.ctl==='shoot'||HG.ctl==='block'||HG.ctl==='steal') hAct();});
+hcv.addEventListener('pointerdown',e=>{
+  e.preventDefault(); if(HG.paused||!C) return;
+  if(HG.phase==='meter'){ hAct(); return; }
+  const r=hcv.getBoundingClientRect(), x=e.clientX-r.left;
+  let best=0,bd=1e9; [-1,0,1].forEach(l=>{const d=Math.abs(SPX(l)-x); if(d<bd){bd=d;best=l}}); setHLane(best);
+});
 document.addEventListener('keydown',e=>{
   if(cur!=='hoops'||!$('#mathModal').hidden||!$('#msgModal').hidden) return;
   if(e.key===' '||e.code==='Space'){ e.preventDefault(); hAct(); }
-  else if(HG.ctl==='pick'&&(e.key==='2'||e.key==='3')) pickSpot(+e.key);
+  else if(e.key==='ArrowLeft'){ e.preventDefault(); hNudge(-1); } else if(e.key==='ArrowRight'){ e.preventDefault(); hNudge(1); }
 });
 /* drawing */
 function hBurst(x,y,n,cols){ if(reduced) n=Math.ceil(n/3); for(let i=0;i<n;i++){const a=Math.random()*6.28,v=1+Math.random()*3; HG.parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-1,life:1,c:pick(cols)})} }
@@ -2566,24 +2623,26 @@ function drawHoopBall(x,y,r){
   cx.beginPath(); cx.arc(x-r*1.1,y,r*.85,-.8,.8); cx.stroke();
   cx.beginPath(); cx.arc(x+r*1.1,y,r*.85,Math.PI-.8,Math.PI+.8); cx.stroke();
 }
+function warnArrow(x0,x1,y){ const dir=Math.sign(x1-x0); cx.strokeStyle='rgba(255,111,89,.95)'; cx.fillStyle='rgba(255,111,89,.95)'; cx.lineWidth=3;
+  cx.beginPath(); cx.moveTo(x0,y); cx.lineTo(x1,y); cx.stroke(); cx.beginPath(); cx.moveTo(x1,y); cx.lineTo(x1-dir*8,y-6); cx.lineTo(x1-dir*8,y+6); cx.closePath(); cx.fill(); }
 function drawCourt(now){
   const {floor,k}=C;
   cx.clearRect(0,0,HW,HH);
-  // planet + nebula
   circle(HW*.16,HH*.2,k*1.1,'#2B3F7A'); circle(HW*.16-k*.25,HH*.2-k*.2,k*.9,'#3557D6');
   cx.save(); cx.strokeStyle='rgba(255,197,71,.5)'; cx.lineWidth=3; cx.beginPath(); cx.ellipse(HW*.16,HH*.2,k*1.8,k*.4,-.3,0,Math.PI*2); cx.stroke(); cx.restore();
-  // floating platform floor
   const g=cx.createLinearGradient(0,floor,0,HH); g.addColorStop(0,'#3A2E6E'); g.addColorStop(1,'#1B1636');
-  cx.fillStyle=g; cx.beginPath(); cx.moveTo(HW*.03,floor); cx.lineTo(HW*.97,floor); cx.lineTo(HW*.9,HH-4); cx.lineTo(HW*.1,HH-4); cx.closePath(); cx.fill();
-  cx.strokeStyle='#5FD8FF'; cx.lineWidth=3; cx.shadowColor='#5FD8FF'; cx.shadowBlur=12; cx.beginPath(); cx.moveTo(HW*.03,floor); cx.lineTo(HW*.97,floor); cx.stroke(); cx.shadowBlur=0;
-  // 3-point arc mark + key
-  cx.strokeStyle='rgba(255,255,255,.4)'; cx.lineWidth=2;
-  cx.beginPath(); cx.moveTo(C.x3+k*.9,floor+2); cx.lineTo(C.x3+k*.9,floor+10); cx.stroke();
-  cx.fillStyle='rgba(255,255,255,.55)'; cx.font=`800 ${Math.max(10,k*.3)}px "Baloo 2",sans-serif`; cx.textAlign='center';
-  cx.fillText('3',C.x3,floor+k*.55); cx.fillText('2',C.x2,floor+k*.55);
-  // floating particles
+  cx.fillStyle=g; cx.beginPath(); cx.moveTo(HW*.02,floor); cx.lineTo(HW*.98,floor); cx.lineTo(HW*.92,HH-4); cx.lineTo(HW*.08,HH-4); cx.closePath(); cx.fill();
+  cx.strokeStyle='#5FD8FF'; cx.lineWidth=3; cx.shadowColor='#5FD8FF'; cx.shadowBlur=12; cx.beginPath(); cx.moveTo(HW*.02,floor); cx.lineTo(HW*.98,floor); cx.stroke(); cx.shadowBlur=0;
+  // spot pads
+  const off=HG.half==='off', showSpots=(off&&(HG.phase==='move'||HG.phase==='ready'))||(!off&&HG.half&&HG.phase!=='flight');
+  cx.font=`800 ${Math.max(11,k*.3)}px "Baloo 2",sans-serif`; cx.textAlign='center';
+  [-1,0,1].forEach(l=>{ const x=SPX(l); let col='rgba(255,255,255,.35)';
+    if(showSpots&&off) col=HG.dl===l?'rgba(255,111,89,.9)':'rgba(67,229,176,.9)';
+    if(showSpots&&!off) col=HG.oL===l?'rgba(255,197,71,.9)':'rgba(255,255,255,.3)';
+    cx.save(); cx.strokeStyle=col; cx.lineWidth=3; cx.shadowColor=col; cx.shadowBlur=showSpots?10:0; cx.beginPath(); cx.ellipse(x,floor+k*.08,k*.55,k*.13,0,0,Math.PI*2); cx.stroke(); cx.restore();
+    cx.fillStyle='rgba(255,255,255,.7)'; cx.fillText(off?['3 pts','2 pts','Close'][l+1]:'',x,floor+k*.62);
+  });
   for(let i=0;i<14;i++){ const px=(i*137%100)/100*HW, py=floor-((now*.02+i*53)%(floor*.9)); cx.globalAlpha=.25; circle(px,py,1.6,'#9FE8FF'); } cx.globalAlpha=1;
-  // hoop: anti-grav post + board + rim (drifts)
   const r=rim(), by=r.y-k*1.1;
   cx.strokeStyle='rgba(159,232,255,.35)'; cx.setLineDash([5,6]); cx.lineWidth=3; cx.beginPath(); cx.moveTo(C.hx+k*.15,by+k*1.4); cx.lineTo(C.hx+k*.15,floor); cx.stroke(); cx.setLineDash([]);
   ell(C.hx+k*.15,floor,k*.6,k*.12,'rgba(95,216,255,.5)');
@@ -2593,23 +2652,25 @@ function drawCourt(now){
   for(let i=0;i<5;i++){ const nx=r.x-k*.48+i*k*.24; cx.beginPath(); cx.moveTo(nx,r.y); cx.lineTo(r.x-k*.3+i*k*.15,r.y+k*.7); cx.stroke(); }
   cx.strokeStyle='#FF6F59'; cx.lineWidth=4; cx.shadowColor='#FF6F59'; cx.shadowBlur=10; cx.beginPath(); cx.ellipse(r.x,r.y,k*.52,k*.13,0,0,Math.PI*2); cx.stroke(); cx.shadowBlur=0;
 }
-function drawHoops(now){
+function drawHoops(now,dt){
   drawCourt(now);
-  const {floor,k}=C, fl=t=>Math.sin(now*.003+t)*k*.08;
+  const {floor,k}=C, fl=t=>Math.sin(now*.003+t)*k*.08, ease=Math.min(1,dt*12);
   const me=knightOf();
   if(HG.half==='off'||!HG.half){
-    const sx=HG.phase==='layup'?C.hx-k*2.2:HG.spot===3?C.x3:C.x2;
-    // defender
-    const dx=sx+k*1.15, jump=(HG.ball&&HG.ball.mine&&HG.ball.t<.35)?Math.sin(HG.ball.t/.35*Math.PI)*k*.6:0;
-    drawTrooper(dx,floor-jump+fl(2),k*1.05,0,HG.team||0);
-    if(HG.plan==='double'&&HG.phase==='q') drawTrooper(dx+k*.8,floor+fl(3),k,0,HG.team||0);
-    // teammate
-    const mate=CREW[S.ship.crew[0]]||CREW[0]; drawMate(HG.phase==='layup'?C.hx-k*2.2:HW*.66,floor+fl(4),k*.95,mate,0);
-    if(HG.phase!=='layup'){ drawMate(sx,floor+fl(0),k*1.1,me,0); }
-    if(!HG.ball&&HG.phase!=='layup') drawHoopBall(sx+k*.35,floor-k*1.7+Math.sin(now*.006)*k*.15,k*.22);
-    // meter
+    if(HG.mx===null||HG.mx===undefined) HG.mx=SPX(0);
+    if(HG.dx===null||HG.dx===undefined) HG.dx=SPX(0);
+    HG.mx+=(SPX(HG.lane)-HG.mx)*ease; HG.dx+=(SPX(HG.dl)-HG.dx)*Math.min(1,dt*9);
+    const layup=HG.phase==='layup';
+    const ddx=HG.dx+k*.5, jump=(HG.ball&&HG.ball.mine&&HG.ball.t<.35&&HG.guarded)?Math.sin(HG.ball.t/.35*Math.PI)*k*.6:0;
+    if(HG.dtgt!==null&&HG.phase==='move') warnArrow(ddx,SPX(HG.dtgt)+k*.5,floor-k*2.3);
+    drawTrooper(ddx,floor-jump+fl(2),k*1.05,0,HG.team||0);
+    if(HG.plan==='double'&&HG.phase==='q') drawTrooper(HG.mx-k*.9,floor+fl(3),k,0,HG.team||0);
+    const mate=CREW[S.ship.crew[0]]||CREW[0]; drawMate(layup?C.hx-k*2.2:Math.max(k*.6,C.spots[0]-k*1.1),floor+fl(4),k*.85,mate,0);
+    if(!layup) drawMate(HG.mx,floor+fl(0),k*1.1,me,0);
+    if(!HG.ball&&!layup) drawHoopBall(HG.mx+k*.35,floor-k*1.7+Math.sin(now*.006)*k*.15,k*.22);
+    if(HG.phase==='move'){ const left=Math.max(0,HG.shotEnd-HG.clock); cx.fillStyle=left<2.5?'#FF6F59':'rgba(255,255,255,.85)'; cx.font=`800 ${Math.max(12,k*.34)}px "Baloo 2",sans-serif`; cx.textAlign='left'; cx.fillText(`Shot clock ${Math.ceil(left)}`,12,Math.max(18,k*.5)); }
     if(HG.phase==='meter'&&HG.meter){
-      const m=HG.meter, w=Math.min(HW*.6,k*7), x=Math.max(10,Math.min(HW-w-10,sx-w/2+k*.3)), y=Math.max(54,floor-k*3.4), h=Math.max(16,k*.36);
+      const m=HG.meter, w=Math.min(HW*.6,k*7), x=Math.max(10,Math.min(HW-w-10,HG.mx-w/2+k*.3)), y=Math.max(54,floor-k*3.4), h=Math.max(16,k*.36);
       cx.fillStyle='rgba(10,15,36,.85)'; roundRect(x-4,y-4,w+8,h+8,h); cx.fill();
       cx.fillStyle='#FF6F59'; roundRect(x,y,w,h,h/2); cx.fill();
       cx.fillStyle='#FFC547'; cx.fillRect(x+w*Math.max(0,m.c-m.w/2-.1),y,w*(m.w+.2),h);
@@ -2617,31 +2678,32 @@ function drawHoops(now){
       const mx=x+w*meterV(); cx.fillStyle='#fff'; cx.shadowColor='#fff'; cx.shadowBlur=10; roundRect(mx-4,y-8,8,h+16,4); cx.fill(); cx.shadowBlur=0;
     }
   } else {
-    const ox=HW*.38;
-    // opponent
+    if(HG.ox===null||HG.ox===undefined) HG.ox=SPX(HG.oL);
+    if(HG.mex===null||HG.mex===undefined) HG.mex=SPX(0);
+    HG.ox+=(SPX(HG.oL)-HG.ox)*Math.min(1,dt*8); HG.mex+=(SPX(HG.ml)-HG.mex)*ease;
+    const ox=HG.ox;
     let lift=0; const shotOut=HG.ball&&!HG.ball.mine;
     if(HG.phase==='dblock'){ const tt=HG.release-HG.clock; lift=tt<.5?(1-Math.max(0,tt)/.5)*k*.5:0;
       if(HG.fake&&HG.clock>=HG.fake.at&&HG.clock<=HG.fake.at+HG.fake.dur) lift=Math.sin((HG.clock-HG.fake.at)/HG.fake.dur*Math.PI)*k*.4; }
     const driveX=HG.phase==='drive'?Math.min(1,(HG.clock-HG.driveT)/.6)*k*1.6:0;
+    if(HG.otgt!==null&&HG.phase==='dmove') warnArrow(ox,SPX(HG.otgt),floor-k*2.4);
     drawTrooper(ox+driveX,floor-lift+fl(1),k*1.1,0,HG.team);
-    // you
     const myJump=HG.role==='block'&&HG.missT!==undefined&&HG.clock-HG.missT<.5?Math.sin((HG.clock-HG.missT)/.5*Math.PI)*k*.7:(HG.role==='block'&&HG.ball&&HG.ball.blk&&HG.ball.t<.4?Math.sin(HG.ball.t/.4*Math.PI)*k*.8:0);
-    drawMate(ox+k*1.35,floor-myJump+fl(0),k*1.1,me,0);
-    if(HG.boost){ cx.save(); cx.strokeStyle=knightBlade(); cx.shadowColor=knightBlade(); cx.shadowBlur=16; cx.lineWidth=3; cx.beginPath(); cx.arc(ox+k*1.35,floor-k*.9,k*.95,0,Math.PI*2); cx.stroke(); cx.restore(); }
-    // ball held / dribble
-    if(HG.role==='block'&&!shotOut&&(HG.phase==='dblock'||HG.phase==='dintro')){
+    const myX=HG.mex+k*.6;
+    if(inFront()&&HG.phase!=='flight'){ cx.save(); cx.globalAlpha=.25; ell(ox+k*.5,floor+k*.08,k*1.1,k*.18,'#43E5B0'); cx.restore(); }
+    drawMate(myX,floor-myJump+fl(0),k*1.1,me,0);
+    if(HG.boost){ cx.save(); cx.strokeStyle=knightBlade(); cx.shadowColor=knightBlade(); cx.shadowBlur=16; cx.lineWidth=3; cx.beginPath(); cx.arc(myX,floor-k*.9,k*.95,0,Math.PI*2); cx.stroke(); cx.restore(); }
+    if(HG.role==='block'&&!shotOut&&(HG.phase==='dblock'||HG.phase==='dintro'||HG.phase==='dmove')){
       drawHoopBall(ox+k*.15,floor-k*1.95-lift,k*.22);
       if(HG.phase==='dblock'&&!HG.tried&&HG.clock>HG.release-.6&&HG.clock<HG.release+.3){ cx.save(); cx.strokeStyle='rgba(255,197,71,.85)'; cx.lineWidth=3; cx.beginPath(); cx.arc(ox+k*.15,floor-k*1.95-lift,k*.42,0,Math.PI*2); cx.stroke(); cx.restore(); }
-      if(HG.phase==='dblock'&&HG.clock>=HG.release+ .32&&!HG.ball) hOppShoot();
     }
-    if(HG.role==='steal'&&(HG.phase==='dsteal'||HG.phase==='drive'||HG.phase==='dintro')&&!shotOut){
-      const ph=HG.phase==='dsteal'?dribPhase():0, by=floor-k*.15-(1-Math.sin(ph*Math.PI))*k*.9;
+    if(HG.role==='steal'&&(HG.phase==='dsteal'||HG.phase==='drive'||HG.phase==='dintro'||HG.phase==='dmove')&&!shotOut){
+      const ph=HG.phase==='dsteal'?dribPhase():(HG.clock*1.3)%1, by=floor-k*.15-(1-Math.sin(ph*Math.PI))*k*.9;
       const bx=ox+k*.45+driveX;
       cx.save(); const on=HG.phase==='dsteal'; cx.strokeStyle=on?'rgba(95,216,255,.9)':'rgba(95,216,255,.3)'; cx.lineWidth=3; cx.shadowColor='#5FD8FF'; cx.shadowBlur=on?12:0; cx.beginPath(); cx.ellipse(bx,floor-k*.05,k*.38,k*.1,0,0,Math.PI*2); cx.stroke(); cx.restore();
       drawHoopBall(bx,by,k*.22);
-      if(HG.phase==='dsteal'&&HG.clock>=HG.drib.end&&!HG.tried){ HG.tried=true; hPad('none'); htoast('Too slow!','coral','Tap STEAL as the ball hits the ring.'); hDrive(); }
     }
-    if(HG.phase==='result'&&HG.role==='steal'&&HG.stolen!==undefined) drawHoopBall(ox+k*1.6,floor-k*1.2,k*.22);
+    if(HG.phase==='result'&&HG.role==='steal'&&HG.stolen!==undefined) drawHoopBall(myX+k*.3,floor-k*1.2,k*.22);
   }
   if(HG.ball){ const p=ballPos(HG.ball); drawHoopBall(p.x,p.y,k*.22); }
   HG.parts=HG.parts.filter(p=>p.life>0);
@@ -2652,10 +2714,14 @@ function hLoop(){
   const now=performance.now(), dt=Math.min(.05,(now-HG.last)/1000); HG.last=now;
   if(HG.active&&C&&!HG.paused&&$('#msgModal').hidden){
     HG.clock+=dt;
+    if(HG.half==='off'&&HG.phase==='move') offMoveUpdate();
+    if(HG.half==='def'&&HG.phase==='dmove') defMoveUpdate();
+    if(HG.phase==='dblock'&&HG.clock>=HG.release+.32&&!HG.ball) hOppShoot();
+    if(HG.phase==='dsteal'&&HG.clock>=HG.drib.end&&!HG.tried){ HG.tried=true; htoast('Too slow!','coral','Tap STEAL as the ball hits the ring.'); hDrive(); }
     if(HG.phase==='meter'&&HG.meter) HG.meter.t+=dt;
     if(HG.ball){ HG.ball.t+=dt; if(HG.ball.t>=HG.ball.dur){ if(HG.ball.blk){ HG.ball=null; if(HG.ot) hlater(hOtCheck,1200); else hNextDef(1200); } else hBallDone(); } }
   }
-  if(C){ const prev=cx; cx=hctx; drawHoops(now); cx=prev; }
+  if(C){ const prev=cx; cx=hctx; drawHoops(now,HG.paused?0:dt); cx=prev; }
   requestAnimationFrame(hLoop);
 }
 
