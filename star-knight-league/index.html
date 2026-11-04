@@ -146,15 +146,15 @@ p{margin:0}
 .counts .ou b.on{background:var(--coral)}
 .minibases{width:30px;height:30px}
 .fieldwrap{position:relative;flex:1;min-height:0;border-radius:22px;overflow:hidden;border:2px solid var(--line);background:radial-gradient(100% 70% at 50% 100%,#1A2350 0%,#0D1330 70%)}
-#field,#pitch{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:manipulation;cursor:pointer}
-#toast,#sToast{position:absolute;left:50%;top:12px;transform:translateX(-50%) scale(.8);max-width:calc(100% - 24px);text-align:center;font-family:var(--display);font-size:clamp(20px,6vw,30px);line-height:1.1;color:var(--ink);text-shadow:0 3px 0 #070B1C,0 0 18px #000;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
-#toast.show,#sToast.show{opacity:1;transform:translateX(-50%) scale(1)}
-#toast.gold,#sToast.gold{color:var(--gold)}
-#toast.coral,#sToast.coral{color:var(--coral)}
-#toast .tip,#sToast .tip{display:block;font-family:var(--body);font-weight:800;font-size:16px;color:var(--ink);margin-top:6px;text-shadow:0 2px 6px #000}
-#boostBadge,#sBadge{position:absolute;left:12px;bottom:14px;font-family:var(--display);font-size:13px;letter-spacing:.06em;color:#0A0F24;background:var(--cyan);border-radius:999px;padding:8px 12px;box-shadow:0 0 18px var(--cyan)}
-#swingBtn,#shootBtn{position:absolute;right:max(12px,env(safe-area-inset-right,0px));bottom:12px;width:clamp(92px,24vw,120px);aspect-ratio:1;border-radius:50%;border:4px solid #FFD3CB;background:var(--coral);color:#fff;font-family:var(--display);font-size:clamp(18px,5vw,22px);box-shadow:0 6px 0 var(--coral-deep),0 0 24px #FF6F5966;cursor:pointer;touch-action:manipulation;user-select:none;-webkit-user-select:none}
-#swingBtn:active,#shootBtn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--coral-deep)}
+#field,#pitch,#court{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:manipulation;cursor:pointer}
+#toast,#sToast,#hToast{position:absolute;left:50%;top:12px;transform:translateX(-50%) scale(.8);max-width:calc(100% - 24px);text-align:center;font-family:var(--display);font-size:clamp(20px,6vw,30px);line-height:1.1;color:var(--ink);text-shadow:0 3px 0 #070B1C,0 0 18px #000;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
+#toast.show,#sToast.show,#hToast.show{opacity:1;transform:translateX(-50%) scale(1)}
+#toast.gold,#sToast.gold,#hToast.gold{color:var(--gold)}
+#toast.coral,#sToast.coral,#hToast.coral{color:var(--coral)}
+#toast .tip,#sToast .tip,#hToast .tip{display:block;font-family:var(--body);font-weight:800;font-size:16px;color:var(--ink);margin-top:6px;text-shadow:0 2px 6px #000}
+#boostBadge,#sBadge,#hBadge{position:absolute;left:12px;bottom:14px;font-family:var(--display);font-size:13px;letter-spacing:.06em;color:#0A0F24;background:var(--cyan);border-radius:999px;padding:8px 12px;box-shadow:0 0 18px var(--cyan)}
+#swingBtn,#shootBtn,#hActBtn{position:absolute;right:max(12px,env(safe-area-inset-right,0px));bottom:12px;width:clamp(92px,24vw,120px);aspect-ratio:1;border-radius:50%;border:4px solid #FFD3CB;background:var(--coral);color:#fff;font-family:var(--display);font-size:clamp(18px,5vw,22px);box-shadow:0 6px 0 var(--coral-deep),0 0 24px #FF6F5966;cursor:pointer;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+#swingBtn:active,#shootBtn:active,#hActBtn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--coral-deep)}
 .gamehint{position:absolute;left:12px;top:12px;font-size:13px;font-weight:700;color:var(--ink-dim);pointer-events:none}
 
 .counts .ba b.on{background:var(--mint)}
@@ -168,7 +168,7 @@ p{margin:0}
 #meter{position:absolute;left:12px;right:calc(clamp(92px,24vw,120px) + 28px);bottom:22px;display:grid;gap:6px}
 .mtrack{position:relative;height:28px;border-radius:999px;border:3px solid #ffffff40;background:linear-gradient(90deg,var(--coral) 0 20%,var(--gold) 20% 40%,var(--mint) 40% 60%,var(--gold) 60% 80%,var(--coral) 80%)}
 #mMark{position:absolute;top:-8px;left:50%;width:8px;height:38px;margin-left:-4px;border-radius:4px;background:#fff;box-shadow:0 0 10px #fff}
-.choicegrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.choicegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:12px}
 .choicegrid .tile{padding:14px 8px}
 .choicegrid svg{width:72px;height:72px}
 .choicegrid .nm{font-family:var(--display);font-weight:400;font-size:20px}
@@ -215,6 +215,12 @@ p{margin:0}
 .ltiles .back{font-size:20px;width:auto;padding:0 14px}
 #spChoices button{font-family:var(--body);font-weight:800;font-size:clamp(20px,5.6vw,24px)}
 .spelled{font-family:var(--display);letter-spacing:.06em}
+
+.modal.vocab .choices button{font-family:var(--body);font-weight:800;font-size:clamp(17px,4.6vw,20px);padding:8px;line-height:1.2}
+.qtext b.vw{color:var(--gold)}
+.qtext .blank{display:inline-block;min-width:4ch;border-bottom:4px solid var(--cyan);margin:0 4px;vertical-align:-2px}
+.ctlrow.two{grid-template-columns:1fr 1fr}
+.resetrow{display:flex;flex-wrap:wrap;gap:10px}
 
 /* results */
 .result-head{text-align:center;display:grid;gap:8px;justify-items:center}
@@ -336,7 +342,7 @@ textarea.text-in{min-height:120px;font-size:17px;font-weight:600;resize:vertical
           <h3>Chapters</h3>
           <button class="chap" data-ch="1"><div class="num">1</div><div><div class="t">The Station Cup</div><div class="s">Asteroid Baseball · math</div></div><span class="tag" id="ch1Tag" style="color:var(--mint)">Play</span></button>
           <button class="chap" data-ch="2"><div class="num">2</div><div><div class="t">Meteor Storm</div><div class="s">Hover-Soccer · spelling</div></div><span class="tag" id="ch2Tag" style="color:var(--mint)">Play</span></button>
-          <div class="chap locked"><div class="num">3</div><div><div class="t">The Lost Signal</div><div class="s">Zero-G Basketball · vocabulary</div></div><span class="tag">Coming soon</span></div>
+          <button class="chap" data-ch="3"><div class="num">3</div><div><div class="t">The Lost Signal</div><div class="s">Zero-G Basketball · vocabulary</div></div><span class="tag" id="ch3Tag" style="color:var(--mint)">Play</span></button>
           <div class="chap locked"><div class="num">4</div><div><div class="t">Eclipse Ambush</div><div class="s">Ship battle · mixed review</div></div><span class="tag">Coming soon</span></div>
           <div class="chap locked"><div class="num">5</div><div><div class="t">The Missing Droid</div><div class="s">Rescue mission · reading</div></div><span class="tag">Coming soon</span></div>
         </div>
@@ -471,6 +477,31 @@ textarea.text-in{min-height:120px;font-size:17px;font-weight:600;resize:vertical
             <button data-l="-1" aria-pressed="false">◀ Left</button>
             <button data-l="0" aria-pressed="true">Middle</button>
             <button data-l="1" aria-pressed="false">Right ▶</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOOPS -->
+    <section class="screen game gut" id="s-hoops" hidden>
+      <div class="board" aria-live="polite">
+        <div class="team"><span class="tn" id="hUsName">Star Knights</span><span class="sc" id="hScoreUs">0</span></div>
+        <div class="mid">
+          <span class="inn" id="hHalfVal">YOU SHOOT</span>
+          <div class="counts"><span class="c ou" id="hTurns" aria-label="Turns used">TURNS <b></b><b></b><b></b></span></div>
+        </div>
+        <div class="team r"><span class="tn" id="hThemName">Troopers</span><span class="sc" id="hScoreThem">0</span></div>
+      </div>
+      <div class="fieldwrap">
+        <canvas id="court" aria-label="Zero-G basketball court"></canvas>
+        <div id="hToast" role="status"></div>
+        <div id="hBadge" hidden></div>
+        <button id="hActBtn" hidden>Shoot</button>
+        <div class="ctlpanel" id="hPad" hidden>
+          <span class="ctl-l">Pick your shot</span>
+          <div class="ctlrow two">
+            <button data-n="2">2 points<small>Close · easier</small></button>
+            <button data-n="3">3 points<small>Far · harder</small></button>
           </div>
         </div>
       </div>
@@ -772,6 +803,7 @@ function show(id){
   cur=id; $('#homeBtn').hidden=(id==='title');
   if(id!=='game'){G.active=false}
   if(id!=='soccer'&&typeof SG!=='undefined'){SG.active=false}
+  if(id!=='hoops'&&typeof HG!=='undefined'){HG.active=false}
   const sc=$('#s-'+id); if(sc) sc.scrollTop=0;
 }
 function setCredits(bump){
@@ -805,7 +837,8 @@ function renderTitle(){
   $('#heroArt').firstElementChild.style.cssText='position:absolute;inset:0';
   $('#playBtn').textContent=S.progress.games>0?'Play again':'Play';
   const ch=S.progress.lastCh||1;
-  $('#chapline').textContent=ch===2?'Chapter 2 · Meteor Storm':'Chapter 1 · The Station Cup';
+  $('#chapline').textContent=ch===3?'Chapter 3 · The Lost Signal':ch===2?'Chapter 2 · Meteor Storm':'Chapter 1 · The Station Cup';
+  $('#ch3Tag').textContent=S.progress.hoopsCup?'Cup won':(S.progress.hoopsBeaten||0)?`${S.progress.hoopsBeaten} of 5 won`:'New!';
   $('#ch1Tag').textContent=S.progress.cupWon?'Cup won':`${S.progress.beaten||0} of 5 won`;
   $('#ch2Tag').textContent=S.progress.soccerCup?'Cup won':(S.progress.soccerBeaten||0)?`${S.progress.soccerBeaten} of 5 won`:'New!';
 }
@@ -813,6 +846,7 @@ function playChapter(ch){
   if(!S.profile){openSetup(); return;}
   S.progress.lastCh=ch; save();
   if(ch===2){ if(!S.progress.story2Seen){startStory(2); return;} openBracket('soccer'); return; }
+  if(ch===3){ if(!S.progress.story3Seen){startStory(3); return;} openBracket('hoops'); return; }
   if(!S.progress.storySeen){startStory(1); return;}
   openBracket('baseball');
 }
@@ -822,12 +856,13 @@ $('#playBtn').addEventListener('click',()=>{
   if(!S.profile){openSetup(); return;}
   showMsg({title:'Pick a sport',body:'Which game do you want to play?',choices:[
     {label:'Baseball',sub:`Chapter 1 · math · ${S.progress.beaten||0} of 5 won`,art:`<svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="22" fill="#fff"/><path d="M17 16Q25 30 17 44M43 16Q35 30 43 44" stroke="#FF6F59" stroke-width="3" fill="none"/></svg>`,cb:()=>playChapter(1)},
-    {label:'Soccer',sub:`Chapter 2 · spelling · ${S.progress.soccerBeaten||0} of 5 won`,art:`<svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="22" fill="#fff"/><path d="M30 20l9 6.5-3.4 10.5H24.4L21 26.5z" fill="#15183A"/><path d="M30 20V9M39 26.5l10-4M35.6 37l6 9M24.4 37l-6 9M21 26.5l-10-4" stroke="#15183A" stroke-width="2"/></svg>`,cb:()=>playChapter(2)}
+    {label:'Soccer',sub:`Chapter 2 · spelling · ${S.progress.soccerBeaten||0} of 5 won`,art:`<svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="22" fill="#fff"/><path d="M30 20l9 6.5-3.4 10.5H24.4L21 26.5z" fill="#15183A"/><path d="M30 20V9M39 26.5l10-4M35.6 37l6 9M24.4 37l-6 9M21 26.5l-10-4" stroke="#15183A" stroke-width="2"/></svg>`,cb:()=>playChapter(2)},
+    {label:'Basketball',sub:`Chapter 3 · words · ${S.progress.hoopsBeaten||0} of 5 won`,art:`<svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="22" fill="#E9873A"/><path d="M8 30h44M30 8v44" stroke="#5A2A0E" stroke-width="2.5"/><path d="M14 14q10 16 0 32M46 14q-10 16 0 32" stroke="#5A2A0E" stroke-width="2.5" fill="none"/></svg>`,cb:()=>playChapter(3)}
   ]});
 });
 $('#hangarBtn').addEventListener('click',()=>{sfx.tap(); if(!S.profile){openSetup();return} openHangar('title')});
 $('#storyBtn').addEventListener('click',()=>{sfx.tap(); if(!S.profile){openSetup();return} startStory(S.progress.lastCh||1)});
-$('#homeBtn').addEventListener('click',()=>{sfx.tap(); closeMath(null,true); closeSpell(null,true); hideMsg(); show('title'); renderTitle();});
+$('#homeBtn').addEventListener('click',()=>{sfx.tap(); closeVocab(null,true); closeMath(null,true); closeSpell(null,true); hideMsg(); show('title'); renderTitle();});
 $('#soundBtn').addEventListener('click',()=>{S.sound=!S.sound; save(); renderSoundBtn(); sfx.tap();});
 
 // grown-ups gate: press and hold
@@ -915,6 +950,14 @@ function startStory(ch){
     {art:person(knightOf()),who:name,text:`Team spells T-E-A-M. Let's go!`},
     {art:droidSVG(S.ship.droidHead,S.ship.droidColor),who:'Coach Droid',text:`First you attack: tap Left or Right to dodge, then tap SHOOT when the arrow points at a corner. Then pick goalie or defender. Spell words right to power up!`}
   ]; si=0; renderStory(); show('story'); return; }
+  if(storyCh===3){ story=[
+    {art:person(FAMILY.mom),who:'Mom',text:`${name}, the station's big radio dish lost its signal. We can't call our friends on other planets!`},
+    {art:person(FAMILY.dad),who:'Dad',text:`The Zero-G Hoops League gives a decoder chip to every winner. Five chips will fix the dish.`},
+    {art:person(FAMILY.cadet),who:'Little Cadet',text:`Me shoot hoops! Swish!`},
+    {art:commanderSVG(),who:'Eclipse Commander',text:`My teams will win every chip, and your station will stay quiet forever!`},
+    {art:person(knightOf()),who:name,text:`Words are our power-ups. Let's play!`},
+    {art:droidSVG(S.ship.droidHead,S.ship.droidColor),who:'Coach Droid',text:`On offense, pick a 2 or a 3, then tap SHOOT when the marker is in the green. On defense, pick block or steal. Answer word questions to power up!`}
+  ]; si=0; renderStory(); show('story'); return; }
   story=[
     {art:person(FAMILY.mom),who:'Mom',text:`Big news, ${name}! The Station Cup starts today. Beat five teams to win it.`},
     {art:person(FAMILY.cadet),who:'Little Cadet',text:`Me play too! Me hit the ball!`},
@@ -930,11 +973,11 @@ function renderStory(){
   const s=story[si];
   $('#storyPortrait').innerHTML=s.art; $('#storyWho').innerHTML=s.who; $('#storyText').innerHTML=s.text;
   $('#storyDots').innerHTML=story.map((_,i)=>`<i class="${i<=si?'on':''}"></i>`).join('');
-  $('#storyNext').textContent=si===story.length-1?(storyCh===2?'Kick off!':'Play ball!'):'Next';
+  $('#storyNext').textContent=si===story.length-1?(storyCh===3?'Tip off!':storyCh===2?'Kick off!':'Play ball!'):'Next';
 }
 $('#storyNext').addEventListener('click',()=>{sfx.tap(); if(si<story.length-1){si++; renderStory();} else endStory();});
 $('#storySkip').addEventListener('click',()=>{sfx.tap(); endStory();});
-function endStory(){ if(storyCh===2){S.progress.story2Seen=true; save(); openBracket('soccer');} else {S.progress.storySeen=true; save(); openBracket('baseball');} }
+function endStory(){ if(storyCh===3){S.progress.story3Seen=true; save(); openBracket('hoops');} else if(storyCh===2){S.progress.story2Seen=true; save(); openBracket('soccer');} else {S.progress.storySeen=true; save(); openBracket('baseball');} }
 
 /* ---------- math generators (CA Common Core, grade 3) ---------- */
 const LV=()=>S.settings.level;
@@ -1439,10 +1482,14 @@ cv.addEventListener('pointerdown',e=>{
 let bracketSport='baseball';
 function openBracket(sport){
   bracketSport=sport||bracketSport;
-  const soc=bracketSport==='soccer', beaten=(soc?S.progress.soccerBeaten:S.progress.beaten)||0;
-  $('#bracketTitle').textContent=soc?'The Hover Cup':'The Station Cup';
-  $('#bracketSub').textContent=(soc?'Each match: you attack, then you choose goalie or defender.':'Each match: you bat, then you choose to pitch or catch.')+' Win a match to unlock the next team.';
-  const desc=soc?['Rookie team','Fast dribblers','Big goalie','Tricky strikers']:['Rookie team','Tough hitters','Fast pitchers','Tricky fielders'];
+  const BR={
+    baseball:{title:'The Station Cup',sub:'Each match: you bat, then you choose to pitch or catch.',key:'beaten',desc:['Rookie team','Tough hitters','Fast pitchers','Tricky fielders']},
+    soccer:{title:'The Hover Cup',sub:'Each match: you attack, then you choose goalie or defender.',key:'soccerBeaten',desc:['Rookie team','Fast dribblers','Big goalie','Tricky strikers']},
+    hoops:{title:'The Hoops League',sub:'Each match: you shoot, then you choose block or steal.',key:'hoopsBeaten',desc:['Rookie team','Tall blockers','Quick dribblers','Pump fakers']}
+  }[bracketSport];
+  const beaten=S.progress[BR.key]||0, desc=BR.desc;
+  $('#bracketTitle').textContent=BR.title;
+  $('#bracketSub').textContent=BR.sub+' Win a match to unlock the next team.';
   $('#bracketList').innerHTML=TEAMS.map((t,i)=>{
     const st=i<beaten?'won':i===beaten?'next':'locked';
     const sub=st==='locked'?`<span class="s unlock">Win against the ${TEAMS[i-1].short} to unlock</span>`:`<span class="s">${t.boss?'Final · coached by the Eclipse Commander':desc[i]}</span>`;
@@ -1453,7 +1500,7 @@ function openBracket(sport){
       <span class="tag ${st}">${st==='won'?'Won':st==='next'?'Play':'Locked'}</span></button>`;}).join('');
   show('bracket');
 }
-$('#bracketList').addEventListener('click',e=>{const b=e.target.closest('.match'); if(!b||b.disabled) return; sfx.tap(); if(bracketSport==='soccer') sMatch(+b.dataset.t); else startMatch(+b.dataset.t);});
+$('#bracketList').addEventListener('click',e=>{const b=e.target.closest('.match'); if(!b||b.disabled) return; sfx.tap(); if(bracketSport==='soccer') sMatch(+b.dataset.t); else if(bracketSport==='hoops') hMatch(+b.dataset.t); else startMatch(+b.dataset.t);});
 
 /* ---------- drawing ---------- */
 const knightBlade=()=>BLADES[(S.profile&&S.profile.blade)||'cyan']||BLADES.cyan;
@@ -2138,6 +2185,480 @@ function sLoop(){
   requestAnimationFrame(sLoop);
 }
 
+/* ---------- vocabulary & language arts (CA grade 3: L.3.1, L.3.4, L.3.5) ---------- */
+const VTYPES={meaning:'Word meanings',ctx:'Context clues',syn:'Synonyms (same)',ant:'Antonyms (opposite)',affix:'Prefixes & suffixes',homo:'Homophones',pos:'Parts of speech',verb:'Past-tense verbs',comp:'Comparing words (-er, -est)'};
+const VBANK=[
+['meaning','What does *enormous* mean?','very big','very small','very fast','very quiet'],
+['meaning','What does *tiny* mean?','very small','very loud','very old','very bright'],
+['meaning','What does *ancient* mean?','very old','brand new','very fast','very wet'],
+['meaning','What does *brave* mean?','not afraid','very sleepy','very hungry','very rude'],
+['meaning','What does *exhausted* mean?','very tired','very excited','very hungry','very cold'],
+['meaning','What does *furious* mean?','very angry','very happy','very calm','very shy'],
+['meaning','What does *delighted* mean?','very pleased','very bored','very scared','very sick'],
+['meaning','What does *fragile* mean?','easy to break','very heavy','very sticky','hard to see'],
+['meaning','What does *gaze* mean?','to look for a long time','to run away','to shout','to fall asleep'],
+['meaning','What does *glide* mean?','to move smoothly','to stop fast','to bump hard','to sink'],
+['meaning','What does *whisper* mean?','to talk very quietly','to yell','to sing loudly','to cry'],
+['meaning','What does *curious* mean?','wanting to know more','wanting to sleep','feeling sick','feeling grumpy'],
+['meaning','What does *rapid* mean?','very fast','very slow','very wet','very soft'],
+['meaning','What does *vanish* mean?','to disappear','to appear','to grow','to shout'],
+['meaning','What does *distant* mean?','far away','very close','very loud','very new'],
+['meaning','What does *cautious* mean?','careful','careless','sleepy','noisy'],
+['meaning','What does *shiver* mean?','to shake from cold or fear','to sweat','to laugh','to sleep'],
+['meaning','What does *predict* mean?','to guess what will happen','to forget','to fix','to clean'],
+['syn','Which word means the same as *happy*?','glad','sad','angry','tired'],
+['syn','Which word means the same as *quick*?','fast','slow','heavy','late'],
+['syn','Which word means the same as *begin*?','start','finish','stop','wait'],
+['syn','Which word means the same as *large*?','big','small','thin','short'],
+['syn','Which word means the same as *shout*?','yell','whisper','sleep','sit'],
+['syn','Which word means the same as *smart*?','clever','silly','sleepy','loud'],
+['syn','Which word means the same as *difficult*?','hard','easy','soft','fun'],
+['syn','Which word means the same as *scared*?','afraid','brave','calm','proud'],
+['syn','Which word means the same as *quiet*?','silent','noisy','loud','busy'],
+['syn','Which word means the same as *choose*?','pick','lose','forget','break'],
+['ant','What is the opposite of *ancient*?','new','old','huge','wise'],
+['ant','What is the opposite of *float*?','sink','fly','drift','hover'],
+['ant','What is the opposite of *whisper*?','shout','murmur','mumble','hum'],
+['ant','What is the opposite of *brave*?','afraid','bold','strong','proud'],
+['ant','What is the opposite of *empty*?','full','bare','hollow','clear'],
+['ant','What is the opposite of *arrive*?','leave','come','reach','enter'],
+['ant','What is the opposite of *friendly*?','mean','kind','nice','gentle'],
+['ant','What is the opposite of *shallow*?','deep','low','wet','flat'],
+['ant','What is the opposite of *remember*?','forget','recall','think','know'],
+['ant','What is the opposite of *smooth*?','rough','soft','flat','shiny'],
+['ant','What is the opposite of *victory*?','loss','win','prize','goal'],
+['affix','In *rebuild*, what does re- mean?','again','not','before','too much','Re- means again, so rebuild means build again.'],
+['affix','What does *unhappy* mean?','not happy','very happy','happy again','happy before','Un- means not.'],
+['affix','What does *preview* mean?','see before','see again','not see','see wrong','Pre- means before.'],
+['affix','What does *misspell* mean?','spell wrong','spell again','spell before','spell fast','Mis- means wrong or badly.'],
+['affix','What does *fearless* mean?','without fear','full of fear','more fear','fear again','-less means without.'],
+['affix','What does *careful* mean?','full of care','without care','care again','not care','-ful means full of.'],
+['affix','In *teacher*, what does -er mean?','a person who','again','not','without','-er can mean a person who does something. A teacher teaches.'],
+['affix','What does *dislike* mean?','not like','like a lot','like again','like before','Dis- means not or the opposite of.'],
+['affix','What does *reheat* mean?','heat again','not heat','heat before','heat too much','Re- means again.'],
+['affix','What does *helpful* mean?','full of help','without help','help again','not help','-ful means full of.'],
+['affix','In *quickly*, what does -ly tell you?','how something is done','when it happens','where it happens','who did it','-ly words tell how something is done.'],
+['homo','The Troopers lost ___ helmets.','their','there','they\'re','three'],
+['homo','Put the ball over ___.','there','their','they\'re','three'],
+['homo','___ going to win the Cup!','They\'re','Their','There','Three'],
+['homo','I scored ___ goals today.','two','to','too','tow'],
+['homo','Can I come ___?','too','two','to','toe'],
+['homo','I can ___ the rocket engines.','hear','here','hair','her'],
+['homo','Come over ___ and sit.','here','hear','hair','hare'],
+['homo','I ___ the answer!','knew','new','now','knee'],
+['homo','We got a ___ spaceship.','new','knew','few','knee'],
+['homo','I want to ___ Saturn\'s rings.','see','sea','say','sew'],
+['homo','Dad will ___ snacks at the store.','buy','by','bye','boy'],
+['homo','The ship flew ___ the moon.','by','buy','bye','be'],
+['homo','Please ___ your name here.','write','right','ride','rate'],
+['pos','The droid *zoomed* away. What kind of word is *zoomed*?','verb','noun','adjective','adverb'],
+['pos','The *shiny* rocket blasted off. What kind of word is *shiny*?','adjective','noun','verb','adverb'],
+['pos','My *helmet* is blue. What kind of word is *helmet*?','noun','verb','adjective','adverb'],
+['pos','She ran *quickly* to the ship. What kind of word is *quickly*?','adverb','noun','verb','adjective'],
+['pos','The *planet* has rings. What kind of word is *planet*?','noun','verb','adjective','adverb'],
+['pos','The comet *glows* at night. What kind of word is *glows*?','verb','noun','adjective','adverb'],
+['pos','We saw a *huge* asteroid. What kind of word is *huge*?','adjective','noun','verb','adverb'],
+['pos','The robot spoke *softly*. What kind of word is *softly*?','adverb','noun','verb','adjective'],
+['verb','Yesterday I ___ to the moon.','went','goed','goes','going'],
+['verb','Last night we ___ a shooting star.','saw','seed','sees','seeing'],
+['verb','She ___ the ball across the court.','threw','throwed','throws','throwing'],
+['verb','The team ___ pizza after the game.','ate','eated','eats','eating'],
+['verb','I ___ a picture of Mars.','drew','drawed','draws','drawing'],
+['verb','We ___ the game last week.','won','winned','wins','winning'],
+['verb','He ___ the alarm ring.','heard','heared','hears','hearing'],
+['verb','The ship ___ through space.','flew','flied','flys','flying'],
+['verb','She ___ a song at the party.','sang','singed','sings','singing'],
+['comp','Jupiter is ___ than Earth.','bigger','biggest','more big','bigly'],
+['comp','This is the ___ star of all.','brightest','brighter','most bright','brightly'],
+['comp','My ship is ___ than yours.','faster','fastest','more fast','fastly'],
+['comp','Mercury is the ___ planet to the Sun.','closest','closer','most close','closely'],
+['comp','Today is ___ than yesterday.','colder','coldest','more cold','coldly'],
+['ctx','The cave was *gloomy*, so dark we could barely see. What does *gloomy* mean?','dark','sunny','wet','noisy'],
+['ctx','The astronaut was *famished*. She had not eaten all day. What does *famished* mean?','very hungry','very tired','very cold','very happy'],
+['ctx','The soup was *scalding*, so we waited for it to cool. What does *scalding* mean?','very hot','very cold','very salty','very sweet'],
+['ctx','The droid was *sturdy* and did not break when it fell. What does *sturdy* mean?','strong','weak','shiny','tiny'],
+['ctx','Little Cadet was *drowsy* and fell asleep on the ride. What does *drowsy* mean?','sleepy','angry','hungry','silly'],
+['ctx','The *jubilant* fans cheered and danced after the win. What does *jubilant* mean?','very happy','very sad','very bored','very angry'],
+['ctx','The path was *narrow*, so only one person could fit. What does *narrow* mean?','not wide','very long','very wet','very wide'],
+['ctx','The comet was *brilliant*. We had to cover our eyes. What does *brilliant* mean?','very bright','very dark','very small','very slow']
+];
+const HOMO_TIP={their:'"Their" means it belongs to them.',there:'"There" tells a place.',"they're":'"They\'re" is short for "they are."',two:'"Two" is the number 2.',too:'"Too" means also.',hear:'You hear with your ears.',here:'"Here" means this place.',knew:'"Knew" is the past tense of "know."',new:'"New" means not old.',see:'You see with your eyes.',buy:'"Buy" means to pay for something.',by:'"By" means next to or past.',write:'"Write" means to put words on paper.'};
+const POS_TIP={noun:'A noun is a person, place, or thing.',verb:'A verb is an action word.',adjective:'An adjective describes a noun.',adverb:'An adverb tells how something is done.'};
+function vExplain(it){
+  const [t,q,a,d0]=it, W=(q.match(/\*([^*]+)\*/)||[])[1]||'';
+  if(it[6]) return it[6];
+  if(t==='meaning') return `"${W}" means ${a}.`;
+  if(t==='ctx') return `The clue words show that "${W}" means ${a}.`;
+  if(t==='syn') return `"${a}" means the same as "${W}."`;
+  if(t==='ant') return `"${a}" is the opposite of "${W}."`;
+  if(t==='homo') return HOMO_TIP[a.toLowerCase()]||`"${a}" fits this sentence.`;
+  if(t==='pos') return POS_TIP[a];
+  if(t==='verb') return `We say "${a}," not "${d0}."`;
+  if(t==='comp') return 'Use -er to compare two things. Use -est to compare three or more.';
+  return '';
+}
+const vFmt=s=>esc(s).replace(/\*([^*]+)\*/g,'<b class="vw">$1</b>').replace('___','<span class="blank"></span>');
+function pickVocab(){
+  if(!S.vReview) S.vReview=[];
+  if(S.vReview.length&&Math.random()<.35){ const i=S.vReview.shift(); save(); if(VBANK[i]) return {i,review:true}; }
+  const types=Object.keys(VTYPES);
+  const ws=types.map(t=>{const st=S.stats['v_'+t]||{r:0,w:0}; return Math.min(3,Math.max(.6,(st.w+1)/(st.r+1)*1.5));});
+  let x=Math.random()*ws.reduce((a,b)=>a+b,0), ty=types[0];
+  for(let k=0;k<types.length;k++){x-=ws[k]; if(x<=0){ty=types[k];break}}
+  const pool=VBANK.map((it,i)=>i).filter(i=>VBANK[i][0]===ty&&i!==HG.lastQ);
+  return {i:pick(pool)};
+}
+const VKIND={
+  laser:{t:'Laser Shot!',s:'Answer it to make the green zone bigger.',ok:'Laser Shot ready!'},
+  double:{t:'Double-team!',s:'Two defenders! Answer it to pass to your open teammate.',ok:'Great pass!'},
+  block:{t:'Super Block!',s:'Answer it to slow down their shot.',ok:'Super Block ready!'},
+  steal:{t:'Quick Hands!',s:'Answer it to get faster hands for the steal.',ok:'Quick Hands ready!'},
+  loose:{t:'Loose ball!',s:'They fumbled! Answer it to grab the ball.',ok:'You grabbed it!'}
+};
+let VQ=null;
+function openVocab(kind,cb){
+  const {i,review}=pickVocab(); HG.lastQ=i; const it=VBANK[i];
+  VQ={i,it,cb,kind,locked:false,choices:shuffle([it[2],it[3],it[4],it[5]])};
+  const K=VKIND[kind];
+  $('#mqTitle').textContent=K.t; $('#mqSub').textContent=K.s+(review?' (Practice round)':'');
+  $('#mqText').innerHTML=vFmt(it[1]);
+  $('#mqVisual').hidden=true; $('#mqHint').hidden=true; $('#mqAnswer').hidden=true; $('#mqKeypad').hidden=true;
+  const ch=$('#mqChoices'); ch.hidden=false; ch.innerHTML=VQ.choices.map((c,k)=>`<button data-v="${k}">${esc(c)}</button>`).join('');
+  $('#mqFb').hidden=true; $('#mqContinue').hidden=true;
+  $('#mathModal').classList.add('vocab'); HG.paused=true; $('#mathModal').hidden=false;
+}
+function gradeVocab(k,btn){
+  if(!VQ||VQ.locked) return; VQ.locked=true;
+  const it=VQ.it, given=VQ.choices[k], ok=given===it[2];
+  const key='v_'+it[0], st=S.stats[key]||(S.stats[key]={r:0,w:0}); ok?st.r++:st.w++;
+  if(!ok){ if(!S.vReview) S.vReview=[]; if(!S.vReview.includes(VQ.i)) S.vReview.push(VQ.i); if(S.vReview.length>20) S.vReview.shift();
+    S.vMissed=[{q:it[1].replace(/\*/g,''),a:it[2]},...(S.vMissed||[])].slice(0,12); }
+  save(); HG.asked++; if(ok) HG.right++;
+  $$('#mqChoices button').forEach(b=>{const c=VQ.choices[+b.dataset.v]; if(c===it[2]) b.classList.add('right'); else if(b===btn) b.classList.add('wrong');});
+  const fb=$('#mqFb'); fb.hidden=false;
+  if(ok){ fb.className='fb good'; fb.innerHTML=`<strong>${VKIND[VQ.kind].ok}</strong>+3 credits`; addCredits(3); HG.earned+=3; sfx.right(); setTimeout(()=>closeVocab(true),1200); }
+  else { fb.className='fb bad'; fb.innerHTML=`<strong>Not quite</strong>The answer is "${esc(it[2])}." ${esc(vExplain(it))}`; sfx.wrong(); $('#mqContinue').hidden=false; setTimeout(()=>$('#mqContinue').focus(),30); }
+}
+function closeVocab(ok,silent){
+  if(!VQ) return; $('#mathModal').hidden=true; $('#mathModal').classList.remove('vocab');
+  const cb=VQ.cb; VQ=null; HG.paused=false; if(!silent&&cb) cb(ok);
+}
+$('#mqChoices').addEventListener('click',e=>{const b=e.target.closest('button[data-v]'); if(!b||!VQ) return; gradeVocab(+b.dataset.v,b);});
+$('#mqContinue').addEventListener('click',()=>{ if(VQ){ sfx.tap(); closeVocab(false); } });
+document.addEventListener('keydown',e=>{ if(!VQ||VQ.locked||$('#mathModal').hidden) return; if(/^[1-4]$/.test(e.key)){const b=$$('#mqChoices button')[+e.key-1]; if(b) gradeVocab(+e.key-1,b);} });
+
+/* ---------- zero-g basketball ---------- */
+const HG={active:false,parts:[],paused:false,asked:0,right:0,earned:0};
+const hcv=$('#court'), hctx=hcv.getContext('2d');
+let HW=300,HH=300,C=null;
+const hSkill=()=>Math.max(.2,Math.min(.85,TEAMS[HG.team||0].skill+(S.settings.level==='easy'?-.08:S.settings.level==='hard'?.08:0)));
+function hlater(fn,ms){const id=HG.id; setTimeout(()=>{if(HG.active&&HG.id===id) fn()},ms)}
+function hResize(){
+  const r=hcv.getBoundingClientRect(), d=Math.min(2,window.devicePixelRatio||1);
+  HW=Math.max(200,r.width); HH=Math.max(180,r.height);
+  hcv.width=Math.round(HW*d); hcv.height=Math.round(HH*d); hctx.setTransform(d,0,0,d,0,0);
+  const wide=HW/HH>1.3, floor=HH*(wide?.82:.7);
+  C={floor,k:Math.min(HW*.12,HH*.13),hx:HW*(wide?.7:.84),hy:HH*(wide?.32:.3),x2:HW*(wide?.44:.5),x3:HW*(wide?.2:.24)};
+}
+window.addEventListener('resize',()=>{if(cur==='hoops') hResize();});
+function rim(){ return {x:C.hx-C.k*.55,y:C.hy+Math.sin(HG.clock*1.1)*HH*.05}; }
+function hPad(m){
+  $('#hPad').hidden=m!=='pick'; const b=$('#hActBtn'); b.hidden=!(m==='shoot'||m==='block'||m==='steal');
+  b.textContent=m==='block'?'Block':m==='steal'?'Steal':'Shoot'; HG.ctl=m;
+}
+function htoast(text,cls='',tip=''){
+  const t=$('#hToast'); t.innerHTML=esc(text)+(tip?`<span class="tip">${esc(tip)}</span>`:''); t.className='show '+cls;
+  clearTimeout(htoast.h); htoast.h=setTimeout(()=>{t.className=''},tip?2600:1500);
+}
+function hHUD(){
+  $('#hScoreUs').textContent=HG.us; $('#hScoreThem').textContent=HG.them;
+  $('#hHalfVal').textContent=HG.ot?'OVERTIME':HG.half==='off'?'YOU SHOOT':HG.role==='block'?'YOU BLOCK':'YOU STEAL';
+  $$('#hTurns b').forEach((b,i)=>b.classList.toggle('on',i<HG.turn)); $('#hTurns').hidden=!!HG.ot;
+  const bd=$('#hBadge'), on=HG.laser||HG.boost; bd.hidden=!on; bd.textContent=HG.laser?'Laser Shot ready':HG.role==='block'?'Super Block on':'Quick Hands on';
+}
+function qDue(){ if(!HG.qUsed&&(HG.turn>=HG.qAt||HG.turn>=HG.turns-1)) return true; return HG.qUsed&&Math.random()<EXTRA[S.settings.freq]; }
+function hMatch(t){
+  Object.assign(HG,{active:true,team:t,half:'off',role:null,us:0,them:0,turn:0,turns:3,phase:'idle',paused:false,ot:false,otRound:0,
+    clock:0,last:0,parts:[],ball:null,meter:null,laser:false,boost:false,earned:0,made:0,blocks:0,steals:0,right:0,asked:0,id:(HG.id||0)+1});
+  $('#hUsName').textContent=(S.profile&&S.profile.name)?S.profile.name+"'s Knights":'Star Knights';
+  $('#hThemName').textContent=TEAMS[t].short; S.progress.lastCh=3; save();
+  hPad('none'); show('hoops'); HG.active=true;
+  requestAnimationFrame(()=>{ hResize(); hHUD(); if(!HG.loop){HG.loop=true; HG.last=performance.now(); requestAnimationFrame(hLoop);}
+    hlater(()=>{htoast(`vs ${TEAMS[t].name}`,'gold','You shoot first!'); hlater(hOffHalf,2000);},300); });
+}
+function hNewHalf(){ HG.turn=0; HG.qUsed=false; HG.qAt=R(0,2); }
+/* offense */
+function hOffHalf(){ HG.half='off'; HG.role=null; hNewHalf(); hHUD(); hOffTurn(); }
+function hOffTurn(){
+  if(!HG.active) return;
+  HG.laser=false; HG.ball=null; HG.meter=null; HG.spot=null; HG.phase='pick'; hHUD();
+  const due=qDue(); HG.plan=due?(Math.random()<.35?'double':'laser'):null;
+  const go=()=>{ hPad('pick'); htoast(HG.ot?'Overtime shot':`Shot ${HG.turn+1} of 3`,'gold','Pick a 2-pointer or a 3-pointer.'); };
+  if(HG.plan==='double'){ HG.qUsed=true; HG.spot=2; HG.phase='q';
+    hlater(()=>openVocab('double',ok=>{ if(ok){ HG.phase='layup'; htoast('Pass to your teammate!','gold'); hlater(()=>hShootBall(2,'swish',true),700); } else { htoast('The double-team stole it!','coral'); sfx.strike(); hNextOff(1800); } }),500); return; }
+  go();
+}
+function pickSpot(n){
+  if(HG.phase!=='pick') return; sfx.tap(); HG.spot=n; hPad('none');
+  const start=()=>{ const L=S.settings.level, T=hSkill();
+    let w=(n===2?.22:.14)*(L==='easy'?1.3:L==='hard'?.8:1)*(1-(T-.3)*.4); if(HG.laser) w*=1.7;
+    HG.meter={t:0,spd:(n===2?.8:1.0)*(L==='easy'?.75:L==='hard'?1.2:1),c:.3+Math.random()*.4,w};
+    HG.phase='meter'; hPad('shoot'); };
+  if(HG.plan==='laser'){ HG.qUsed=true; HG.phase='q'; openVocab('laser',ok=>{HG.laser=!!ok; hHUD(); start();}); }
+  else start();
+}
+const meterV=()=>{const x=(HG.meter.t*HG.meter.spd)%2; return x<1?x:2-x;};
+function hAct(){
+  if(HG.paused) return;
+  if(HG.phase==='meter'){ const v=meterV(), m=HG.meter, d=Math.abs(v-m.c);
+    hPad('none'); let res;
+    if(d<=m.w/2) res=d<=m.w/6?'swish':'bank'; else if(d<=m.w/2+.1) res=Math.random()<.5?'rimin':'rimout'; else res=v<m.c?'short':'long';
+    hShootBall(HG.spot,res,false); return; }
+  if(HG.phase==='dblock'){ hTryBlock(); return; }
+  if(HG.phase==='dsteal'){ hTrySteal(); return; }
+}
+function hShootBall(pts,res,layup){
+  HG.phase='flight'; const x0=layup?C.hx-C.k*2.2:(pts===2?C.x2:C.x3);
+  HG.ball={x0:x0+C.k*.3,y0:C.floor-C.k*1.9,t:0,dur:layup?.55:pts===3?1.15:.95,res,pts,mine:true}; sfx.hit();
+}
+function ballPos(b){
+  const r=rim(), t=Math.min(1,b.t/b.dur);
+  let tx=r.x, ty=r.y;
+  if(b.res==='short'){ tx=r.x-C.k*1.4; ty=r.y+C.k*.6; } else if(b.res==='long'){ tx=C.hx+C.k*.2; ty=r.y-C.k*.9; }
+  else if(b.res==='rimout'||b.res==='rimin'){ tx=r.x+C.k*.35; }
+  else if(b.res==='blocked'){ tx=b.x0+C.k*1.2; ty=b.y0-C.k*1.2; }
+  const peak=Math.min(b.y0,ty)-HH*(b.res==='blocked'?.02:.22);
+  const x=b.x0+(tx-b.x0)*t;
+  const y=(1-t)*(1-t)*b.y0+2*(1-t)*t*peak+t*t*ty;
+  return {x,y,t};
+}
+function hBallDone(){
+  const b=HG.ball, made=b.res==='swish'||b.res==='bank'||b.res==='rimin';
+  if(b.mine){
+    if(made){ HG.us+=b.pts; HG.made++; const cr=b.pts===3?12:8; addCredits(cr); HG.earned+=cr; sfx.hr();
+      htoast(b.res==='swish'?'SWISH!':b.res==='rimin'?'It rolls in!':'Bucket!','gold',`+${b.pts} points`); const r=rim(); for(let i=0;i<3;i++) hlater(()=>hBurst(r.x,r.y,18,['#FFC547','#FF6F59','#43E5B0','#5FD8FF']),i*180); }
+    else { sfx.strike(); htoast(b.res==='rimout'?'Rim out!':b.res==='short'?'Too short!':'Too far!','coral',b.res==='short'?'Tap a little later next time.':b.res==='long'?'Tap a little sooner next time.':'So close!'); }
+    hHUD(); HG.ball=null;
+    if(HG.ot){ hlater(hOtDefend,1800); return; }
+    hNextOff(made?2000:1700);
+  } else {
+    if(made){ HG.them+=2; sfx.strike(); htoast(`${TEAMS[HG.team].short} scored`,'coral','+2 for them'); }
+    else htoast('They missed!','gold');
+    hHUD(); HG.ball=null; if(HG.ot){ hlater(hOtCheck,1800); return; } hNextDef(1800);
+  }
+}
+function hNextOff(ms){ HG.turn++; hHUD(); if(HG.turn>=HG.turns) hlater(hOffEnd,ms); else hlater(hOffTurn,ms); }
+function hOffEnd(){
+  hPad('none'); HG.ball=null; const T=TEAMS[HG.team];
+  showMsg({title:`The ${T.short} have the ball!`,art:trooperSVG(HG.team),body:'Now stop them from scoring. How do you want to play defense?',
+    choices:[
+      {label:'Block',sub:'Swat their shot',art:`<svg viewBox="0 0 60 60"><path d="M22 52V28a4 4 0 018 0v-6a4 4 0 018 0v4a4 4 0 018 0v14q0 12-12 12z" fill="#F1CDB0"/><circle cx="18" cy="16" r="9" fill="#E9873A"/><path d="M9 16h18M18 7v18" stroke="#15183A" stroke-width="1.5"/></svg>`,cb:()=>hDefHalf('block')},
+      {label:'Steal',sub:'Swipe the dribble',art:`<svg viewBox="0 0 60 60"><circle cx="24" cy="38" r="12" fill="#E9873A"/><path d="M12 38h24M24 26v24" stroke="#15183A" stroke-width="1.5"/><path d="M36 20l12-8M40 28l14-4M38 12l6-8" stroke="#FFC547" stroke-width="3" stroke-linecap="round"/></svg>`,cb:()=>hDefHalf('steal')}
+    ]});
+}
+/* defense */
+function hDefHalf(role){ HG.half='def'; HG.role=role; hNewHalf(); hHUD();
+  htoast(role==='block'?'You\'re blocking!':'You\'re stealing!','gold',role==='block'?'Tap BLOCK right when the ball leaves their hands. Watch for fakes!':'Tap STEAL when the ball hits the glowing ring on the floor.');
+  hlater(hDefTurn,2400); }
+function hDefTurn(){
+  if(!HG.active) return;
+  HG.boost=false; HG.ball=null; HG.tried=false; HG.phase='dintro'; hHUD(); hPad('none');
+  const go=()=>hlater(()=>{ if(HG.role==='block') hStartShot(); else hStartDribble(); },500);
+  if(qDue()){ HG.qUsed=true;
+    if(Math.random()<.3){ openVocab('loose',ok=>{ if(ok){ HG.steals++; addCredits(5); HG.earned+=5; htoast('Ball is yours!','gold','+5 credits'); hNextDef(1700);} else { htoast('They picked it back up.','coral'); go(); } }); }
+    else openVocab(HG.role,ok=>{HG.boost=!!ok; hHUD(); go();});
+  } else { htoast(`Their turn ${HG.turn+1} of 3`); go(); }
+}
+function hStartShot(){
+  const T=hSkill(), L=S.settings.level;
+  const crouch=(R(7,13)/10)*(L==='easy'?1.15:1);
+  HG.fake=Math.random()<T*.55?{at:HG.clock+crouch*.55,dur:.45}:null;
+  HG.release=HG.clock+crouch+(HG.fake?.55:0); HG.phase='dblock'; hPad('block');
+}
+function hTryBlock(){
+  if(HG.tried) return; HG.tried=true; hPad('none');
+  const L=S.settings.level, win=(L==='easy'?.24:L==='hard'?.13:.18)*(HG.boost?1.8:1), d=HG.clock-HG.release;
+  const inFake=HG.fake&&HG.clock>=HG.fake.at&&HG.clock<=HG.fake.at+HG.fake.dur;
+  if(inFake){ HG.tried=false; hPad('block'); htoast('Pump fake!','coral','They faked it. Wait for the real shot!'); sfx.strike(); HG.missT=HG.clock; return; }
+  if(Math.abs(d)<=win){ HG.phase='result'; HG.blocks++; addCredits(5); HG.earned+=5; sfx.hit(); htoast('BLOCKED!','gold','+5 credits');
+    HG.ball={x0:HW*.38+C.k*.3,y0:C.floor-C.k*2.3,t:0,dur:.6,res:'blocked',pts:2,mine:false,blk:true}; hBurst(HW*.47,C.floor-C.k*2.3,16,[knightBlade(),'#fff']); return; }
+  htoast(d<0?'Too early!':'Too late!','coral'); sfx.strike(); HG.missT=HG.clock;
+}
+function hOppShoot(){
+  const T=hSkill(), made=Math.random()<.35+T*.45;
+  HG.ball={x0:HW*.38+C.k*.3,y0:C.floor-C.k*2.1,t:0,dur:1,res:made?(Math.random()<.5?'swish':'bank'):pick(['rimout','short','long']),pts:2,mine:false};
+  HG.phase='flight'; hPad('none'); sfx.hit();
+}
+function hStartDribble(){
+  const T=hSkill(), L=S.settings.level;
+  HG.drib={t0:HG.clock,period:(L==='easy'?.95:L==='hard'?.62:.78)-T*.18,end:HG.clock+R(40,55)/10};
+  HG.phase='dsteal'; hPad('steal');
+}
+function dribPhase(){ const d=HG.drib; return ((HG.clock-d.t0)/d.period)%1; } // 0 = hand, .5 = floor
+function hTrySteal(){
+  if(HG.tried) return; HG.tried=true; hPad('none');
+  const L=S.settings.level, win=(L==='easy'?.14:L==='hard'?.08:.11)*(HG.boost?1.7:1), ph=dribPhase();
+  if(Math.abs(ph-.5)<=win){ HG.phase='result'; HG.steals++; addCredits(5); HG.earned+=5; sfx.right(); htoast('STOLEN!','gold','+5 credits'); HG.stolen=HG.clock; hBurst(HW*.45,C.floor-C.k*.2,14,[knightBlade(),'#fff']); hNextDef(1700); return; }
+  htoast('Missed the steal!','coral',ph<.5?'Too early: wait for the floor ring.':'Too late: tap as it hits the floor.'); sfx.strike(); HG.missT=HG.clock;
+  hlater(hDrive,700);
+}
+function hDrive(){ if(HG.phase!=='dsteal') return; HG.phase='drive'; HG.driveT=HG.clock; hlater(hOppShoot,700); }
+function hNextDef(ms){ HG.turn++; hHUD(); if(HG.turn>=HG.turns) hlater(hDefEnd,ms); else hlater(hDefTurn,ms); }
+function hDefEnd(){
+  hPad('none'); HG.ball=null;
+  if(HG.us!==HG.them){ hEnd(); return; }
+  showMsg({title:'Tie game!',art:person(knightOf()),body:'Overtime! You take one shot, then you play defense once.',btn:'Let\'s go',cb:hOtRound});
+}
+/* overtime */
+function hOtRound(){ HG.ot=true; HG.otRound++; HG.half='off'; HG.role=null; HG.plan=null; HG.laser=false; hHUD(); HG.phase='pick'; hPad('pick'); htoast(`Overtime ${HG.otRound}`,'gold','Pick a 2 or a 3.'); }
+function hOtDefend(){ HG.half='def'; HG.role='block'; HG.boost=false; HG.tried=false; hHUD(); htoast('Block their shot!','gold'); hlater(hStartShot,1200); }
+function hOtCheck(){ if(HG.us!==HG.them||HG.otRound>=3){ hEnd(); return; } htoast('Still tied!','gold'); hlater(hOtRound,1800); }
+function hEnd(){
+  HG.active=false; hPad('none');
+  const us=HG.us, them=HG.them, win=us>them, tie=us===them, T=TEAMS[HG.team];
+  const bonus=win?25:10; S.credits+=bonus; HG.earned+=bonus; S.progress.games++;
+  if(win){ S.progress.wins++; if(HG.team>=(S.progress.hoopsBeaten||0)) S.progress.hoopsBeaten=HG.team+1; }
+  const champ=win&&HG.team===TEAMS.length-1; if(champ) S.progress.hoopsCup=true;
+  save(); setCredits(true); if(win) sfx.win();
+  const next=TEAMS[HG.team+1];
+  const head=champ?'Hoops League Champions!':win?`You beat the ${T.short}!`:tie?'A tie game!':`The ${T.short} won this one`;
+  const line=champ?'You won the Signal Decoder. The station can talk to the stars again!':win?`You won a decoder chip and unlocked the ${next.name}!`:'Every game makes you stronger. Want a rematch?';
+  $('#resultsWrap').innerHTML=`
+    <div class="result-head">
+      <div style="width:min(220px,55%)">${win?person(knightOf()):(T.boss?commanderSVG():trooperSVG(HG.team))}</div>
+      <div class="big">${head}</div>
+      <p style="font-size:19px;font-weight:700">${line}</p>
+    </div>
+    <div class="panel finalscore"><div><span class="fs-n">${esc((S.profile&&S.profile.name)||'Star')} Knights</span><span class="fs-v">${us}</span></div><span class="fs-dash">–</span><div><span class="fs-v">${them}</span><span class="fs-n">${esc(T.short)}</span></div></div>
+    <div class="statgrid">
+      <div class="stat"><div class="v">${HG.made}</div><div class="l">Baskets</div></div>
+      <div class="stat"><div class="v">${HG.right}/${HG.asked}</div><div class="l">Word questions</div></div>
+      <div class="stat"><div class="v">+${HG.earned}</div><div class="l">Credits</div></div>
+    </div>
+    <div class="row" style="justify-content:center">
+      ${win&&next?`<button class="btn" id="nextBtn">Play the ${esc(next.short)}</button>`:`<button class="btn" id="againBtn">${champ?'Play again':'Rematch'}</button>`}
+      <button class="btn alt" id="toBracket">Hoops League</button>
+      <button class="btn alt" id="toHangar">Spend credits</button>
+    </div>`;
+  const nb=$('#nextBtn'); if(nb) nb.onclick=()=>{sfx.tap(); hMatch(HG.team+1)};
+  const ab=$('#againBtn'); if(ab) ab.onclick=()=>{sfx.tap(); hMatch(HG.team)};
+  $('#toBracket').onclick=()=>{sfx.tap(); openBracket('hoops')};
+  $('#toHangar').onclick=()=>{sfx.tap(); openHangar('title')};
+  show('results');
+}
+/* controls */
+$('#hPad').addEventListener('click',e=>{const b=e.target.closest('button[data-n]'); if(b) pickSpot(+b.dataset.n);});
+$('#hActBtn').addEventListener('pointerdown',e=>{e.preventDefault(); e.stopPropagation(); hAct();});
+$('#hActBtn').addEventListener('click',e=>{if(e.detail===0) hAct();});
+hcv.addEventListener('pointerdown',e=>{e.preventDefault(); if(HG.ctl==='shoot'||HG.ctl==='block'||HG.ctl==='steal') hAct();});
+document.addEventListener('keydown',e=>{
+  if(cur!=='hoops'||!$('#mathModal').hidden||!$('#msgModal').hidden) return;
+  if(e.key===' '||e.code==='Space'){ e.preventDefault(); hAct(); }
+  else if(HG.ctl==='pick'&&(e.key==='2'||e.key==='3')) pickSpot(+e.key);
+});
+/* drawing */
+function hBurst(x,y,n,cols){ if(reduced) n=Math.ceil(n/3); for(let i=0;i<n;i++){const a=Math.random()*6.28,v=1+Math.random()*3; HG.parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-1,life:1,c:pick(cols)})} }
+function drawHoopBall(x,y,r){
+  circle(x,y,r,'#E9873A');
+  cx.strokeStyle='#5A2A0E'; cx.lineWidth=Math.max(1,r*.12);
+  cx.beginPath(); cx.moveTo(x-r,y); cx.lineTo(x+r,y); cx.stroke();
+  cx.beginPath(); cx.moveTo(x,y-r); cx.lineTo(x,y+r); cx.stroke();
+  cx.beginPath(); cx.arc(x-r*1.1,y,r*.85,-.8,.8); cx.stroke();
+  cx.beginPath(); cx.arc(x+r*1.1,y,r*.85,Math.PI-.8,Math.PI+.8); cx.stroke();
+}
+function drawCourt(now){
+  const {floor,k}=C;
+  cx.clearRect(0,0,HW,HH);
+  // planet + nebula
+  circle(HW*.16,HH*.2,k*1.1,'#2B3F7A'); circle(HW*.16-k*.25,HH*.2-k*.2,k*.9,'#3557D6');
+  cx.save(); cx.strokeStyle='rgba(255,197,71,.5)'; cx.lineWidth=3; cx.beginPath(); cx.ellipse(HW*.16,HH*.2,k*1.8,k*.4,-.3,0,Math.PI*2); cx.stroke(); cx.restore();
+  // floating platform floor
+  const g=cx.createLinearGradient(0,floor,0,HH); g.addColorStop(0,'#3A2E6E'); g.addColorStop(1,'#1B1636');
+  cx.fillStyle=g; cx.beginPath(); cx.moveTo(HW*.03,floor); cx.lineTo(HW*.97,floor); cx.lineTo(HW*.9,HH-4); cx.lineTo(HW*.1,HH-4); cx.closePath(); cx.fill();
+  cx.strokeStyle='#5FD8FF'; cx.lineWidth=3; cx.shadowColor='#5FD8FF'; cx.shadowBlur=12; cx.beginPath(); cx.moveTo(HW*.03,floor); cx.lineTo(HW*.97,floor); cx.stroke(); cx.shadowBlur=0;
+  // 3-point arc mark + key
+  cx.strokeStyle='rgba(255,255,255,.4)'; cx.lineWidth=2;
+  cx.beginPath(); cx.moveTo(C.x3+k*.9,floor+2); cx.lineTo(C.x3+k*.9,floor+10); cx.stroke();
+  cx.fillStyle='rgba(255,255,255,.55)'; cx.font=`800 ${Math.max(10,k*.3)}px "Baloo 2",sans-serif`; cx.textAlign='center';
+  cx.fillText('3',C.x3,floor+k*.55); cx.fillText('2',C.x2,floor+k*.55);
+  // floating particles
+  for(let i=0;i<14;i++){ const px=(i*137%100)/100*HW, py=floor-((now*.02+i*53)%(floor*.9)); cx.globalAlpha=.25; circle(px,py,1.6,'#9FE8FF'); } cx.globalAlpha=1;
+  // hoop: anti-grav post + board + rim (drifts)
+  const r=rim(), by=r.y-k*1.1;
+  cx.strokeStyle='rgba(159,232,255,.35)'; cx.setLineDash([5,6]); cx.lineWidth=3; cx.beginPath(); cx.moveTo(C.hx+k*.15,by+k*1.4); cx.lineTo(C.hx+k*.15,floor); cx.stroke(); cx.setLineDash([]);
+  ell(C.hx+k*.15,floor,k*.6,k*.12,'rgba(95,216,255,.5)');
+  cx.fillStyle='rgba(233,248,255,.92)'; roundRect(C.hx,by,k*.3,k*1.5,4); cx.fill();
+  cx.fillStyle='#FF6F59'; cx.fillRect(C.hx,by+k*.55,k*.3,k*.5);
+  cx.strokeStyle='rgba(255,255,255,.7)'; cx.lineWidth=1.5;
+  for(let i=0;i<5;i++){ const nx=r.x-k*.48+i*k*.24; cx.beginPath(); cx.moveTo(nx,r.y); cx.lineTo(r.x-k*.3+i*k*.15,r.y+k*.7); cx.stroke(); }
+  cx.strokeStyle='#FF6F59'; cx.lineWidth=4; cx.shadowColor='#FF6F59'; cx.shadowBlur=10; cx.beginPath(); cx.ellipse(r.x,r.y,k*.52,k*.13,0,0,Math.PI*2); cx.stroke(); cx.shadowBlur=0;
+}
+function drawHoops(now){
+  drawCourt(now);
+  const {floor,k}=C, fl=t=>Math.sin(now*.003+t)*k*.08;
+  const me=knightOf();
+  if(HG.half==='off'||!HG.half){
+    const sx=HG.phase==='layup'?C.hx-k*2.2:HG.spot===3?C.x3:C.x2;
+    // defender
+    const dx=sx+k*1.15, jump=(HG.ball&&HG.ball.mine&&HG.ball.t<.35)?Math.sin(HG.ball.t/.35*Math.PI)*k*.6:0;
+    drawTrooper(dx,floor-jump+fl(2),k*1.05,0,HG.team||0);
+    if(HG.plan==='double'&&HG.phase==='q') drawTrooper(dx+k*.8,floor+fl(3),k,0,HG.team||0);
+    // teammate
+    const mate=CREW[S.ship.crew[0]]||CREW[0]; drawMate(HG.phase==='layup'?C.hx-k*2.2:HW*.66,floor+fl(4),k*.95,mate,0);
+    if(HG.phase!=='layup'){ drawMate(sx,floor+fl(0),k*1.1,me,0); }
+    if(!HG.ball&&HG.phase!=='layup') drawHoopBall(sx+k*.35,floor-k*1.7+Math.sin(now*.006)*k*.15,k*.22);
+    // meter
+    if(HG.phase==='meter'&&HG.meter){
+      const m=HG.meter, w=Math.min(HW*.6,k*7), x=Math.max(10,Math.min(HW-w-10,sx-w/2+k*.3)), y=Math.max(54,floor-k*3.4), h=Math.max(16,k*.36);
+      cx.fillStyle='rgba(10,15,36,.85)'; roundRect(x-4,y-4,w+8,h+8,h); cx.fill();
+      cx.fillStyle='#FF6F59'; roundRect(x,y,w,h,h/2); cx.fill();
+      cx.fillStyle='#FFC547'; cx.fillRect(x+w*Math.max(0,m.c-m.w/2-.1),y,w*(m.w+.2),h);
+      cx.fillStyle='#43E5B0'; cx.fillRect(x+w*Math.max(0,m.c-m.w/2),y,w*m.w,h);
+      const mx=x+w*meterV(); cx.fillStyle='#fff'; cx.shadowColor='#fff'; cx.shadowBlur=10; roundRect(mx-4,y-8,8,h+16,4); cx.fill(); cx.shadowBlur=0;
+    }
+  } else {
+    const ox=HW*.38;
+    // opponent
+    let lift=0; const shotOut=HG.ball&&!HG.ball.mine;
+    if(HG.phase==='dblock'){ const tt=HG.release-HG.clock; lift=tt<.5?(1-Math.max(0,tt)/.5)*k*.5:0;
+      if(HG.fake&&HG.clock>=HG.fake.at&&HG.clock<=HG.fake.at+HG.fake.dur) lift=Math.sin((HG.clock-HG.fake.at)/HG.fake.dur*Math.PI)*k*.4; }
+    const driveX=HG.phase==='drive'?Math.min(1,(HG.clock-HG.driveT)/.6)*k*1.6:0;
+    drawTrooper(ox+driveX,floor-lift+fl(1),k*1.1,0,HG.team);
+    // you
+    const myJump=HG.role==='block'&&HG.missT!==undefined&&HG.clock-HG.missT<.5?Math.sin((HG.clock-HG.missT)/.5*Math.PI)*k*.7:(HG.role==='block'&&HG.ball&&HG.ball.blk&&HG.ball.t<.4?Math.sin(HG.ball.t/.4*Math.PI)*k*.8:0);
+    drawMate(ox+k*1.35,floor-myJump+fl(0),k*1.1,me,0);
+    if(HG.boost){ cx.save(); cx.strokeStyle=knightBlade(); cx.shadowColor=knightBlade(); cx.shadowBlur=16; cx.lineWidth=3; cx.beginPath(); cx.arc(ox+k*1.35,floor-k*.9,k*.95,0,Math.PI*2); cx.stroke(); cx.restore(); }
+    // ball held / dribble
+    if(HG.role==='block'&&!shotOut&&(HG.phase==='dblock'||HG.phase==='dintro')){
+      drawHoopBall(ox+k*.15,floor-k*1.95-lift,k*.22);
+      if(HG.phase==='dblock'&&!HG.tried&&HG.clock>HG.release-.6&&HG.clock<HG.release+.3){ cx.save(); cx.strokeStyle='rgba(255,197,71,.85)'; cx.lineWidth=3; cx.beginPath(); cx.arc(ox+k*.15,floor-k*1.95-lift,k*.42,0,Math.PI*2); cx.stroke(); cx.restore(); }
+      if(HG.phase==='dblock'&&HG.clock>=HG.release+ .32&&!HG.ball) hOppShoot();
+    }
+    if(HG.role==='steal'&&(HG.phase==='dsteal'||HG.phase==='drive'||HG.phase==='dintro')&&!shotOut){
+      const ph=HG.phase==='dsteal'?dribPhase():0, by=floor-k*.15-(1-Math.sin(ph*Math.PI))*k*.9;
+      const bx=ox+k*.45+driveX;
+      cx.save(); const on=HG.phase==='dsteal'; cx.strokeStyle=on?'rgba(95,216,255,.9)':'rgba(95,216,255,.3)'; cx.lineWidth=3; cx.shadowColor='#5FD8FF'; cx.shadowBlur=on?12:0; cx.beginPath(); cx.ellipse(bx,floor-k*.05,k*.38,k*.1,0,0,Math.PI*2); cx.stroke(); cx.restore();
+      drawHoopBall(bx,by,k*.22);
+      if(HG.phase==='dsteal'&&HG.clock>=HG.drib.end&&!HG.tried){ HG.tried=true; hPad('none'); htoast('Too slow!','coral','Tap STEAL as the ball hits the ring.'); hDrive(); }
+    }
+    if(HG.phase==='result'&&HG.role==='steal'&&HG.stolen!==undefined) drawHoopBall(ox+k*1.6,floor-k*1.2,k*.22);
+  }
+  if(HG.ball){ const p=ballPos(HG.ball); drawHoopBall(p.x,p.y,k*.22); }
+  HG.parts=HG.parts.filter(p=>p.life>0);
+  HG.parts.forEach(p=>{p.x+=p.vx; p.y+=p.vy; p.vy+=.03; p.life-=.02; cx.globalAlpha=Math.max(0,p.life); circle(p.x,p.y,2.4,p.c);}); cx.globalAlpha=1;
+}
+function hLoop(){
+  if(cur!=='hoops'){HG.loop=false; return;}
+  const now=performance.now(), dt=Math.min(.05,(now-HG.last)/1000); HG.last=now;
+  if(HG.active&&C&&!HG.paused&&$('#msgModal').hidden){
+    HG.clock+=dt;
+    if(HG.phase==='meter'&&HG.meter) HG.meter.t+=dt;
+    if(HG.ball){ HG.ball.t+=dt; if(HG.ball.t>=HG.ball.dur){ if(HG.ball.blk){ HG.ball=null; if(HG.ot) hlater(hOtCheck,1200); else hNextDef(1200); } else hBallDone(); } }
+  }
+  if(C){ const prev=cx; cx=hctx; drawHoops(now); cx=prev; }
+  requestAnimationFrame(hLoop);
+}
+
 /* ---------- grown-ups ---------- */
 function openParent(){
   sfx.tap();
@@ -2148,7 +2669,7 @@ function openParent(){
     <h2>Grown-ups corner</h2>
     <div class="statgrid">
       <div class="stat"><div class="v">${S.progress.games}</div><div class="l">Games played</div></div>
-      <div class="stat"><div class="v">${(S.progress.beaten||0)+(S.progress.soccerBeaten||0)}/10</div><div class="l">Teams beaten</div></div>
+      <div class="stat"><div class="v">${(S.progress.beaten||0)+(S.progress.soccerBeaten||0)+(S.progress.hoopsBeaten||0)}/15</div><div class="l">Teams beaten</div></div>
       <div class="stat"><div class="v">${S.credits}</div><div class="l">Credits</div></div>
     </div>
     <div class="panel"><h3 style="margin-bottom:6px">Math accuracy by skill</h3>${rows}
@@ -2156,6 +2677,8 @@ function openParent(){
     <div class="panel"><h3 style="margin-bottom:6px">Spelling</h3>${(()=>{const st=S.stats.spell||{r:0,w:0}, t=st.r+st.w, pct=t?Math.round(st.r/t*100):0; return `<div class="skillrow"><span>Words spelled right</span><div class="bar"><i class="${pct>=80?'':pct>=60?'mid':'low'}" style="width:${t?pct:0}%"></i></div><span class="n">${t?`${st.r}/${t}`:'—'}</span></div>`;})()}
       <h3 style="margin:12px 0 8px">Recently missed words</h3>${(S.spellMissed||[]).length?`<ul class="missed">${S.spellMissed.map(m=>`<li><span>She tried: ${esc(m.given)}</span><span>${esc(m.w)}</span></li>`).join('')}</ul>`:'<p class="dim">Nothing missed yet.</p>'}
       <p class="note" style="margin-top:8px">Missed words come back later for practice. Words from her weekly list come up most of the time.</p></div>
+    <div class="panel"><h3 style="margin-bottom:6px">Vocabulary &amp; language arts</h3>${Object.keys(VTYPES).map(t=>{const st=S.stats['v_'+t]||{r:0,w:0}, n=st.r+st.w, pct=n?Math.round(st.r/n*100):0; return `<div class="skillrow"><span>${VTYPES[t]}</span><div class="bar"><i class="${pct>=80?'':pct>=60?'mid':'low'}" style="width:${n?pct:0}%"></i></div><span class="n">${n?`${st.r}/${n}`:'—'}</span></div>`;}).join('')}
+      <h3 style="margin:12px 0 8px">Recently missed word questions</h3>${(S.vMissed||[]).length?`<ul class="missed">${S.vMissed.map(m=>`<li><span>${esc(m.q)}</span><span>${esc(m.a)}</span></li>`).join('')}</ul>`:'<p class="dim">Nothing missed yet.</p>'}</div>
     <div class="panel"><h3 style="margin-bottom:8px">Recently missed math</h3>${S.missed.length?`<ul class="missed">${S.missed.map(m=>`<li><span>${esc(m.text)}</span><span>${esc(m.answer)}</span></li>`).join('')}</ul>`:'<p class="dim">Nothing missed yet.</p>'}</div>
     <div class="panel" style="display:grid;gap:14px">
       <div><h3 style="margin-bottom:8px">Level</h3>${seg('level',[['easy','Easier'],['on','3rd grade'],['hard','Challenge']],S.settings.level)}</div>
@@ -2165,14 +2688,26 @@ function openParent(){
     <div class="panel"><label class="field-label" for="spellIn">This week's spelling and vocabulary words</label>
       <textarea class="text-in" id="spellIn" placeholder="One word per line, from her teacher's list">${esc(S.spelling)}</textarea>
       <p class="note" style="margin-top:6px">Saved on this device. Hover-Soccer (Chapter 2) uses these words. Without a list, it uses a built-in 3rd-grade word bank.</p></div>
-    <div class="panel" style="display:grid;gap:10px"><h3>Start over</h3><p class="note">Clears the Star Knight, ship, credits and progress on this device.</p>
-      <div class="row"><button class="btn alt small" id="resetBtn">Reset progress</button></div></div>`;
+    <div class="panel" style="display:grid;gap:10px"><h3>Reset one game</h3><p class="note">Locks that game's teams again, replays its story, and clears its learning history. Her Star Knight, ship, and credits stay.</p>
+      <div class="resetrow"><button class="btn alt small" data-reset="baseball">Reset Baseball</button><button class="btn alt small" data-reset="soccer">Reset Soccer</button><button class="btn alt small" data-reset="hoops">Reset Basketball</button></div></div>
+    <div class="panel" style="display:grid;gap:10px"><h3>Start over</h3><p class="note">Clears everything on this device: her Star Knight, ship, credits, and all three games.</p>
+      <div class="row"><button class="btn alt small" id="resetBtn">Reset everything</button></div></div>`;
   show('parent');
 }
 $('#s-parent').addEventListener('click',e=>{
   const b=e.target.closest('.seg button'); if(b){const set=b.parentElement.dataset.set; S.settings[set]=b.dataset.v; save(); $$(`[data-set="${set}"] button`).forEach(x=>x.setAttribute('aria-pressed',x===b)); sfx.tap(); return;}
+  const rb=e.target.closest('[data-reset]');
+  if(rb){ const g=rb.dataset.reset, nm={baseball:'Baseball',soccer:'Soccer',hoops:'Basketball'}[g];
+    showMsg({title:`Reset ${nm}?`,body:`This locks the ${nm} teams again and clears its learning history. Her Star Knight, ship, and credits stay.`,btn:'Reset',alt:'Cancel',cb:()=>{ resetGame(g); openParent(); showMsg({title:`${nm} reset`,body:'Start it again from the title screen.',btn:'OK'}); }}); return; }
   if(e.target.id==='resetBtn'){ showMsg({title:'Reset everything?',body:'This clears progress on this device. It cannot be undone.',btn:'Reset',alt:'Cancel',cb:()=>{try{localStorage.removeItem(KEY)}catch(err){} S=load(); S.profile=null; save(); setCredits(); renderSoundBtn(); show('title'); renderTitle();}}); }
 });
+function resetGame(g){
+  const P=S.progress;
+  if(g==='baseball'){ P.beaten=0; P.cupWon=false; P.storySeen=false; Object.keys(SKILLS).forEach(k=>delete S.stats[k]); S.review=[]; S.missed=[]; }
+  if(g==='soccer'){ P.soccerBeaten=0; P.soccerCup=false; P.story2Seen=false; delete S.stats.spell; S.spellReview=[]; S.spellMissed=[]; }
+  if(g==='hoops'){ P.hoopsBeaten=0; P.hoopsCup=false; P.story3Seen=false; Object.keys(VTYPES).forEach(t=>delete S.stats['v_'+t]); S.vReview=[]; S.vMissed=[]; }
+  save();
+}
 $('#s-parent').addEventListener('change',e=>{const k=e.target.dataset&&e.target.dataset.skill; if(k){S.settings.skills[k]=e.target.checked; save();}});
 $('#s-parent').addEventListener('input',e=>{if(e.target.id==='spellIn'){S.spelling=e.target.value; clearTimeout(save.t); save.t=setTimeout(save,400);}});
 
