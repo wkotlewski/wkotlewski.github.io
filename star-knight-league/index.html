@@ -264,6 +264,13 @@ p{margin:0}
 .given{display:flex;gap:6px;align-items:center;font-weight:700;color:var(--ink)}
 .given input{width:20px;height:20px;accent-color:var(--gold)}
 
+.perkline{display:grid;gap:6px;font-size:15px;line-height:1.35;color:var(--ink-dim);text-align:left;max-width:520px}
+.perkline b{color:var(--gold);font-weight:800}
+.perkpanel{display:grid;gap:8px}
+.pp-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.choices button.gone,.ltiles button.gone{opacity:.25}
+#meter .mtrack.wide{background:linear-gradient(90deg,var(--coral) 0 10%,var(--gold) 10% 36.7%,var(--mint) 36.7% 63.3%,var(--gold) 63.3% 90%,var(--coral) 90%)}
+
 /* results */
 .result-head{text-align:center;display:grid;gap:8px;justify-items:center}
 .result-head .big{font-family:var(--display);font-size:clamp(30px,8vw,46px);line-height:1;color:var(--gold);text-shadow:0 4px 0 var(--coral-deep)}
@@ -423,6 +430,7 @@ textarea.text-in{min-height:120px;font-size:17px;font-weight:600;resize:vertical
       <div class="wrap">
         <h2>Hangar</h2>
         <div class="bay" id="bayPreview"></div>
+        <p class="note" style="margin-top:-6px">Your ship frame and cargo bay give you powers in every game. Paint and droids are just for style.</p>
         <div><h3 style="margin-bottom:8px">Ship frame</h3><div class="tiles" id="frameTiles"></div></div>
         <div><h3 style="margin-bottom:8px">Cargo bay</h3><div class="tiles" id="cargoTiles"></div></div>
         <div><h3 style="margin-bottom:8px">Paint</h3><div class="tiles" id="paintTiles"></div></div>
@@ -497,6 +505,8 @@ textarea.text-in{min-height:120px;font-size:17px;font-weight:600;resize:vertical
         <div>
           <h2 id="bracketTitle">The Station Cup</h2>
           <p class="dim" id="bracketSub" style="margin-top:4px"></p>
+        </div>
+        <div class="panel perkpanel" id="bracketPerks">
         </div>
         <div class="bracket" id="bracketList"></div>
       </div>
@@ -591,7 +601,7 @@ textarea.text-in{min-height:120px;font-size:17px;font-weight:600;resize:vertical
         <div style="display:grid;gap:12px">
           <div class="qtext" id="mqText"></div>
           <div class="qvis" id="mqVisual"></div>
-          <button class="btn alt small hintbtn" id="mqHint">Show me</button>
+          <div class="row" style="gap:8px"><button class="btn alt small hintbtn" id="mqHint">Show me</button><button class="btn alt small" id="labHint" hidden>Hint (Science Lab)</button></div>
           <div class="answer" id="mqAnswer" aria-live="polite"></div>
         </div>
         <div style="display:grid;gap:12px">
@@ -615,6 +625,7 @@ textarea.text-in{min-height:120px;font-size:17px;font-weight:600;resize:vertical
       <div class="sp-tools">
         <button class="btn alt small" id="spHear"><svg viewBox="0 0 24 24" fill="none" stroke="#F3F1FF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#F3F1FF"/><path d="M16 9a4 4 0 010 6M18.5 6.5a8 8 0 010 11"/></svg>Hear it</button>
         <button class="btn alt small" id="spPeek">Peek</button>
+        <button class="btn alt small" id="spLab" hidden>Hint (Science Lab)</button>
       </div>
       <div id="spPeekBox" hidden></div>
       <div class="sp-prompt" id="spPrompt"></div>
@@ -655,8 +666,17 @@ let reduced=false; try{reduced=matchMedia('(prefers-reduced-motion: reduce)').ma
 const PAINTS={white:{name:'Comet White',hex:'#E9EDF7',cost:0},teal:{name:'Nebula Teal',hex:'#2EC4B6',cost:0},gold:{name:'Sunburst Gold',hex:'#FFC547',cost:0},coral:{name:'Coral Red',hex:'#FF6F59',cost:20},purple:{name:'Galaxy Purple',hex:'#9B6BFF',cost:20},mint:{name:'Mint Rocket',hex:'#7CF2C3',cost:30},blue:{name:'Midnight Blue',hex:'#3557D6',cost:40},rainbow:{name:'Rainbow Stripe',hex:'#FF8AD8',cost:80,stripes:true}};
 const DROID_HEADS={dome:{name:'Dome',cost:0},square:{name:'Boxy',cost:0},antenna:{name:'Antenna',cost:25},bubble:{name:'Bubble',cost:40}};
 const DROID_COLORS={gold:'#FFC547',teal:'#2EC4B6',coral:'#FF6F59',white:'#E9EDF7',purple:'#9B6BFF'};
-const FRAMES={scout:{name:'Swift Scout',note:'Fast'},hauler:{name:'Heavy Hauler',note:'Tough'},cruiser:{name:'Star Cruiser',note:'Balanced'}};
-const CARGO={rescue:{name:'Rescue Pod'},lab:{name:'Science Lab'},drones:{name:'Repair Drones'},sports:{name:'Sports Gear'}};
+const FRAMES={scout:{name:'Swift Scout',note:'More time to react'},hauler:{name:'Heavy Hauler',note:'Shield blocks 1 mistake'},cruiser:{name:'Star Cruiser',note:'+5 credits every match'}};
+const CARGO={lab:{name:'Science Lab',note:'Hint on questions'},rescue:{name:'Rescue Pod',note:'1 free retry each match'},drones:{name:'Repair Drones',note:'Bigger green zones'},sports:{name:'Sports Gear',note:'Power-ups last longer'}};
+const FRAME_PERK={scout:'Warning arrows stay longer and pitches come a little slower, so you have more time to react.',hauler:'A shield blocks one mistake each match, like strike three, a tackle, or their basket.',cruiser:'You get 5 bonus credits after every match, win or lose.'};
+const CARGO_PERK={lab:'A Hint button on questions takes away one wrong answer.',rescue:'If you miss a question, you get one more try. Works once each match.',drones:'Green zones are bigger for swinging, pitching, and shooting.',sports:'Power-ups you earn from questions last one extra play.'};
+const perkF=f=>!!(S.ship&&S.ship.frame===f), perkC=c=>!!(S.ship&&S.ship.cargo===c);
+const PERK={shield:0,rescue:0};
+function resetPerks(){ PERK.shield=perkF('hauler')?1:0; PERK.rescue=perkC('rescue')?1:0;
+  G.boostX=G.starX=false; if(typeof SG!=='undefined'){SG.hoverX=SG.powerX=SG.saveX=SG.slideX=false;} if(typeof HG!=='undefined'){HG.laserX=HG.boostX=false;} }
+function useShield(){ if(PERK.shield>0){ PERK.shield--; sfx.right(); return true; } return false; }
+function useRescue(){ if(PERK.rescue>0){ PERK.rescue--; return true; } return false; }
+function perkLine(){ const f=S.ship.frame, c=S.ship.cargo; return `<div class="perkline"><p><b>${FRAMES[f].name}:</b> ${FRAME_PERK[f]}</p><p><b>${CARGO[c].name}:</b> ${CARGO_PERK[c]}</p></div>`; }
 const BLADES={cyan:'#5FD8FF',mint:'#43E5B0',gold:'#FFC547',coral:'#FF6F59',violet:'#B48CFF',pink:'#FF8AD8'};
 const KNIGHTS=[
   {skin:'#C68B5E',hair:'curly',hairColor:'#2B1B12'},
@@ -967,9 +987,10 @@ function renderHangar(){
   const sh=S.ship;
   $('#bayPreview').innerHTML=`${shipSVG(sh,'ship float')}
     <div class="shipname">${esc(FRAMES[sh.frame].name)} · ${esc(CARGO[sh.cargo].name)}</div>
+    ${perkLine()}
     <div class="crewline">${person(knightOf())}${sh.crew.map(i=>person(CREW[i])).join('')}${droidSVG(sh.droidHead,sh.droidColor,'droidmini')}</div>`;
   $('#frameTiles').innerHTML=Object.keys(FRAMES).map(k=>`<button class="tile" data-k="${k}" aria-pressed="${sh.frame===k}">${shipSVG(Object.assign({},sh,{frame:k}),'')}<span class="nm">${FRAMES[k].name}</span><span class="sub">${FRAMES[k].note}</span></button>`).join('');
-  $('#cargoTiles').innerHTML=Object.keys(CARGO).map(k=>`<button class="tile" data-k="${k}" aria-pressed="${sh.cargo===k}">${shipSVG(Object.assign({},sh,{cargo:k}),'')}<span class="nm">${CARGO[k].name}</span></button>`).join('');
+  $('#cargoTiles').innerHTML=Object.keys(CARGO).map(k=>`<button class="tile" data-k="${k}" aria-pressed="${sh.cargo===k}">${shipSVG(Object.assign({},sh,{cargo:k}),'')}<span class="nm">${CARGO[k].name}</span><span class="sub">${CARGO[k].note}</span></button>`).join('');
   $('#paintTiles').innerHTML=Object.keys(PAINTS).map(k=>{const p=PAINTS[k], own=S.unlocked.paint.includes(k);
     const bg=p.stripes?'linear-gradient(#FF6F59 0 20%,#FFC547 0 40%,#43E5B0 0 60%,#5FD8FF 0 80%,#9B6BFF 0)':p.hex;
     return `<button class="tile" data-k="${k}" aria-pressed="${sh.paint===k}">${own?'':lockBadge(p.cost)}<span class="swatch" style="background:${bg}"></span><span class="nm">${p.name}</span>${own?'':needLine(p.cost)}</button>`}).join('');
@@ -998,7 +1019,7 @@ $('#s-hangar').addEventListener('click',e=>{
   else if(box==='crewTiles'){const i=+t.dataset.i; if(sh.crew.includes(i)){ if(sh.crew.length>1) sh.crew=sh.crew.filter(x=>x!==i);} else {sh.crew.push(i); if(sh.crew.length>2) sh.crew.shift();}}
   save(); renderHangar();
 });
-$('#hangarDone').addEventListener('click',()=>{sfx.tap(); if(hangarReturn==='story') startStory(1); else {show('title'); renderTitle();}});
+$('#hangarDone').addEventListener('click',()=>{sfx.tap(); if(hangarReturn==='story') startStory(1); else if(hangarReturn==='bracket') openBracket(); else {show('title'); renderTitle();}});
 
 /* ---------- story ---------- */
 let story=[],si=0,storyCh=1;
@@ -1158,6 +1179,7 @@ function openMath(kind,cb){
   const ch=$('#mqChoices'); ch.hidden=num;
   ch.innerHTML=num?'':q.choices.map((c,i)=>`<button data-i="${i}">${q.skill==='fraction'?fracHTML(c):esc(c)}</button>`).join('');
   $('#mqFb').hidden=true; $('#mqContinue').hidden=true;
+  $('#labHint').hidden=!perkC('lab'); $('#labHint').disabled=false;
   $('#mathModal').hidden=false;
 }
 function closeMath(ok,silent){
@@ -1170,6 +1192,8 @@ function typeBack(){if(!MQ||MQ.locked) return; MQ.input=MQ.input.slice(0,-1); $(
 function grade(given,btn){
   if(!MQ||MQ.locked) return; if(given==='') return;
   MQ.locked=true; const q=MQ.q, ok=String(given)===q.answer;
+  if(!ok&&useRescue()){ const fb=$('#mqFb'); fb.hidden=false; fb.className='fb bad'; fb.innerHTML='<strong>Rescue Pod!</strong>Not quite, but you get one more try.'; sfx.wrong();
+    if(btn){ btn.classList.add('wrong'); btn.disabled=true; } else { MQ.input=''; $('#mqAnswer').textContent=''; } MQ.locked=false; return; }
   record(q,ok); if(G.active){G.asked++; if(ok) G.right++;}
   const fb=$('#mqFb'); fb.hidden=false;
   if(q.kind==='choice'){ $$('#mqChoices button').forEach(b=>{const c=q.choices[+b.dataset.i]; if(c===q.answer) b.classList.add('right'); else if(b===btn) b.classList.add('wrong');}); }
@@ -1229,6 +1253,7 @@ function later(fn,ms){const id=G.id; setTimeout(()=>{if(G.active&&G.id===id) fn(
 
 /* match flow: you bat one half, then pick pitch or catch for theirs */
 function startMatch(t){
+  resetPerks();
   Object.assign(G,{active:true,team:t,inning:1,half:'bat',role:null,score:{us:0,them:0},outs:0,strikes:0,balls:0,bases:[0,0,0],obases:[0,0,0],boost:false,star:false,phase:'idle',earned:0,hits:0,ks:0,right:0,asked:0,lineUs:[],lineThem:[],inRuns:0,pitch:null,dp:null,fly:null,swingT:-9999,oppSwingT:-9999,chase:null,parts:[],tips:0,glove:0,meter:null,id:(G.id||0)+1});
   $('#usName').textContent=(S.profile&&S.profile.name)?S.profile.name+"'s Knights":'Star Knights';
   S.progress.lastCh=1; save();
@@ -1285,11 +1310,11 @@ const stealable=b=>{for(const i of [1,0]) if(b[i]&&!b[i+1]) return i; return -1;
 /* ----- batting ----- */
 function nextPitch(){
   if(!G.active) return;
-  G.boost=false; G.chase=null; G.fly=null; G.pitch=null; updateHUD();
+  if(G.boost&&G.boostX){G.boostX=false;} else G.boost=false; G.chase=null; G.fly=null; G.pitch=null; updateHUD();
   // her runner can try to steal
   const sr=stealable(G.bases);
   if(sr>=0&&Math.random()<.3){ offerSteal(sr); return; }
-  if(mathDue()){G.mathUsed=true; G.phase='math'; openMath('power',ok=>{G.boost=!!ok; updateHUD(); later(windup,350);});}
+  if(mathDue()){G.mathUsed=true; G.phase='math'; openMath('power',ok=>{G.boost=G.boost||!!ok; if(ok) G.boostX=perkC('sports'); updateHUD(); later(windup,350);});}
   else windup();
 }
 function offerSteal(i){
@@ -1298,15 +1323,15 @@ function offerSteal(i){
     cb:()=>{G.mathUsed=true; openMath('runsteal',ok=>{
       if(ok){G.bases[i]=0; G.bases[i+1]=1; toast('Safe!','gold',`Stole ${base} base!`);}
       else toast('Back to the base!','coral','The throw beat you there.');
-      updateHUD(); later(()=>{ if(mathDue()){G.mathUsed=true; openMath('power',ok2=>{G.boost=!!ok2; updateHUD(); later(windup,350);});} else windup(); },1600);
+      updateHUD(); later(()=>{ if(mathDue()){G.mathUsed=true; openMath('power',ok2=>{G.boost=G.boost||!!ok2; if(ok2) G.boostX=perkC('sports'); updateHUD(); later(windup,350);});} else windup(); },1600);
     });},
-    altCb:()=>{ if(mathDue()){G.mathUsed=true; openMath('power',ok=>{G.boost=!!ok; updateHUD(); later(windup,350);});} else windup(); }});
+    altCb:()=>{ if(mathDue()){G.mathUsed=true; openMath('power',ok=>{G.boost=G.boost||!!ok; if(ok) G.boostX=perkC('sports'); updateHUD(); later(windup,350);});} else windup(); }});
 }
 function windup(){
   if(!G.active) return;
   G.pitchNo++;
   const L=S.settings.level, base=(L==='easy'?1550:L==='hard'?1150:1350)-teamSkill()*250;
-  const flight=base+R(-160,160)+(Math.random()<.15?300:0), now=performance.now();
+  const flight=(base+R(-160,160)+(Math.random()<.15?300:0))*(perkF('scout')?1.15:1), now=performance.now();
   G.pitch={t0:now+750,flight,arrive:now+750+flight}; G.swung=false; G.phase='pitch';
   later(()=>sfx.pitch(),700);
 }
@@ -1314,7 +1339,7 @@ function swing(){
   if(!G.active||G.half!=='bat'||G.phase!=='pitch'||G.swung) return;
   const now=performance.now(); if(now<G.pitch.t0) return;
   G.swung=true; G.swingT=now; $('#gameHint').hidden=true;
-  const d=now-G.pitch.arrive, k=S.settings.level==='easy'?1.35:S.settings.level==='hard'?.85:1, a=Math.abs(d);
+  const d=now-G.pitch.arrive, k=(S.settings.level==='easy'?1.35:S.settings.level==='hard'?.85:1)*(perkC('drones')?1.25:1), a=Math.abs(d);
   if(a<=65*k) hit(1,d); else if(a<=135*k) hit(.8,d); else if(a<=215*k) hit(.6,d); else if(a<=320*k) foul(d); else whiff(d);
 }
 function judge(q,boost){
@@ -1352,7 +1377,8 @@ function whiff(d){ G.phase='result'; sfx.strike(); later(()=>strike(d<0?'Too ear
 function lookingStrike(){ G.phase='result'; sfx.strike(); strike('Strike!',G.tips<2?'Swing when the ball reaches the glowing ring.':''); G.tips++; }
 function strike(msg,tip){
   G.strikes++;
-  if(G.strikes>=3){ toast('Strike three!','coral'); batOut(); }
+  if(G.strikes>=3&&useShield()){ G.strikes=2; toast('Shield!','gold','Your Heavy Hauler shield blocked strike three.'); updateHUD(); later(nextPitch,1900); }
+  else if(G.strikes>=3){ toast('Strike three!','coral'); batOut(); }
   else { toast(msg,'coral',tip||''); updateHUD(); later(nextPitch,1500); }
 }
 function batOut(){ G.outs++; G.strikes=0; updateHUD(); if(G.outs>=3) later(endBatHalf,1500); else later(nextPitch,1500); }
@@ -1387,12 +1413,12 @@ function startDefHalf(role){
 }
 function defNext(){
   if(!G.active) return;
-  G.dp=null; G.fly=null; G.chase=null; G.star=false; G.phase='idle'; updateHUD();
+  G.dp=null; G.fly=null; G.chase=null; if(G.star&&G.starX){G.starX=false;} else G.star=false; G.phase='idle'; updateHUD();
   if(G.role==='catch'){
     const sr=stealable(G.obases);
     if(sr>=0&&Math.random()<.3){ G.mathUsed=true; stealAlert(sr); return; }
   }
-  if(mathDue()){ G.mathUsed=true; openMath(G.role==='pitch'?'star':'call',ok=>{G.star=!!ok; updateHUD(); later(defPitchStart,300);}); }
+  if(mathDue()){ G.mathUsed=true; openMath(G.role==='pitch'?'star':'call',ok=>{G.star=G.star||!!ok; if(ok) G.starX=perkC('sports'); updateHUD(); later(defPitchStart,300);}); }
   else defPitchStart();
 }
 function stealAlert(i){
@@ -1412,12 +1438,12 @@ function pickPitch(type){
   if(G.phase!=='pick') return; sfx.tap();
   const L=S.settings.level;
   G.ptype=type; G.meter={t0:performance.now(),speed:{fast:1.6,curve:1.2,change:.85}[type]*(L==='easy'?.75:L==='hard'?1.2:1)};
-  G.phase='meter'; setControls('meter');
+  G.phase='meter'; setControls('meter'); $('#meter .mtrack').classList.toggle('wide',perkC('drones'));
 }
 const meterPos=now=>{const x=((now-G.meter.t0)/1000*G.meter.speed)%2; return x<1?x:2-x;};
 function throwNow(){
   if(G.phase!=='meter') return;
-  const m=meterPos(performance.now()), q=1-Math.abs(m-.5)*2;
+  const m=meterPos(performance.now()), q=1-Math.abs(m-.5)*2*(perkC('drones')?.75:1);
   setControls('none');
   toast(q>=.8?'Right in the zone!':q>=.4?'Good pitch!':'Wild pitch!',q>=.8?'gold':q>=.4?'':'coral');
   throwDef(G.ptype,q);
@@ -1439,7 +1465,7 @@ function oppDecide(q,type,star){
 }
 function throwDef(type,q){
   if(!G.active) return;
-  const flight={fast:950,curve:1200,change:1450}[type]+(S.settings.level==='easy'?220:0);
+  const flight=({fast:950,curve:1200,change:1450}[type]+(S.settings.level==='easy'?220:0))*(perkF('scout')?1.15:1);
   const spot=G.role==='catch'?pick([-1,0,1]):(q<.4?pick([-1,1]):0);
   const now=performance.now();
   G.dp={t0:now+400,flight,arrive:now+400+flight,type,q,spot,res:oppDecide(q,type,G.star),done:false};
@@ -1479,6 +1505,7 @@ function finishDef(res){
   G.phase='result';
   if(res.type==='foul'){ if(G.strikes<2) G.strikes++; toast('Foul ball!'); updateHUD(); later(defNext,1300); return; }
   if(res.type==='groundout'||res.type==='flyout'){ toast(res.type==='groundout'?'Ground out!':'Caught it! Out!','gold','+3 credits'); addCredits(3); G.earned+=3; defOut(); return; }
+  if(useShield()){ toast('Shield!','gold','Your shield caught their hit. Out!'); defOut(); return; }
   const {nb,runs}=advanceOn(G.obases,res.bases); G.obases=nb; G.strikes=0; G.balls=0;
   const label={single:'They hit a single',double:'They hit a double',triple:'They hit a triple',hr:'They hit a home run'}[res.type];
   toast(label,'coral',runs?`${TEAMS[G.team].short} score ${runs}`:''); addOppRuns(runs);
@@ -1492,7 +1519,7 @@ function endDefHalf(){
 function endGame(){
   G.active=false; setControls('none');
   const us=G.score.us, them=G.score.them, win=us>them, tie=us===them, T=TEAMS[G.team];
-  const bonus=win?25:10; S.credits+=bonus; G.earned+=bonus;
+  const bonus=(win?25:10)+(perkF('cruiser')?5:0); S.credits+=bonus; G.earned+=bonus;
   if(win) awardTrophy(G.team,G.team>=(S.progress.beaten||0));
   S.progress.games++; if(win){S.progress.wins++; if(G.team>=(S.progress.beaten||0)) S.progress.beaten=G.team+1;}
   const champ=win&&G.team===TEAMS.length-1;
@@ -1555,6 +1582,8 @@ function openBracket(sport){
   const beaten=S.progress[BR.key]||0, desc=BR.desc;
   $('#bracketTitle').textContent=BR.title;
   $('#bracketSub').textContent=BR.sub+' Win a match to unlock the next team.';
+  $('#bracketPerks').innerHTML=`<div class="pp-head"><h3>Your ship powers</h3><button class="btn alt small" id="ppHangar">Change in Hangar</button></div>${perkLine()}`;
+  $('#ppHangar').onclick=()=>{sfx.tap(); openHangar('bracket');};
   $('#bracketList').innerHTML=TEAMS.map((t,i)=>{
     const st=i<beaten?'won':i===beaten?'next':'locked';
     const sub=st==='locked'?`<span class="s unlock">Win against the ${TEAMS[i-1].short} to unlock</span>`:`<span class="s">${t.boss?'Final · coached by the Eclipse Commander':desc[i]}</span>`;
@@ -1805,6 +1834,7 @@ function openSpell(kind,cb){
     SQ.tiles=shuffle([...w,...decoys(w,n)]).map(c=>({c,used:false}));
     renderSpellTiles();
   }
+  $('#spLab').hidden=!perkC('lab'); $('#spLab').disabled=false;
   SG.paused=true; $('#spellModal').hidden=false;
   if(canSpeak) setTimeout(()=>{ if(SQ&&SQ.w===w) hearWord(); },250);
   else if(mode==='tiles') peekWord();
@@ -1828,6 +1858,9 @@ function spellBack(){ if(!SQ||SQ.locked||!SQ.input.length) return; const j=SQ.in
 function gradeSpell(given,btn){
   if(!SQ||SQ.locked) return; SQ.locked=true;
   const w=SQ.w, ok=given===w;
+  if(!ok&&useRescue()){ const fb=$('#spFb'); fb.hidden=false; fb.className='fb bad'; fb.innerHTML='<strong>Rescue Pod!</strong>Not quite, but you get one more try.'; sfx.wrong();
+    if(SQ.mode==='choice'){ if(btn){ btn.classList.add('wrong'); btn.disabled=true; } } else { SQ.input.forEach(j=>SQ.tiles[j].used=false); SQ.input=[]; renderSpellTiles(); }
+    SQ.locked=false; return; }
   const st=S.stats.spell||(S.stats.spell={r:0,w:0}); ok?st.r++:st.w++;
   if(!ok){ if(!S.spellReview) S.spellReview=[]; if(!S.spellReview.includes(w)) S.spellReview.push(w); if(S.spellReview.length>20) S.spellReview.shift();
     S.spellMissed=[{w,given},...(S.spellMissed||[])].slice(0,12); }
@@ -1898,6 +1931,7 @@ function spellDue(){
   return SG.spellUsed&&Math.random()<EXTRA[S.settings.freq];
 }
 function sMatch(t){
+  resetPerks();
   Object.assign(SG,{active:true,team:t,half:'att',role:null,us:0,them:0,turn:0,turns:3,phase:'idle',paused:false,pk:false,pkRound:0,
     p:null,defs:[],ball:null,shot:null,gk:null,me:null,st:null,hover:false,power:false,superSave:false,slide:false,
     clock:0,last:0,parts:[],earned:0,goals:0,saves:0,tackles:0,right:0,asked:0,id:(SG.id||0)+1});
@@ -1913,7 +1947,7 @@ function sNewHalf(){ SG.turn=0; SG.spellUsed=false; SG.spellAt=R(0,2); }
 function sAttHalf(){ SG.half='att'; SG.role=null; sNewHalf(); sHUD(); sAttTurn(); }
 function sAttTurn(){
   if(!SG.active) return;
-  SG.hover=false; SG.power=false; SG.shot=null; SG.gk={x:F.cx,to:F.cx,t:0}; SG.p={lane:0,x:LX(0),y:.86};
+  if(SG.hover&&SG.hoverX){SG.hoverX=false;} else SG.hover=false; if(SG.power&&SG.powerX){SG.powerX=false;} else SG.power=false; SG.shot=null; SG.gk={x:F.cx,to:F.cx,t:0}; SG.p={lane:0,x:LX(0),y:.86};
   const T=sSkill(), n=Math.min(4,Math.floor(1.6+T*3.5)), rows=[];
   for(let i=0;i<n;i++) rows.push(.74-(.34*(i/(Math.max(1,n-1)))));
   SG.defs=rows.map((y,i)=>{const lane=i===0?pick([-1,1]):pick([-1,0,1]); return {y,lane,x:LX(lane),tgt:null,warnT:0,hopAt:SG.clock+R(5,14)/10,passed:false};});
@@ -1936,7 +1970,7 @@ function runUpdate(dt){
   const p=SG.p, T=sSkill(), L=S.settings.level;
   const dur=(L==='easy'?5.4:L==='hard'?4.2:4.8)-T*.8, spd=(.86-.3)/dur;
   p.y-=spd*dt; p.x+=(LX(p.lane)-p.x)*Math.min(1,dt*14);
-  const warnDur=L==='easy'?.62:L==='hard'?.42:.5;
+  const warnDur=(L==='easy'?.62:L==='hard'?.42:.5)*(perkF('scout')?1.6:1);
   SG.defs.forEach(d=>{
     if(!d.passed){
       if(d.tgt===null&&SG.clock>=d.hopAt){ const gap=p.y-d.y; if(!(gap>0&&gap<.13)){ const opts=[-1,0,1].filter(l=>Math.abs(l-d.lane)===1); d.tgt=pick(opts); d.warnT=SG.clock; } else d.hopAt=SG.clock+.3; }
@@ -1946,15 +1980,16 @@ function runUpdate(dt){
     if(!d.passed&&p.y<=d.y){ d.passed=true;
       if(Math.abs(p.x-d.x)<F.lw*.55){
         if(SG.hover){ SG.hover=false; sHUD(); stoast('Hover jump!','gold'); beep(500,.25,'sine',.1,500); sBurst(p.x,FY(p.y),12,['#5FD8FF','#fff']); p.jumpT=SG.clock; }
+        else if(useShield()){ stoast('Shield!','gold','Your shield kept the ball safe.'); }
         else { sTackled(d); }
       } else beep(740,.05,'triangle',.05);
     }
   });
   if(SG.phase!=='run') return;
-  if(SG.plan==='mid'&&!SG.midDone&&p.y<=.8){ SG.midDone=true; SG.spellUsed=true; openSpell('hover',ok=>{SG.hover=!!ok; sHUD();}); return; }
+  if(SG.plan==='mid'&&!SG.midDone&&p.y<=.8){ SG.midDone=true; SG.spellUsed=true; openSpell('hover',ok=>{SG.hover=SG.hover||!!ok; if(ok) SG.hoverX=perkC('sports'); sHUD();}); return; }
   if(p.y<=.3){ p.y=.3; SG.phase='aimwait';
     const go=()=>{ SG.phase='aim'; SG.aimT=0; setPad('shoot'); $('#sHint').textContent='Tap SHOOT when the arrow points at an open corner'; $('#sHint').hidden=SG.tips>1; };
-    if(SG.plan==='kick'&&!SG.kickDone){ SG.kickDone=true; SG.spellUsed=true; setPad('none'); openSpell('kick',ok=>{SG.power=!!ok; sHUD(); go();}); }
+    if(SG.plan==='kick'&&!SG.kickDone){ SG.kickDone=true; SG.spellUsed=true; setPad('none'); openSpell('kick',ok=>{SG.power=SG.power||!!ok; if(ok) SG.powerX=perkC('sports'); sHUD(); go();}); }
     else go();
   }
 }
@@ -1970,7 +2005,7 @@ function shoot(){
   const T=sSkill(), side=ax>F.cx?1:-1, off=Math.abs(ax-F.cx)/(F.gw/2);
   let guess=Math.random()<(SG.power?.1:.2+T*.6);
   const dive=guess?ax:(Math.random()<.5?F.cx:F.cx-side*F.gw*.32);
-  const reach=F.gw*(.13+T*.1)*(SG.power?.6:1);
+  const reach=F.gw*(.13+T*.1)*(SG.power?.6:1)*(perkC('drones')?.8:1);
   SG.gk={x:F.cx,from:F.cx,to:dive,t:0};
   SG.shot={x0:SG.p.x,y0:FY(.3),x1:ax,y1:FY(.035),t:0,dur:.55,saved:Math.abs(ax-dive)<reach,power:SG.power};
   sfx.hit();
@@ -1999,14 +2034,14 @@ function sDefHalf(role){ SG.half='def'; SG.role=role; sNewHalf(); sHUD();
   slater(sDefTurn,2300); }
 function sDefTurn(){
   if(!SG.active) return;
-  SG.superSave=false; SG.slide=false; SG.shot=null;
+  if(SG.superSave&&SG.saveX){SG.saveX=false;} else SG.superSave=false; if(SG.slide&&SG.slideX){SG.slideX=false;} else SG.slide=false; SG.shot=null;
   const lane=pick([-1,0,1]);
   SG.st={lane,x:LX(lane),y:.1,tgt:null,warnT:0,hopAt:SG.clock+.8};
   SG.gk={pos:0,x:F.cx,locked:false}; SG.me=SG.role==='defender'?{lane:0,x:LX(0)}:null;
   SG.phase='intro'; sHUD();
   setPad('lanes',SG.role==='goalie'?'Dive: left, middle or right':'Block: left, middle or right');
   const go=()=>slater(()=>{SG.phase='drun';},500);
-  if(spellDue()){ SG.spellUsed=true; openSpell(SG.role==='goalie'?'save':'slide',ok=>{ if(SG.role==='goalie') SG.superSave=!!ok; else SG.slide=!!ok; sHUD(); go(); }); }
+  if(spellDue()){ SG.spellUsed=true; openSpell(SG.role==='goalie'?'save':'slide',ok=>{ if(SG.role==='goalie'){ SG.superSave=SG.superSave||!!ok; if(ok) SG.saveX=perkC('sports'); } else { SG.slide=SG.slide||!!ok; if(ok) SG.slideX=perkC('sports'); } sHUD(); go(); }); }
   else { stoast(`Their turn ${SG.turn+1} of 3`); go(); }
 }
 function defUpdate(dt){
@@ -2016,7 +2051,7 @@ function defUpdate(dt){
   if(SG.phase==='drun'){
     const stopY=SG.role==='goalie'?.62:.8, spd=(L==='easy'?.16:L==='hard'?.24:.2)+T*.05;
     st.y+=spd*dt;
-    const warnDur=L==='easy'?.55:L==='hard'?.36:.45, meY=.56;
+    const warnDur=(L==='easy'?.55:L==='hard'?.36:.45)*(perkF('scout')?1.6:1), meY=.56;
     if(st.tgt===null&&SG.clock>=st.hopAt&&!st.passed){
       const gap=meY-st.y, nearMe=SG.role==='defender'&&gap>0&&gap<.08;
       if(!nearMe){ st.tgt=pick([-1,0,1].filter(l=>Math.abs(l-st.lane)===1)); st.warnT=SG.clock; }
@@ -2057,6 +2092,7 @@ function dshotDone(){
   else if(SG.role==='goalie'){ goal=SG.gk.pos!==SG.side;
     if(!goal){ SG.saves++; addCredits(5); SG.earned+=5; sfx.right(); stoast('Great save!','gold','+5 credits'); sBurst(SG.gk.x,FY(.95),14,['#FFC547','#fff']); } }
   else { goal=s.crewGoal; if(!goal){ stoast('Your goalie saved it!','gold'); sfx.right(); } }
+  if(goal&&useShield()){ goal=false; stoast('Shield!','gold','Your shield blocked their goal.'); }
   if(goal){ SG.them++; sfx.strike(); stoast(`${TEAMS[SG.team].short} scored`,'coral',SG.role==='goalie'?'Watch which way the kicker leans.':''); }
   sHUD();
   if(SG.pk){ slater(sPkCheck,1800); return; }
@@ -2088,7 +2124,7 @@ function sPkCheck(){
 function sEnd(){
   SG.active=false; setPad('none');
   const us=SG.us, them=SG.them, win=us>them, tie=us===them, T=TEAMS[SG.team];
-  const bonus=win?25:10; S.credits+=bonus; SG.earned+=bonus; S.progress.games++;
+  const bonus=(win?25:10)+(perkF('cruiser')?5:0); S.credits+=bonus; SG.earned+=bonus; S.progress.games++;
   if(win){ awardTrophy(SG.team,SG.team>=(S.progress.soccerBeaten||0)); S.progress.wins++; if(SG.team>=(S.progress.soccerBeaten||0)) S.progress.soccerBeaten=SG.team+1; }
   const champ=win&&SG.team===TEAMS.length-1; if(champ) S.progress.soccerCup=true;
   save(); setCredits(true); if(win) sfx.win();
@@ -2390,11 +2426,13 @@ function openVocab(kind,cb){
   $('#mqVisual').hidden=true; $('#mqHint').hidden=true; $('#mqAnswer').hidden=true; $('#mqKeypad').hidden=true;
   const ch=$('#mqChoices'); ch.hidden=false; ch.innerHTML=VQ.choices.map((c,k)=>`<button data-v="${k}">${esc(c)}</button>`).join('');
   $('#mqFb').hidden=true; $('#mqContinue').hidden=true;
+  $('#labHint').hidden=!perkC('lab'); $('#labHint').disabled=false;
   $('#mathModal').classList.add('vocab'); HG.paused=true; $('#mathModal').hidden=false;
 }
 function gradeVocab(k,btn){
   if(!VQ||VQ.locked) return; VQ.locked=true;
   const it=VQ.it, given=VQ.choices[k], ok=given===it[2];
+  if(!ok&&useRescue()){ const fb=$('#mqFb'); fb.hidden=false; fb.className='fb bad'; fb.innerHTML='<strong>Rescue Pod!</strong>Not quite, but you get one more try.'; sfx.wrong(); if(btn){ btn.classList.add('wrong'); btn.disabled=true; } VQ.locked=false; return; }
   const key='v_'+it[0], st=S.stats[key]||(S.stats[key]={r:0,w:0}); ok?st.r++:st.w++;
   if(!ok){ if(!S.vReview) S.vReview=[]; if(!S.vReview.includes(VQ.i)) S.vReview.push(VQ.i); if(S.vReview.length>20) S.vReview.shift();
     S.vMissed=[{q:it[1].replace(/\*/g,''),a:it[2]},...(S.vMissed||[])].slice(0,12); }
@@ -2451,6 +2489,7 @@ function hHUD(){
 }
 function qDue(){ if(!HG.qUsed&&(HG.turn>=HG.qAt||HG.turn>=HG.turns-1)) return true; return HG.qUsed&&Math.random()<EXTRA[S.settings.freq]; }
 function hMatch(t){
+  resetPerks();
   Object.assign(HG,{active:true,team:t,half:'off',role:null,us:0,them:0,turn:0,turns:3,phase:'idle',paused:false,ot:false,otRound:0,
     clock:0,last:0,parts:[],ball:null,meter:null,laser:false,boost:false,earned:0,made:0,blocks:0,steals:0,right:0,asked:0,
     lane:0,mx:null,dl:0,dx:null,dtgt:null,ml:0,mex:null,oL:0,ox:null,otgt:null,id:(HG.id||0)+1});
@@ -2473,20 +2512,20 @@ function hNudge(d){ const v=HG.half==='off'?HG.lane:HG.ml; setHLane(Math.max(-1,
 function hOffHalf(){ HG.half='off'; HG.role=null; hNewHalf(); hHUD(); hOffTurn(); }
 function hOffTurn(){
   if(!HG.active) return;
-  HG.laser=false; HG.ball=null; HG.meter=null; HG.phase='ready'; HG.lane=0; HG.dl=0; HG.dtgt=null; hHUD();
+  if(HG.laser&&HG.laserX){HG.laserX=false;} else HG.laser=false; HG.ball=null; HG.meter=null; HG.phase='ready'; HG.lane=0; HG.dl=0; HG.dtgt=null; hHUD();
   const due=qDue(); HG.plan=due?(Math.random()<.35?'double':'laser'):null;
   const startMove=()=>{
     const L=S.settings.level, T=hSkill();
-    HG.shotEnd=HG.clock+(L==='easy'?9:L==='hard'?6:7.5); HG.dHopAt=HG.clock+.9; HG.phase='move'; hPad('move');
+    HG.shotEnd=HG.clock+(L==='easy'?9:L==='hard'?6:7.5)+(perkF('scout')?2:0); HG.dHopAt=HG.clock+.9; HG.phase='move'; hPad('move');
     htoast(HG.ot?'Overtime shot':`Shot ${HG.turn+1} of 3`,'gold','Move to an open spot, then tap SHOOT.');
   };
   if(HG.plan==='double'){ HG.qUsed=true; HG.phase='q';
     hlater(()=>openVocab('double',ok=>{ if(ok){ HG.phase='layup'; htoast('Pass to your teammate!','gold'); hlater(()=>hShootBall(2,'swish',true),700); } else { htoast('The double-team stole it!','coral'); sfx.strike(); hNextOff(1800); } }),500); return; }
-  if(HG.plan==='laser'){ HG.qUsed=true; HG.phase='q'; hlater(()=>openVocab('laser',ok=>{HG.laser=!!ok; hHUD(); startMove();}),500); return; }
+  if(HG.plan==='laser'){ HG.qUsed=true; HG.phase='q'; hlater(()=>openVocab('laser',ok=>{HG.laser=HG.laser||!!ok; if(ok) HG.laserX=perkC('sports'); hHUD(); startMove();}),500); return; }
   hlater(startMove,400);
 }
 function offMoveUpdate(){
-  const T=hSkill(), L=S.settings.level, warn=L==='easy'?.6:L==='hard'?.38:.48;
+  const T=hSkill(), L=S.settings.level, warn=(L==='easy'?.6:L==='hard'?.38:.48)*(perkF('scout')?1.6:1);
   if(HG.dtgt===null&&HG.clock>=HG.dHopAt){
     let tgt; if(HG.lane!==HG.dl&&Math.random()<.45+T*.4) tgt=HG.dl+Math.sign(HG.lane-HG.dl); else tgt=pick([-1,0,1].filter(l=>Math.abs(l-HG.dl)===1));
     HG.dtgt=tgt; HG.dWarn=HG.clock;
@@ -2497,6 +2536,7 @@ function offMoveUpdate(){
 function hStartMeter(){
   const L=S.settings.level, T=hSkill(), pts=SPOT_PTS[HG.lane+1], guarded=HG.dl===HG.lane;
   let w=[.14,.2,.26][HG.lane+1]*(L==='easy'?1.3:L==='hard'?.8:1)*(1-(T-.3)*.4);
+  if(perkC('drones')) w*=1.25;
   if(guarded) w*=.5; else w*=1.15; if(HG.laser) w*=1.7;
   HG.spot=pts; HG.guarded=guarded;
   HG.meter={t:0,spd:(pts===3?1:.8)*(L==='easy'?.75:L==='hard'?1.2:1),c:.3+Math.random()*.4,w};
@@ -2535,12 +2575,14 @@ function hBallDone(){
   if(b.mine){
     if(made){ HG.us+=b.pts; HG.made++; const cr=b.pts===3?12:8; addCredits(cr); HG.earned+=cr; sfx.hr();
       htoast(b.res==='swish'?'SWISH!':b.res==='rimin'?'It rolls in!':'Bucket!','gold',`+${b.pts} points`); const r=rim(); for(let i=0;i<3;i++) hlater(()=>hBurst(r.x,r.y,18,['#FFC547','#FF6F59','#43E5B0','#5FD8FF']),i*180); }
+    else if(useShield()){ htoast('Shield rebound!','gold','Your shield gave you a second shot.'); HG.ball=null; hlater(hStartMeter,1300); return; }
     else { sfx.strike(); htoast(b.res==='rimout'?'Rim out!':b.res==='short'?'Too short!':'Too far!','coral',b.res==='short'?'Tap a little later next time.':b.res==='long'?'Tap a little sooner next time.':(HG.guarded?'Find an open spot first.':'So close!')); }
     hHUD(); HG.ball=null;
     if(HG.ot){ hlater(hOtDefend,1800); return; }
     hNextOff(made?2000:1700);
   } else {
-    if(made){ HG.them+=2; sfx.strike(); htoast(`${TEAMS[HG.team].short} scored`,'coral',b.open?'You weren\'t in front of them.':'+2 for them'); }
+    if(made&&useShield()){ htoast('Shield!','gold','Your shield blocked their basket.'); }
+    else if(made){ HG.them+=2; sfx.strike(); htoast(`${TEAMS[HG.team].short} scored`,'coral',b.open?'You weren\'t in front of them.':'+2 for them'); }
     else htoast('They missed!','gold');
     hHUD(); HG.ball=null; if(HG.ot){ hlater(hOtCheck,1800); return; } hNextDef(1800);
   }
@@ -2560,15 +2602,15 @@ function hDefHalf(role){ HG.half='def'; HG.role=role; hNewHalf(); hHUD();
   hlater(hDefTurn,2600); }
 function hDefTurn(){
   if(!HG.active) return;
-  HG.boost=false; HG.ball=null; HG.tried=false; HG.phase='dintro'; HG.oL=pick([-1,0,1]); HG.otgt=null; HG.ml=0; hHUD(); hPad('none');
+  if(HG.boost&&HG.boostX){HG.boostX=false;} else HG.boost=false; HG.ball=null; HG.tried=false; HG.phase='dintro'; HG.oL=pick([-1,0,1]); HG.otgt=null; HG.ml=0; hHUD(); hPad('none');
   const go=()=>hlater(()=>{ HG.phase='dmove'; HG.dEnd=HG.clock+R(25,40)/10; HG.oHopAt=HG.clock+.8; hPad(HG.role); },500);
   if(qDue()){ HG.qUsed=true;
     if(Math.random()<.3){ openVocab('loose',ok=>{ if(ok){ HG.steals++; addCredits(5); HG.earned+=5; htoast('Ball is yours!','gold','+5 credits'); hNextDef(1700);} else { htoast('They picked it back up.','coral'); go(); } }); }
-    else openVocab(HG.role,ok=>{HG.boost=!!ok; hHUD(); go();});
+    else openVocab(HG.role,ok=>{HG.boost=HG.boost||!!ok; if(ok) HG.boostX=perkC('sports'); hHUD(); go();});
   } else { htoast(`Their turn ${HG.turn+1} of 3`); go(); }
 }
 function defMoveUpdate(){
-  const T=hSkill(), L=S.settings.level, warn=L==='easy'?.6:L==='hard'?.38:.48;
+  const T=hSkill(), L=S.settings.level, warn=(L==='easy'?.6:L==='hard'?.38:.48)*(perkF('scout')?1.6:1);
   if(HG.otgt===null&&HG.clock>=HG.oHopAt){ HG.otgt=pick([-1,0,1].filter(l=>Math.abs(l-HG.oL)===1)); HG.oWarn=HG.clock; }
   if(HG.otgt!==null&&HG.clock-HG.oWarn>=warn){ HG.oL=HG.otgt; HG.otgt=null; HG.oHopAt=HG.clock+(R(8,15)/10)/(.6+T); }
   if(HG.clock>=HG.dEnd&&HG.otgt===null){ if(HG.role==='block') hStartShot(); else hStartDribble(); }
@@ -2622,14 +2664,14 @@ function hDefEnd(){
 /* overtime */
 function hOtRound(){ HG.ot=true; HG.otRound++; HG.half='off'; HG.role=null; HG.plan=null; hHUD(); hOffTurnOT(); }
 function hOffTurnOT(){ HG.laser=false; HG.ball=null; HG.meter=null; HG.lane=0; HG.dl=0; HG.dtgt=null; const L=S.settings.level;
-  HG.shotEnd=HG.clock+(L==='easy'?9:L==='hard'?6:7.5); HG.dHopAt=HG.clock+.9; HG.phase='move'; hPad('move'); htoast(`Overtime ${HG.otRound}`,'gold','Find an open spot and shoot!'); }
+  HG.shotEnd=HG.clock+(L==='easy'?9:L==='hard'?6:7.5)+(perkF('scout')?2:0); HG.dHopAt=HG.clock+.9; HG.phase='move'; hPad('move'); htoast(`Overtime ${HG.otRound}`,'gold','Find an open spot and shoot!'); }
 function hOtDefend(){ HG.half='def'; HG.role='block'; HG.boost=false; HG.tried=false; HG.oL=pick([-1,0,1]); HG.otgt=null; HG.ml=0; hHUD(); htoast('Block their shot!','gold','Stay in front of them.');
   hlater(()=>{ HG.phase='dmove'; HG.dEnd=HG.clock+2.5; HG.oHopAt=HG.clock+.8; hPad('block'); },1200); }
 function hOtCheck(){ if(HG.us!==HG.them||HG.otRound>=3){ hEnd(); return; } htoast('Still tied!','gold'); hlater(hOtRound,1800); }
 function hEnd(){
   HG.active=false; hPad('none');
   const us=HG.us, them=HG.them, win=us>them, tie=us===them, T=TEAMS[HG.team];
-  const bonus=win?25:10; S.credits+=bonus; HG.earned+=bonus; S.progress.games++;
+  const bonus=(win?25:10)+(perkF('cruiser')?5:0); S.credits+=bonus; HG.earned+=bonus; S.progress.games++;
   if(win){ awardTrophy(HG.team,HG.team>=(S.progress.hoopsBeaten||0)); S.progress.wins++; if(HG.team>=(S.progress.hoopsBeaten||0)) S.progress.hoopsBeaten=HG.team+1; }
   const champ=win&&HG.team===TEAMS.length-1; if(champ) S.progress.hoopsCup=true;
   save(); setCredits(true); if(win) sfx.win();
@@ -2999,6 +3041,20 @@ $('#s-parent').addEventListener('click',e=>{
   else if(t.dataset.pzdel){ S.prizes=prizeList().filter(p=>p.id!==t.dataset.pzdel); save(); refreshPrizeSettings(); }
 });
 
+/* ---------- ship powers: science lab hints ---------- */
+function dropWrong(sel,getVal,answer){ const opts=$$(sel).filter(b=>!b.disabled&&getVal(b)!==answer); if(!opts.length) return false; const b=pick(opts); b.disabled=true; b.classList.add('gone'); return true; }
+$('#labHint').addEventListener('click',()=>{
+  if(VQ&&!VQ.locked){ dropWrong('#mqChoices button',b=>VQ.choices[+b.dataset.v],VQ.it[2]); }
+  else if(MQ&&!MQ.locked){ const q=MQ.q; if(q.kind==='choice') dropWrong('#mqChoices button',b=>q.choices[+b.dataset.i],q.answer); else { MQ.input=q.answer[0]; $('#mqAnswer').textContent=MQ.input; } }
+  else return; sfx.tap(); $('#labHint').disabled=true;
+});
+$('#spLab').addEventListener('click',()=>{
+  if(!SQ||SQ.locked) return; sfx.tap(); $('#spLab').disabled=true;
+  if(SQ.mode==='choice'){ dropWrong('#spChoices button',b=>SQ.choices[+b.dataset.i],SQ.w); return; }
+  let k=0; while(k<SQ.input.length&&SQ.tiles[SQ.input[k]].c===SQ.w[k]) k++;
+  while(SQ.input.length>k){ const j=SQ.input.pop(); SQ.tiles[j].used=false; }
+  renderSpellTiles(); const i=SQ.tiles.findIndex(t=>!t.used&&t.c===SQ.w[k]); if(i>=0) tapTile(i);
+});
 /* ---------- grown-ups ---------- */
 function openParent(){
   sfx.tap();
