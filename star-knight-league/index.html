@@ -146,15 +146,15 @@ p{margin:0}
 .counts .ou b.on{background:var(--coral)}
 .minibases{width:30px;height:30px}
 .fieldwrap{position:relative;flex:1;min-height:0;border-radius:22px;overflow:hidden;border:2px solid var(--line);background:radial-gradient(100% 70% at 50% 100%,#1A2350 0%,#0D1330 70%)}
-#field,#pitch,#court{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:manipulation;cursor:pointer}
-#toast,#sToast,#hToast{position:absolute;left:50%;top:12px;transform:translateX(-50%) scale(.8);max-width:calc(100% - 24px);text-align:center;font-family:var(--display);font-size:clamp(20px,6vw,30px);line-height:1.1;color:var(--ink);text-shadow:0 3px 0 #070B1C,0 0 18px #000;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
-#toast.show,#sToast.show,#hToast.show{opacity:1;transform:translateX(-50%) scale(1)}
-#toast.gold,#sToast.gold,#hToast.gold{color:var(--gold)}
-#toast.coral,#sToast.coral,#hToast.coral{color:var(--coral)}
-#toast .tip,#sToast .tip,#hToast .tip{display:block;font-family:var(--body);font-weight:800;font-size:16px;color:var(--ink);margin-top:6px;text-shadow:0 2px 6px #000}
-#boostBadge,#sBadge,#hBadge{position:absolute;left:12px;bottom:14px;font-family:var(--display);font-size:13px;letter-spacing:.06em;color:#0A0F24;background:var(--cyan);border-radius:999px;padding:8px 12px;box-shadow:0 0 18px var(--cyan)}
-#swingBtn,#shootBtn,#hActBtn{position:absolute;right:max(12px,env(safe-area-inset-right,0px));bottom:12px;width:clamp(92px,24vw,120px);aspect-ratio:1;border-radius:50%;border:4px solid #FFD3CB;background:var(--coral);color:#fff;font-family:var(--display);font-size:clamp(18px,5vw,22px);box-shadow:0 6px 0 var(--coral-deep),0 0 24px #FF6F5966;cursor:pointer;touch-action:manipulation;user-select:none;-webkit-user-select:none}
-#swingBtn:active,#shootBtn:active,#hActBtn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--coral-deep)}
+#field,#pitch,#court,#space,#trail{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:manipulation;cursor:pointer}
+#toast,#sToast,#hToast,#bToast,#rToast{position:absolute;left:50%;top:12px;transform:translateX(-50%) scale(.8);max-width:calc(100% - 24px);text-align:center;font-family:var(--display);font-size:clamp(20px,6vw,30px);line-height:1.1;color:var(--ink);text-shadow:0 3px 0 #070B1C,0 0 18px #000;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
+#toast.show,#sToast.show,#hToast.show,#bToast.show,#rToast.show{opacity:1;transform:translateX(-50%) scale(1)}
+#toast.gold,#sToast.gold,#hToast.gold,#bToast.gold,#rToast.gold{color:var(--gold)}
+#toast.coral,#sToast.coral,#hToast.coral,#bToast.coral,#rToast.coral{color:var(--coral)}
+#toast .tip,#sToast .tip,#hToast .tip,#bToast .tip,#rToast .tip{display:block;font-family:var(--body);font-weight:800;font-size:16px;color:var(--ink);margin-top:6px;text-shadow:0 2px 6px #000}
+#boostBadge,#sBadge,#hBadge,#bBadge,#rBadge{position:absolute;left:12px;bottom:14px;font-family:var(--display);font-size:13px;letter-spacing:.06em;color:#0A0F24;background:var(--cyan);border-radius:999px;padding:8px 12px;box-shadow:0 0 18px var(--cyan)}
+#swingBtn,#shootBtn,#hActBtn,#bMegaBtn{position:absolute;right:max(12px,env(safe-area-inset-right,0px));bottom:12px;width:clamp(92px,24vw,120px);aspect-ratio:1;border-radius:50%;border:4px solid #FFD3CB;background:var(--coral);color:#fff;font-family:var(--display);font-size:clamp(18px,5vw,22px);box-shadow:0 6px 0 var(--coral-deep),0 0 24px #FF6F5966;cursor:pointer;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+#swingBtn:active,#shootBtn:active,#hActBtn:active,#bMegaBtn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--coral-deep)}
 .gamehint{position:absolute;left:12px;top:12px;font-size:13px;font-weight:700;color:var(--ink-dim);pointer-events:none}
 
 .counts .ba b.on{background:var(--mint)}
@@ -220,7 +220,15 @@ p{margin:0}
 .qtext b.vw{color:var(--gold)}
 .qtext .blank{display:inline-block;min-width:4ch;border-bottom:4px solid var(--cyan);margin:0 4px;vertical-align:-2px}
 .ctlrow.two{grid-template-columns:1fr 1fr}
-#hLanePad{right:calc(clamp(92px,24vw,120px) + 22px)}
+#hLanePad,#bLanePad{right:calc(clamp(92px,24vw,120px) + 22px)}
+#bLanePad.side{width:220px;left:auto;right:max(10px,env(safe-area-inset-right,0px));bottom:auto;top:12px}
+#bMegaBtn{background:#5FD8FF;border-color:#D6F6FF;color:#062A3A;box-shadow:0 6px 0 #2A8FB0,0 0 24px #5FD8FF88}
+.hearts{display:flex;gap:2px;align-items:center;min-height:30px}
+.modal.reading .qtext{font-size:clamp(16px,4.4vw,19px);font-weight:600}
+.passage{background:var(--space);border-radius:14px;padding:12px 14px;line-height:1.55;margin-bottom:10px;border:2px solid var(--line)}
+.rq{font-weight:800;font-size:clamp(18px,5vw,21px);margin-top:10px;line-height:1.3}
+.modal.reading .choices{grid-template-columns:1fr}
+.modal.reading .choices button{min-height:52px;text-align:left;justify-items:start;padding:8px 14px}
 #hLanePad .ctlrow button{min-height:58px}
 .resetrow{display:flex;flex-wrap:wrap;gap:10px}
 
@@ -397,8 +405,8 @@ textarea.text-in{min-height:120px;font-size:17px;font-weight:600;resize:vertical
           <button class="chap" data-ch="1"><div class="num">1</div><div><div class="t">The Station Cup</div><div class="s">Asteroid Baseball · math</div></div><span class="tag" id="ch1Tag" style="color:var(--mint)">Play</span></button>
           <button class="chap" data-ch="2"><div class="num">2</div><div><div class="t">Meteor Storm</div><div class="s">Hover-Soccer · spelling</div></div><span class="tag" id="ch2Tag" style="color:var(--mint)">Play</span></button>
           <button class="chap" data-ch="3"><div class="num">3</div><div><div class="t">The Lost Signal</div><div class="s">Zero-G Basketball · vocabulary</div></div><span class="tag" id="ch3Tag" style="color:var(--mint)">Play</span></button>
-          <div class="chap locked"><div class="num">4</div><div><div class="t">Eclipse Ambush</div><div class="s">Ship battle · mixed review</div></div><span class="tag">Coming soon</span></div>
-          <div class="chap locked"><div class="num">5</div><div><div class="t">The Missing Droid</div><div class="s">Rescue mission · reading</div></div><span class="tag">Coming soon</span></div>
+          <button class="chap" data-ch="4"><div class="num">4</div><div><div class="t">Eclipse Ambush</div><div class="s">Ship battle · mixed review</div></div><span class="tag" id="ch4Tag" style="color:var(--mint)">Play</span></button>
+          <button class="chap" data-ch="5"><div class="num">5</div><div><div class="t">The Missing Droid</div><div class="s">Rescue mission · reading</div></div><span class="tag" id="ch5Tag" style="color:var(--mint)">Play</span></button>
         </div>
         <button class="btn alt small parentbtn" id="parentBtn">Grown-ups: press and hold</button>
       </div>
@@ -576,6 +584,51 @@ textarea.text-in{min-height:120px;font-size:17px;font-weight:600;resize:vertical
         <p id="certNote" style="font-weight:700;font-size:18px"></p>
         <div class="row"><button class="btn" id="sendBtn">Send to my parents</button><button class="btn alt" id="certDone">Done</button></div>
         <div class="panel" id="sendPanel" hidden></div>
+      </div>
+    </section>
+
+    <!-- BATTLE -->
+    <section class="screen game gut" id="s-battle" hidden>
+      <div class="board" aria-live="polite">
+        <div class="team"><span class="tn">Your shields</span><span class="hearts" id="bHearts"></span></div>
+        <div class="mid"><span class="inn" id="bWaveVal">WAVE 1 OF 3</span></div>
+        <div class="team r"><span class="tn" id="bThemName">Troopers</span><span class="sc" id="bLeft">0</span></div>
+      </div>
+      <div class="fieldwrap">
+        <canvas id="space" aria-label="Space battle"></canvas>
+        <div id="bToast" role="status"></div>
+        <div id="bBadge" hidden></div>
+        <button id="bMegaBtn" hidden>Mega</button>
+        <div class="ctlpanel" id="bLanePad" hidden>
+          <span class="ctl-l">Dodge the red lanes</span>
+          <div class="ctlrow">
+            <button data-l="-1" aria-pressed="false">◀ Left</button>
+            <button data-l="0" aria-pressed="true">Middle</button>
+            <button data-l="1" aria-pressed="false">Right ▶</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESCUE -->
+    <section class="screen game gut" id="s-rescue" hidden>
+      <div class="board" aria-live="polite">
+        <div class="team"><span class="tn">Hearts</span><span class="hearts" id="rHearts"></span></div>
+        <div class="mid"><span class="inn" id="rLegVal">LEG 1 OF 3</span><span class="inn" id="rPlace" style="color:var(--ink-dim)"></span></div>
+        <div class="team r"><span class="tn">Gears</span><span class="sc" id="rGears">0</span></div>
+      </div>
+      <div class="fieldwrap">
+        <canvas id="trail" aria-label="Rescue trail"></canvas>
+        <div id="rToast" role="status"></div>
+        <div id="rBadge" hidden></div>
+        <div class="ctlpanel" id="rLanePad" hidden>
+          <span class="ctl-l">Dodge the rocks</span>
+          <div class="ctlrow">
+            <button data-l="-1" aria-pressed="false">▲ Up</button>
+            <button data-l="0" aria-pressed="true">Middle</button>
+            <button data-l="1" aria-pressed="false">▼ Down</button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -886,6 +939,8 @@ function show(id){
   if(id!=='game'){G.active=false}
   if(id!=='soccer'&&typeof SG!=='undefined'){SG.active=false}
   if(id!=='hoops'&&typeof HG!=='undefined'){HG.active=false}
+  if(id!=='battle'&&typeof BG!=='undefined'){BG.active=false}
+  if(id!=='rescue'&&typeof RG!=='undefined'){RG.active=false}
   const sc=$('#s-'+id); if(sc) sc.scrollTop=0;
 }
 function setCredits(bump){
@@ -919,7 +974,10 @@ function renderTitle(){
   $('#heroArt').firstElementChild.style.cssText='position:absolute;inset:0';
   $('#playBtn').textContent=S.progress.games>0?'Play again':'Play';
   const ch=S.progress.lastCh||1;
-  $('#chapline').textContent=ch===3?'Chapter 3 · The Lost Signal':ch===2?'Chapter 2 · Meteor Storm':'Chapter 1 · The Station Cup';
+  $('#chapline').textContent=ch===5?'Chapter 5 · The Missing Droid':ch===4?'Chapter 4 · Eclipse Ambush':ch===3?'Chapter 3 · The Lost Signal':ch===2?'Chapter 2 · Meteor Storm':'Chapter 1 · The Station Cup';
+  const tagOf=(cup,n)=>cup?'Cup won':n?`${n} of 5 won`:'New!';
+  $('#ch4Tag').textContent=tagOf(S.progress.ambushCup,S.progress.ambushBeaten||0);
+  $('#ch5Tag').textContent=S.progress.rescueCup?'Droid found':tagOf(false,S.progress.rescueBeaten||0);
   $('#ch3Tag').textContent=S.progress.hoopsCup?'Cup won':(S.progress.hoopsBeaten||0)?`${S.progress.hoopsBeaten} of 5 won`:'New!';
   $('#ch1Tag').textContent=S.progress.cupWon?'Cup won':`${S.progress.beaten||0} of 5 won`;
   $('#ch2Tag').textContent=S.progress.soccerCup?'Cup won':(S.progress.soccerBeaten||0)?`${S.progress.soccerBeaten} of 5 won`:'New!';
@@ -929,6 +987,8 @@ function playChapter(ch){
   S.progress.lastCh=ch; save();
   if(ch===2){ if(!S.progress.story2Seen){startStory(2); return;} openBracket('soccer'); return; }
   if(ch===3){ if(!S.progress.story3Seen){startStory(3); return;} openBracket('hoops'); return; }
+  if(ch===4){ if(!S.progress.story4Seen){startStory(4); return;} openBracket('ambush'); return; }
+  if(ch===5){ if(!S.progress.story5Seen){startStory(5); return;} openBracket('rescue'); return; }
   if(!S.progress.storySeen){startStory(1); return;}
   openBracket('baseball');
 }
@@ -936,17 +996,19 @@ $$('.chap[data-ch]').forEach(b=>b.addEventListener('click',()=>{sfx.tap(); playC
 $('#playBtn').addEventListener('click',()=>{
   sfx.tap();
   if(!S.profile){openSetup(); return;}
-  showMsg({title:'Pick a sport',body:'Which game do you want to play?',choices:[
+  showMsg({title:'Pick a game',body:'Which one do you want to play?',choices:[
     {label:'Baseball',sub:`Chapter 1 · math · ${S.progress.beaten||0} of 5 won`,art:`<svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="22" fill="#fff"/><path d="M17 16Q25 30 17 44M43 16Q35 30 43 44" stroke="#FF6F59" stroke-width="3" fill="none"/></svg>`,cb:()=>playChapter(1)},
     {label:'Soccer',sub:`Chapter 2 · spelling · ${S.progress.soccerBeaten||0} of 5 won`,art:`<svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="22" fill="#fff"/><path d="M30 20l9 6.5-3.4 10.5H24.4L21 26.5z" fill="#15183A"/><path d="M30 20V9M39 26.5l10-4M35.6 37l6 9M24.4 37l-6 9M21 26.5l-10-4" stroke="#15183A" stroke-width="2"/></svg>`,cb:()=>playChapter(2)},
-    {label:'Basketball',sub:`Chapter 3 · words · ${S.progress.hoopsBeaten||0} of 5 won`,art:`<svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="22" fill="#E9873A"/><path d="M8 30h44M30 8v44" stroke="#5A2A0E" stroke-width="2.5"/><path d="M14 14q10 16 0 32M46 14q-10 16 0 32" stroke="#5A2A0E" stroke-width="2.5" fill="none"/></svg>`,cb:()=>playChapter(3)}
+    {label:'Basketball',sub:`Chapter 3 · words · ${S.progress.hoopsBeaten||0} of 5 won`,art:`<svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="22" fill="#E9873A"/><path d="M8 30h44M30 8v44" stroke="#5A2A0E" stroke-width="2.5"/><path d="M14 14q10 16 0 32M46 14q-10 16 0 32" stroke="#5A2A0E" stroke-width="2.5" fill="none"/></svg>`,cb:()=>playChapter(3)},
+    {label:'Space battle',sub:`Chapter 4 · mixed review · ${S.progress.ambushBeaten||0} of 5 won`,art:`<svg viewBox="0 0 60 60"><path d="M30 6L42 40H18Z" fill="#5FD8FF"/><path d="M18 40L8 50L22 46ZM42 40L52 50L38 46Z" fill="#2EC4B6"/><circle cx="30" cy="28" r="5" fill="#9FE8FF"/><path d="M26 46L30 56L34 46Z" fill="#FFC547"/></svg>`,cb:()=>playChapter(4)},
+    {label:'Rescue',sub:`Chapter 5 · reading · ${S.progress.rescueBeaten||0} of 5 done`,art:`<svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="20" fill="#9B6BFF"/><circle cx="23" cy="24" r="5" fill="#C9AEFF"/><ellipse cx="30" cy="30" rx="28" ry="7" fill="none" stroke="#E2CCFF" stroke-width="2.5" transform="rotate(-18 30 30)"/></svg>`,cb:()=>playChapter(5)}
   ]});
 });
 $('#prizesBtn').addEventListener('click',()=>{sfx.tap(); openPrizes();});
-$('#trophyChip').addEventListener('click',()=>{sfx.tap(); closeVocab(null,true); closeMath(null,true); closeSpell(null,true); hideMsg(); openPrizes();});
+$('#trophyChip').addEventListener('click',()=>{sfx.tap(); closeRead(null,true); closeVocab(null,true); closeMath(null,true); closeSpell(null,true); hideMsg(); openPrizes();});
 $('#hangarBtn').addEventListener('click',()=>{sfx.tap(); if(!S.profile){openSetup();return} openHangar('title')});
 $('#storyBtn').addEventListener('click',()=>{sfx.tap(); if(!S.profile){openSetup();return} startStory(S.progress.lastCh||1)});
-$('#homeBtn').addEventListener('click',()=>{sfx.tap(); closeVocab(null,true); closeMath(null,true); closeSpell(null,true); hideMsg(); show('title'); renderTitle();});
+$('#homeBtn').addEventListener('click',()=>{sfx.tap(); closeRead(null,true); closeVocab(null,true); closeMath(null,true); closeSpell(null,true); hideMsg(); show('title'); renderTitle();});
 $('#soundBtn').addEventListener('click',()=>{S.sound=!S.sound; save(); renderSoundBtn(); sfx.tap();});
 
 // grown-ups gate: press and hold
@@ -1035,6 +1097,21 @@ function startStory(ch){
     {art:person(knightOf()),who:name,text:`Team spells T-E-A-M. Let's go!`},
     {art:droidSVG(S.ship.droidHead,S.ship.droidColor),who:'Coach Droid',text:`First you attack: tap Left or Right to dodge, then tap SHOOT when the arrow points at a corner. Then pick goalie or defender. Spell words right to power up!`}
   ]; si=0; renderStory(); show('story'); return; }
+  if(storyCh===4){ story=[
+    {art:person(FAMILY.dad),who:'Dad',text:`Red alert, ${name}! The Eclipse Commander is ambushing ships near our station.`},
+    {art:person(FAMILY.mom),who:'Mom',text:`Five squadrons are on the way. Fly your ship and protect the station!`},
+    {art:person(FAMILY.cadet),who:'Little Cadet',text:`Pew pew! Me help!`},
+    {art:commanderSVG(),who:'Eclipse Commander',text:`Your station is mine, unless you can beat my whole fleet. Ha!`},
+    {art:shipSVG(S.ship,''),who:name,text:`My ${FRAMES[S.ship.frame].name} is ready. Let's go!`},
+    {art:droidSVG(S.ship.droidHead,S.ship.droidColor),who:'Coach Droid',text:`Tap Left, Middle or Right to get out of the red warning lanes. Your ship fires on its own. Answer questions to charge your Mega Laser, then tap MEGA!`}
+  ]; si=0; renderStory(); show('story'); return; }
+  if(storyCh===5){ story=[
+    {art:person(FAMILY.cadet),who:'Little Cadet',text:`My droid is gone! I looked everywhere!`},
+    {art:person(FAMILY.mom),who:'Mom',text:`Look, tiny wheel tracks! They lead out toward the Glow Caves.`},
+    {art:person(FAMILY.dad),who:'Dad',text:`Grab your jetpack, ${name}. Every place on the trail might have a clue.`},
+    {art:person(knightOf()),who:name,text:`We'll find your droid, Little Cadet. I promise.`},
+    {art:droidSVG(S.ship.droidHead,S.ship.droidColor),who:'Coach Droid',text:`Tap Up, Middle or Down to dodge rocks and grab gears. Read each clue carefully. Right answers power up your tractor beam!`}
+  ]; si=0; renderStory(); show('story'); return; }
   if(storyCh===3){ story=[
     {art:person(FAMILY.mom),who:'Mom',text:`${name}, the station's big radio dish lost its signal. We can't call our friends on other planets!`},
     {art:person(FAMILY.dad),who:'Dad',text:`The Zero-G Hoops League gives a decoder chip to every winner. Five chips will fix the dish.`},
@@ -1058,11 +1135,11 @@ function renderStory(){
   const s=story[si];
   $('#storyPortrait').innerHTML=s.art; $('#storyWho').innerHTML=s.who; $('#storyText').innerHTML=s.text;
   $('#storyDots').innerHTML=story.map((_,i)=>`<i class="${i<=si?'on':''}"></i>`).join('');
-  $('#storyNext').textContent=si===story.length-1?(storyCh===3?'Tip off!':storyCh===2?'Kick off!':'Play ball!'):'Next';
+  $('#storyNext').textContent=si===story.length-1?(storyCh===5?'Start the search!':storyCh===4?'Launch!':storyCh===3?'Tip off!':storyCh===2?'Kick off!':'Play ball!'):'Next';
 }
 $('#storyNext').addEventListener('click',()=>{sfx.tap(); if(si<story.length-1){si++; renderStory();} else endStory();});
 $('#storySkip').addEventListener('click',()=>{sfx.tap(); endStory();});
-function endStory(){ if(storyCh===3){S.progress.story3Seen=true; save(); openBracket('hoops');} else if(storyCh===2){S.progress.story2Seen=true; save(); openBracket('soccer');} else {S.progress.storySeen=true; save(); openBracket('baseball');} }
+function endStory(){ if(storyCh===5){S.progress.story5Seen=true; save(); openBracket('rescue');} else if(storyCh===4){S.progress.story4Seen=true; save(); openBracket('ambush');} else if(storyCh===3){S.progress.story3Seen=true; save(); openBracket('hoops');} else if(storyCh===2){S.progress.story2Seen=true; save(); openBracket('soccer');} else {S.progress.storySeen=true; save(); openBracket('baseball');} }
 
 /* ---------- math generators (CA Common Core, grade 3) ---------- */
 const LV=()=>S.settings.level;
@@ -1577,24 +1654,27 @@ function openBracket(sport){
   const BR={
     baseball:{title:'The Station Cup',sub:'Each match: you bat, then you choose to pitch or catch.',key:'beaten',desc:['Rookie team','Tough hitters','Fast pitchers','Tricky fielders']},
     soccer:{title:'The Hover Cup',sub:'Each match: you attack, then you choose goalie or defender.',key:'soccerBeaten',desc:['Rookie team','Fast dribblers','Big goalie','Tricky strikers']},
-    hoops:{title:'The Hoops League',sub:'Each match: you shoot, then you choose block or steal.',key:'hoopsBeaten',desc:['Rookie team','Tall blockers','Quick dribblers','Pump fakers']}
+    hoops:{title:'The Hoops League',sub:'Each match: you shoot, then you choose block or steal.',key:'hoopsBeaten',desc:['Rookie team','Tall blockers','Quick dribblers','Pump fakers']},
+    ambush:{title:'Eclipse Ambush',sub:'Each mission: survive three waves of ships. Between waves, pick shields or blasters.',key:'ambushBeaten',desc:['Trooper scouts','Miner raiders','Comet fighters','Nebula squadron'],bossText:'Final · the Eclipse Commander\'s flagship',lock:i=>`Beat the ${TEAMS[i-1].short} to unlock`},
+    rescue:{title:'The Rescue Map',sub:'Each mission: three legs of the droid\'s trail. Read the clues to power up.',key:'rescueBeaten',items:RESCUE,art:t=>planetSVG(t.col),desc:['An easy trail','Hot and rocky','Slippery and fast','Lots of meteors'],bossText:'Final · find the droid',lock:i=>`Finish ${RESCUE[i-1].name} to unlock`}
   }[bracketSport];
   const beaten=S.progress[BR.key]||0, desc=BR.desc;
   $('#bracketTitle').textContent=BR.title;
   $('#bracketSub').textContent=BR.sub+' Win a match to unlock the next team.';
   $('#bracketPerks').innerHTML=`<div class="pp-head"><h3>Your ship powers</h3><button class="btn alt small" id="ppHangar">Change in Hangar</button></div>${perkLine()}`;
   $('#ppHangar').onclick=()=>{sfx.tap(); openHangar('bracket');};
-  $('#bracketList').innerHTML=TEAMS.map((t,i)=>{
+  const items=BR.items||TEAMS, art=BR.art||((t,i)=>t.boss?commanderSVG():trooperSVG(i)), lock=BR.lock||(i=>`Win against the ${TEAMS[i-1].short} to unlock`), bossText=BR.bossText||'Final · coached by the Eclipse Commander';
+  $('#bracketList').innerHTML=items.map((t,i)=>{
     const st=i<beaten?'won':i===beaten?'next':'locked';
-    const sub=st==='locked'?`<span class="s unlock">Win against the ${TEAMS[i-1].short} to unlock</span>`:`<span class="s">${t.boss?'Final · coached by the Eclipse Commander':desc[i]}</span>`;
+    const sub=st==='locked'?`<span class="s unlock">${lock(i)}</span>`:`<span class="s">${t.boss?bossText:desc[i]}</span>`;
     return `<button class="match ${st}" data-t="${i}" ${st==='locked'?'disabled':''}>
       <span class="mnum">${i+1}</span>
-      <span class="mart">${t.boss?commanderSVG():trooperSVG(i)}</span>
+      <span class="mart">${art(t,i)}</span>
       <span class="minfo"><span class="t">${t.name}</span>${sub}</span>
       <span class="tag ${st}">${st==='won'?'Won':st==='next'?'Play':'Locked'}</span></button>`;}).join('');
   show('bracket');
 }
-$('#bracketList').addEventListener('click',e=>{const b=e.target.closest('.match'); if(!b||b.disabled) return; sfx.tap(); if(bracketSport==='soccer') sMatch(+b.dataset.t); else if(bracketSport==='hoops') hMatch(+b.dataset.t); else startMatch(+b.dataset.t);});
+$('#bracketList').addEventListener('click',e=>{const b=e.target.closest('.match'); if(!b||b.disabled) return; sfx.tap(); if(bracketSport==='soccer') sMatch(+b.dataset.t); else if(bracketSport==='hoops') hMatch(+b.dataset.t); else if(bracketSport==='ambush') bMatch(+b.dataset.t); else if(bracketSport==='rescue') rMatch(+b.dataset.t); else startMatch(+b.dataset.t);});
 
 /* ---------- drawing ---------- */
 const knightBlade=()=>BLADES[(S.profile&&S.profile.blade)||'cyan']||BLADES.cyan;
@@ -3041,6 +3121,500 @@ $('#s-parent').addEventListener('click',e=>{
   else if(t.dataset.pzdel){ S.prizes=prizeList().filter(p=>p.id!==t.dataset.pzdel); save(); refreshPrizeSettings(); }
 });
 
+/* ---------- shared helpers for chapters 4 & 5 ---------- */
+const heartSVG=on=>`<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.2 3 4.5 6.6 4.5c2.1 0 3.6 1.2 5.4 3.2 1.8-2 3.3-3.2 5.4-3.2 3.6 0 5.7 3.7 4.2 7.2C19.5 16.4 12 21 12 21z" fill="${on?'#FF6F59':'#2E3A78'}"/></svg>`;
+const heartsHTML=(n,max)=>Array.from({length:max},(_,i)=>heartSVG(i<n)).join('');
+Object.assign(MATHKIND,{mega:{t:'Mega Laser!',s:'Solve it to charge your Mega Laser.',ok:'Mega Laser charged!'},repair:{t:'Shield damaged!',s:'Solve it to repair one shield.',ok:'Shield repaired!'}});
+Object.assign(SPELLKIND,{mega:{t:'Mega Laser!',s:'Spell it right to charge your Mega Laser.',ok:'Mega Laser charged!'},repair:{t:'Shield damaged!',s:'Spell it right to repair one shield.',ok:'Shield repaired!'}});
+Object.assign(VKIND,{mega:{t:'Mega Laser!',s:'Answer it to charge your Mega Laser.',ok:'Mega Laser charged!'},repair:{t:'Shield damaged!',s:'Answer it to repair one shield.',ok:'Shield repaired!'}});
+
+/* ---------- chapter 4: eclipse ambush (ship battle, mixed review) ---------- */
+const BG={active:false,parts:[],paused:false};
+const bcv=$('#space'), bctx=bcv.getContext('2d');
+let BW=300,BH=400,BF=null;
+const bSkill=()=>Math.max(.2,Math.min(.85,TEAMS[BG.team||0].skill+(S.settings.level==='easy'?-.08:S.settings.level==='hard'?.08:0)));
+function blater(fn,ms){const id=BG.id; setTimeout(()=>{if(BG.active&&BG.id===id) fn()},ms)}
+function bResize(){
+  const r=bcv.getBoundingClientRect(), d=Math.min(2,window.devicePixelRatio||1);
+  BW=Math.max(200,r.width); BH=Math.max(180,r.height);
+  bcv.width=Math.round(BW*d); bcv.height=Math.round(BH*d); bctx.setTransform(d,0,0,d,0,0);
+  const wide=BW/BH>1.2; $('#bLanePad').classList.toggle('side',wide);
+  const aw=wide?BW-250:BW-20, ah=wide?BH-20:BH-126, fw=Math.min(aw,Math.max(ah*.75,260));
+  BF={x:10+(aw-fw)/2,y:10,w:fw,h:ah}; BF.cx=BF.x+fw/2; BF.lw=fw*.3; BF.k=Math.min(BF.lw*.42,ah*.085);
+}
+window.addEventListener('resize',()=>{if(cur==='battle') bResize();});
+const BLX=l=>BF.cx+l*BF.lw, BYF=f=>BF.y+BF.h*f;
+let shipImg=null, shipKey='';
+function myShipImg(){ const key=S.ship.frame+S.ship.cargo+S.ship.paint; if(key!==shipKey||!shipImg){ shipKey=key; shipImg=new Image(); shipImg.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(shipSVG(S.ship,'')); } return shipImg; }
+function bPad(m){ $('#bLanePad').hidden=m!=='lanes'; $('#bMegaBtn').hidden=!(m==='lanes'&&BG.mega>0); BG.ctl=m; bMark(); }
+function bMark(){ $$('#bLanePad button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.l===BG.lane)); }
+function btoast(text,cls='',tip=''){ const t=$('#bToast'); t.innerHTML=esc(text)+(tip?`<span class="tip">${esc(tip)}</span>`:''); t.className='show '+cls; clearTimeout(btoast.h); btoast.h=setTimeout(()=>{t.className=''},tip?2600:1500); }
+function bHUD(){
+  $('#bHearts').innerHTML=heartsHTML(BG.hearts,BG.maxHearts);
+  $('#bWaveVal').textContent=`WAVE ${Math.min(BG.wave+1,BG.waves)} OF ${BG.waves}`;
+  $('#bLeft').textContent=(BG.enemies||[]).length;
+  $('#bMegaBtn').hidden=!(BG.ctl==='lanes'&&BG.mega>0);
+  $('#bMegaBtn').textContent=BG.mega>1?`Mega ×${BG.mega}`:'Mega';
+  const bd=$('#bBadge'); bd.hidden=!(BG.blasters>0); bd.textContent=`Blasters level ${BG.blasters+1}`;
+}
+function askMixed(kind,cb,game){
+  game.paused=true; const r=Math.random();
+  const done=ok=>{ game.paused=false; game.asked++; if(ok){game.right++; game.earned+=3;} cb(ok); };
+  if(r<.4) openMath(kind,done); else if(r<.7) openSpell(kind,done); else openVocab(kind,done);
+}
+function bMatch(t){
+  resetPerks();
+  Object.assign(BG,{active:true,team:t,wave:0,waves:3,hearts:3,maxHearts:3,lane:0,x:null,blasters:0,fireT:.4,shots:[],enemies:[],eshots:[],warns:[],mega:0,beam:0,
+    phase:'idle',paused:false,clock:0,last:0,parts:[],earned:0,kills:0,right:0,asked:0,repairUsed:false,nextFire:0,id:(BG.id||0)+1});
+  $('#bThemName').textContent=TEAMS[t].short; S.progress.lastCh=4; save();
+  bPad('none'); show('battle'); BG.active=true;
+  requestAnimationFrame(()=>{ bResize(); bHUD(); if(!BG.loop){BG.loop=true; BG.last=performance.now(); requestAnimationFrame(bLoop);}
+    blater(()=>{btoast(`Ambush by the ${TEAMS[t].name}!`,'gold','Dodge their lasers. Your ship fires on its own.'); blater(bWave,2400);},300); });
+}
+function bWave(){
+  if(!BG.active) return;
+  const T=bSkill(), boss=TEAMS[BG.team].boss&&BG.wave===BG.waves-1;
+  BG.qUsed=false; BG.qAt=BG.clock+R(14,26)/10; BG.q2=Math.random()<EXTRA[S.settings.freq]?BG.clock+R(50,80)/10:null;
+  BG.enemies=[]; BG.eshots=[]; BG.warns=[]; BG.shots=[];
+  if(boss){ const hp=26+Math.round(T*10); BG.enemies.push({lane:0,x:BLX(0),y:-.15,ty:.18,hp,max:hp,boss:true,fireAt:BG.clock+2,hopAt:BG.clock+2.5,tgt:null}); }
+  else {
+    const n=Math.min(4,2+BG.wave+(T>.5?1:0)), hp=2+Math.round(T*2.5);
+    for(let i=0;i<n;i++){ const lane=[-1,0,1][i%3]; BG.enemies.push({lane,x:BLX(lane),y:-.1-i*.06,ty:i<3?.17:.31,hp,max:hp,fireAt:BG.clock+1.4+i*.7+Math.random(),hopAt:BG.clock+2+Math.random()*2,tgt:null}); }
+  }
+  BG.phase='wave'; bPad('lanes'); bHUD();
+  btoast(boss?'The flagship!':`Wave ${BG.wave+1} of 3`,'gold',boss?'Hit the Eclipse Commander\'s flagship until its shield bar is empty!':'');
+}
+function setBLane(l){ if(!BG.active||BG.paused||BG.phase!=='wave') return; BG.lane=l; sfx.tap(); bMark(); }
+function bMega(){
+  if(!BG.active||BG.paused||BG.phase!=='wave'||BG.mega<=0) return;
+  BG.mega--; BG.beam=.5; beep(220,.5,'sawtooth',.12,600); beep(660,.4,'triangle',.1,300,.05);
+  BG.enemies.forEach(e=>{ e.hp-=e.boss?8:4; bBurst(e.x,BYF(e.y),16,['#5FD8FF','#fff','#FFC547']); });
+  BG.eshots=[]; BG.warns=[]; bKillDead(); bHUD(); btoast('MEGA LASER!','gold');
+}
+function bKillDead(){ const before=BG.enemies.length; BG.enemies=BG.enemies.filter(e=>{ if(e.hp<=0){ bBurst(e.x,BYF(e.y),e.boss?40:20,['#FF9F43','#FFC547','#FF6F59','#fff']); beep(120,.3,'square',.08,-60); return false;} return true; });
+  const k=before-BG.enemies.length; if(k){ BG.kills+=k; addCredits(2*k); BG.earned+=2*k; } }
+function bHit(){
+  if(useShield()){ btoast('Shield!','gold','Your Heavy Hauler shield blocked the hit.'); return; }
+  BG.hearts--; sfx.strike(); BG.flash=.4; bHUD(); bBurst(BG.x,BYF(.86),14,['#FF6F59','#FFC547']);
+  if(BG.hearts<=0){ BG.phase='result'; bPad('none'); btoast('Your ship is out of shields!','coral'); blater(()=>bEnd(false),1600); return; }
+  btoast('Hit!','coral','Move away from the red warning lanes.');
+  if(!BG.repairUsed&&BG.hearts<BG.maxHearts&&Math.random()<.6){ BG.repairUsed=true; blater(()=>{ if(BG.phase==='wave') askMixed('repair',ok=>{ if(ok){ BG.hearts=Math.min(BG.maxHearts,BG.hearts+1); bHUD(); btoast('Shield repaired!','gold'); } },BG); },600); }
+}
+function bUpdate(dt){
+  const T=bSkill(), L=S.settings.level;
+  if(BG.x===null) BG.x=BLX(BG.lane);
+  BG.x+=(BLX(BG.lane)-BG.x)*Math.min(1,dt*14);
+  if(BG.beam>0) BG.beam-=dt; if(BG.flash>0) BG.flash-=dt;
+  if(BG.phase!=='wave') return;
+  // questions: at least one per wave
+  if(!BG.qUsed&&BG.clock>=BG.qAt){ BG.qUsed=true; askMixed('mega',ok=>{ if(ok){ BG.mega+=perkC('sports')?2:1; bHUD(); btoast('Tap MEGA to blast every ship!','gold'); } },BG); return; }
+  if(BG.q2&&BG.clock>=BG.q2){ BG.q2=null; askMixed('mega',ok=>{ if(ok){ BG.mega+=1; bHUD(); } },BG); return; }
+  // her blasters
+  BG.fireT-=dt;
+  if(BG.fireT<=0){ BG.fireT=.5*Math.pow(.78,BG.blasters)*(perkC('drones')?.75:1); BG.shots.push({x:BLX(BG.lane),y:.8}); beep(900,.04,'square',.025,-300); }
+  BG.shots.forEach(s=>s.y-=1.25*dt);
+  BG.shots=BG.shots.filter(s=>{
+    if(s.y<-.05) return false;
+    const e=BG.enemies.find(e=>Math.abs(e.x-s.x)<(e.boss?BF.lw*1.4:BF.lw*.45)&&Math.abs(BYF(e.y)-BYF(s.y))<BF.k*(e.boss?1.4:.8)&&e.y>0);
+    if(e){ e.hp--; e.hitT=.12; bBurst(s.x,BYF(s.y),5,[knightBlade(),'#fff']); return false; }
+    return true; });
+  bKillDead(); if(!BG.enemies.length){ bWaveClear(); return; }
+  const warnDur=(L==='easy'?1:L==='hard'?.62:.8)*(perkF('scout')?1.6:1);
+  BG.enemies.forEach(e=>{
+    e.y+=(e.ty-e.y)*Math.min(1,dt*2.2); if(e.hitT>0) e.hitT-=dt;
+    if(e.tgt===null&&BG.clock>=e.hopAt){ const opts=[-1,0,1].filter(l=>Math.abs(l-e.lane)===1&&(e.boss||!BG.enemies.some(o=>o!==e&&o.lane===l&&Math.abs(o.ty-e.ty)<.05))); if(opts.length){ e.tgt=pick(opts); e.hopT=BG.clock; } else e.hopAt=BG.clock+1; }
+    if(e.tgt!==null&&BG.clock-e.hopT>=.5){ e.lane=e.tgt; e.tgt=null; e.hopAt=BG.clock+R(20,40)/10/(.6+T); }
+    e.x+=(BLX(e.lane)-e.x)*Math.min(1,dt*6);
+    if(BG.clock>=e.fireAt&&BG.clock>=BG.nextFire&&e.y>e.ty-.03){
+      const lanes=e.boss?(Math.random()<.35+T*.3?shuffle([-1,0,1]).slice(0,2):[pick([-1,0,1])]):[e.lane];
+      lanes.forEach(l=>BG.warns.push({lane:l,t0:BG.clock,dur:warnDur,y:e.y,boss:e.boss}));
+      e.fireAt=BG.clock+(R(22,36)/10-T*1.2)*(e.boss?.7:1)*(1+BG.enemies.length*.15); BG.nextFire=BG.clock+.55;
+    }
+  });
+  BG.warns=BG.warns.filter(w=>{ if(BG.clock-w.t0>=w.dur){ BG.eshots.push({lane:w.lane,y:w.y+.04,big:w.boss}); beep(300,.12,'sawtooth',.05,-120); return false;} return true; });
+  BG.eshots.forEach(s=>s.y+=1.5*dt);
+  BG.eshots=BG.eshots.filter(s=>{ if(s.y>=.84&&!s.done){ s.done=true; if(Math.abs(BLX(s.lane)-BG.x)<BF.lw*(perkC('drones')?.4:.5)){ bHit(); return false; } } return s.y<1.05; });
+}
+function bWaveClear(){
+  BG.phase='between'; bPad('none'); BG.eshots=[]; BG.warns=[]; BG.shots=[]; sfx.hr();
+  if(BG.wave>=BG.waves-1){ btoast('Ambush defeated!','gold'); blater(()=>bEnd(true),1800); return; }
+  btoast(`Wave ${BG.wave+1} cleared!`,'gold');
+  blater(()=>showMsg({title:'Wave cleared!',art:`<div style="width:160px">${shipSVG(S.ship,'')}</div>`,body:'More ships are coming. Pick an upgrade for your ship:',choices:[
+    {label:'Shields',sub:BG.maxHearts<5?'+1 shield heart':'Refill your shields',art:`<svg viewBox="0 0 60 60">${'<path d="M30 52s-17-10-21-20C6 24 11 15 19 15c5 0 8 3 11 7 3-4 6-7 11-7 8 0 13 9 10 17-4 10-21 20-21 20z" fill="#FF6F59"/>'}</svg>`,cb:()=>{ if(BG.maxHearts<5) BG.maxHearts++; BG.hearts=Math.min(BG.maxHearts,BG.hearts+1); bNextWave(); }},
+    {label:'Blasters',sub:'Fire faster',art:`<svg viewBox="0 0 60 60"><path d="M20 50V14M30 50V8M40 50V14" stroke="#5FD8FF" stroke-width="5" stroke-linecap="round"/><circle cx="30" cy="8" r="4" fill="#fff"/></svg>`,cb:()=>{ BG.blasters++; bNextWave(); }}
+  ]}),1500);
+}
+function bNextWave(){ BG.wave++; bHUD(); blater(bWave,800); }
+function bEnd(win){
+  BG.active=false; bPad('none');
+  const T=TEAMS[BG.team], bonus=(win?25:10)+(perkF('cruiser')?5:0); S.credits+=bonus; BG.earned+=bonus; S.progress.games++;
+  if(win){ awardTrophy(BG.team,BG.team>=(S.progress.ambushBeaten||0)); S.progress.wins++; if(BG.team>=(S.progress.ambushBeaten||0)) S.progress.ambushBeaten=BG.team+1; }
+  const champ=win&&BG.team===TEAMS.length-1; if(champ) S.progress.ambushCup=true;
+  save(); setCredits(true); if(win) sfx.win();
+  const next=TEAMS[BG.team+1];
+  const head=champ?'You beat the Eclipse Commander!':win?`You beat the ${T.short}!`:'Your ship needs repairs';
+  const line=champ?'The flagship surrendered. The Eclipse Commander promised to play fair from now on!':win?`Squadron defeated. You unlocked the ${next.name}!`:'Try again. Dodge the red lanes and charge your Mega Laser.';
+  $('#resultsWrap').innerHTML=`
+    <div class="result-head">
+      <div style="width:min(220px,55%)">${win?shipSVG(S.ship,''):(T.boss?commanderSVG():trooperSVG(BG.team))}</div>
+      <div class="big">${head}</div>
+      <p style="font-size:19px;font-weight:700">${line}</p>
+    </div>
+    <div class="statgrid">
+      <div class="stat"><div class="v">${BG.kills}</div><div class="l">Ships beaten</div></div>
+      <div class="stat"><div class="v">${BG.right}/${BG.asked}</div><div class="l">Questions</div></div>
+      <div class="stat"><div class="v">+${BG.earned}</div><div class="l">Credits</div></div>
+    </div>
+    <div class="row" style="justify-content:center">
+      ${win&&next?`<button class="btn" id="nextBtn">Fight the ${esc(next.short)}</button>`:`<button class="btn" id="againBtn">${champ?'Play again':'Try again'}</button>`}
+      <button class="btn alt" id="toBracket">Missions</button>
+      <button class="btn alt" id="toHangar">Spend credits</button>
+    </div>`;
+  const nb=$('#nextBtn'); if(nb) nb.onclick=()=>{sfx.tap(); bMatch(BG.team+1)};
+  const ab=$('#againBtn'); if(ab) ab.onclick=()=>{sfx.tap(); bMatch(BG.team)};
+  $('#toBracket').onclick=()=>{sfx.tap(); openBracket('ambush')};
+  $('#toHangar').onclick=()=>{sfx.tap(); openHangar('title')};
+  trophyPanel(); show('results');
+}
+$('#bLanePad').addEventListener('pointerdown',e=>{const b=e.target.closest('button[data-l]'); if(b){e.preventDefault(); setBLane(+b.dataset.l);}});
+$('#bLanePad').addEventListener('click',e=>{const b=e.target.closest('button[data-l]'); if(b&&e.detail===0) setBLane(+b.dataset.l);});
+$('#bMegaBtn').addEventListener('pointerdown',e=>{e.preventDefault(); e.stopPropagation(); bMega();});
+$('#bMegaBtn').addEventListener('click',e=>{if(e.detail===0) bMega();});
+bcv.addEventListener('pointerdown',e=>{ e.preventDefault(); if(!BF) return; const r=bcv.getBoundingClientRect(), x=e.clientX-r.left; setBLane(x<BF.cx-BF.lw*.5?-1:x>BF.cx+BF.lw*.5?1:0); });
+document.addEventListener('keydown',e=>{
+  if(cur!=='battle'||!$('#mathModal').hidden||!$('#spellModal').hidden||!$('#msgModal').hidden) return;
+  if(e.key==='ArrowLeft'){e.preventDefault(); setBLane(Math.max(-1,BG.lane-1));} else if(e.key==='ArrowRight'){e.preventDefault(); setBLane(Math.min(1,BG.lane+1));}
+  else if(e.key===' '||e.code==='Space'){e.preventDefault(); bMega();}
+});
+function bBurst(x,y,n,cols){ if(reduced) n=Math.ceil(n/3); for(let i=0;i<n;i++){const a=Math.random()*6.28,v=1+Math.random()*3; BG.parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:1,c:pick(cols)})} }
+const BSTARS=Array.from({length:60},()=>({x:Math.random(),y:Math.random(),s:Math.random()*.6+.2}));
+function drawFighter(e,now){
+  const T=TEAMS[BG.team], s=e.boss?BF.k*2.4:BF.k, x=e.x, y=BYF(e.y), body=e.hitT>0?'#fff':T.body;
+  cx.save(); cx.translate(x,y+Math.sin(now*.004+x)*2);
+  cx.fillStyle=shade(T.body,-.3); cx.beginPath(); cx.moveTo(-s*1.15,-s*.25); cx.lineTo(0,s*.55); cx.lineTo(s*1.15,-s*.25); cx.lineTo(s*.75,-s*.5); cx.lineTo(-s*.75,-s*.5); cx.closePath(); cx.fill();
+  ell(0,0,s*.48,s*.72,body);
+  circle(0,-s*.08,s*.32,T.head);
+  cx.fillStyle=T.visor; roundRect(-s*.24,-s*.14,s*.48,s*.16,s*.08); cx.fill();
+  circle(s*.09,-s*.06,s*.05,T.eye);
+  ell(0,-s*.78,s*.2,s*.12,'rgba(255,159,67,.85)');
+  if(e.boss){ cx.strokeStyle='#FFC547'; cx.lineWidth=3; cx.beginPath(); cx.moveTo(-s*.5,s*.3); cx.lineTo(0,s*.75); cx.lineTo(s*.5,s*.3); cx.stroke(); }
+  cx.restore();
+  if(e.boss||e.max>2){ const w=e.boss?BF.w*.7:s*1.6, bx=e.boss?BF.cx-w/2:x-w/2, by=y-s*(e.boss?1.05:1.05)-8;
+    cx.fillStyle='rgba(10,15,36,.8)'; roundRect(bx,by,w,6,3); cx.fill(); cx.fillStyle=e.boss?'#FFC547':'#FF6F59'; roundRect(bx,by,w*Math.max(0,e.hp/e.max),6,3); cx.fill(); }
+}
+function drawBattle(now){
+  const {x,y,w,h,k}=BF;
+  cx.clearRect(0,0,BW,BH);
+  cx.save(); roundRect(x,y,w,h,14); cx.clip();
+  cx.fillStyle='#070B1C'; cx.fillRect(x,y,w,h);
+  BSTARS.forEach(st=>{ const sy=(st.y+now*.00008*st.s*4)%1; cx.globalAlpha=.3+st.s*.6; cx.fillStyle='#fff'; cx.fillRect(x+st.x*w,y+sy*h,1+st.s*1.5,1+st.s*2); }); cx.globalAlpha=1;
+  cx.strokeStyle='rgba(95,216,255,.12)'; cx.lineWidth=2; [-.5,.5].forEach(l=>{const lx=BF.cx+l*BF.lw; cx.beginPath(); cx.moveTo(lx,y); cx.lineTo(lx,y+h); cx.stroke();});
+  BG.warns.forEach(wn=>{ const p=(BG.clock-wn.t0)/wn.dur, lx=BLX(wn.lane); cx.fillStyle=`rgba(255,111,89,${.12+.25*Math.abs(Math.sin(p*Math.PI*4))})`; cx.fillRect(lx-BF.lw*.45,BYF(wn.y),BF.lw*.9,h);
+    cx.fillStyle='#FF6F59'; cx.font=`400 ${Math.max(14,k*.7)}px Bungee, sans-serif`; cx.textAlign='center'; cx.fillText('!',lx,BYF(.62)); });
+  (BG.enemies||[]).forEach(e=>{ if(e.tgt!==null){ const tx=BLX(e.tgt), yy=BYF(e.y)+BF.k*1.2, dir=Math.sign(tx-e.x); cx.strokeStyle='rgba(255,197,71,.8)'; cx.lineWidth=2; cx.beginPath(); cx.moveTo(e.x,yy); cx.lineTo(tx,yy); cx.stroke(); cx.beginPath(); cx.moveTo(tx,yy); cx.lineTo(tx-dir*6,yy-5); cx.lineTo(tx-dir*6,yy+5); cx.closePath(); cx.fillStyle='rgba(255,197,71,.8)'; cx.fill(); } drawFighter(e,now); });
+  cx.lineCap='round';
+  BG.shots.forEach(s=>{ cx.strokeStyle=knightBlade(); cx.shadowColor=knightBlade(); cx.shadowBlur=10; cx.lineWidth=4; cx.beginPath(); cx.moveTo(s.x,BYF(s.y)); cx.lineTo(s.x,BYF(s.y)+12); cx.stroke(); }); cx.shadowBlur=0;
+  BG.eshots.forEach(s=>{ const lx=BLX(s.lane); cx.strokeStyle='#FF6F59'; cx.shadowColor='#FF6F59'; cx.shadowBlur=12; cx.lineWidth=s.big?9:6; cx.beginPath(); cx.moveTo(lx,BYF(s.y)-18); cx.lineTo(lx,BYF(s.y)); cx.stroke(); }); cx.shadowBlur=0;
+  if(BG.beam>0){ cx.globalAlpha=Math.min(1,BG.beam*2.5); [-1,0,1].forEach(l=>{ const lx=BLX(l); cx.fillStyle='rgba(95,216,255,.55)'; cx.fillRect(lx-BF.lw*.3,y,BF.lw*.6,BYF(.82)-y); cx.fillStyle='rgba(255,255,255,.8)'; cx.fillRect(lx-BF.lw*.08,y,BF.lw*.16,BYF(.82)-y); }); cx.globalAlpha=1; }
+  // your ship
+  const sx=BG.x===null?BLX(0):BG.x, sy=BYF(.86), img=myShipImg(), sw=k*2.9, sh=sw*.6;
+  if(PERK.shield>0||BG.flash>0){ cx.save(); cx.strokeStyle=BG.flash>0?'#FF6F59':'rgba(95,216,255,.6)'; cx.lineWidth=3; cx.beginPath(); cx.arc(sx,sy,k*1.25,0,Math.PI*2); cx.stroke(); cx.restore(); }
+  if(img.complete&&img.naturalWidth){ cx.save(); cx.translate(sx,sy); cx.rotate(-Math.PI/2); cx.drawImage(img,-sw/2,-sh/2,sw,sh); cx.restore(); }
+  else { cx.fillStyle=knightBlade(); cx.beginPath(); cx.moveTo(sx,sy-k); cx.lineTo(sx+k*.7,sy+k*.7); cx.lineTo(sx-k*.7,sy+k*.7); cx.closePath(); cx.fill(); }
+  BG.parts=BG.parts.filter(p=>p.life>0); BG.parts.forEach(p=>{p.x+=p.vx; p.y+=p.vy; p.life-=.025; cx.globalAlpha=Math.max(0,p.life); circle(p.x,p.y,2.4,p.c);}); cx.globalAlpha=1;
+  cx.restore();
+  cx.strokeStyle='rgba(95,216,255,.35)'; cx.lineWidth=2; roundRect(x,y,w,h,14); cx.stroke();
+}
+function bLoop(){
+  if(cur!=='battle'){BG.loop=false; return;}
+  const now=performance.now(), dt=Math.min(.05,(now-BG.last)/1000); BG.last=now;
+  if(BG.active&&BF&&!BG.paused&&$('#msgModal').hidden&&$('#mathModal').hidden&&$('#spellModal').hidden){ BG.clock+=dt; bUpdate(dt); }
+  if(BF){ const prev=cx; cx=bctx; drawBattle(now); cx=prev; }
+  requestAnimationFrame(bLoop);
+}
+
+/* ---------- reading comprehension (CA grade 3 RL/RI 3.1-3.4) ---------- */
+const RTYPES={detail:'Key details',main:'Main idea & lesson',seq:'Order of events',feel:'Characters & feelings',word:'Words in context',cause:'Cause & effect',infer:'Making inferences'};
+const PASSAGES=[
+["Pip the droid loved to collect shiny rocks. Every morning, Pip rolled to the garden dome and looked under the leaves. One day, Pip found a blue crystal that glowed in the dark. Pip carried it home and set it on the shelf by the window.",
+ [['detail','Where did Pip look for rocks?','under the leaves in the garden dome','in the kitchen','on the roof','inside a rocket'],['detail','What did Pip find one day?','a blue crystal that glowed in the dark','a red ball','a lost shoe','a treasure map']]],
+["The station lights flickered and went out. Mia could not see her own hand. Then she remembered the flashlight in her backpack. She opened the zipper, felt around, and clicked it on. A bright circle of light showed the hallway to the control room.",
+ [['seq','What did Mia do right after she remembered the flashlight?','She opened her backpack.','She clicked it on.','She ran to the control room.','She went to sleep.'],['cause','Why did Mia need the flashlight?','The lights went out.','She lost her shoe.','It was her birthday.','She wanted to read a book.']]],
+["Leo was nervous about his first day at Moon School. His hands felt shaky, and his tummy did flips. Then a girl named Zuri waved and said, \"Sit with me!\" Leo smiled. By lunch, the two of them were laughing together.",
+ [['feel','How did Leo feel at the beginning?','nervous','angry','sleepy','bored'],['feel','How did Leo feel by lunch?','happy','scared','grumpy','lonely']]],
+["Comets are balls of ice, dust, and rock. When a comet gets close to the Sun, its ice starts to turn into gas. The gas and dust make a long, glowing tail. Some comet tails are millions of miles long!",
+ [['main','What is this passage mostly about?','how comets get their tails','how to build a rocket','why the Moon is round','what astronauts eat'],['cause','What happens when a comet gets close to the Sun?','Its ice turns into gas and makes a tail.','It turns into a planet.','It stops moving.','It gets colder.']]],
+["Rosa wanted to grow a space garden. First, she filled a pot with soil. Next, she pressed three seeds into the dirt. Then she watered them and set the pot under the grow light. A week later, tiny green sprouts popped up.",
+ [['seq','What did Rosa do after she filled the pot with soil?','She pressed seeds into the dirt.','She watered the seeds.','She set the pot under the light.','She picked the sprouts.'],['detail','How long did it take for the sprouts to pop up?','a week','a day','a month','an hour']]],
+["The rover rolled across the dusty red ground of Mars. Its wheels left long tracks behind it. The rover stopped to scoop up some soil with its robot arm. Scientists on Earth would study the soil to learn if Mars ever had water.",
+ [['word','In this passage, what does "scoop" mean?','to pick up with something shaped like a spoon','to throw far away','to paint','to bury'],['cause','Why did the rover scoop up soil?','so scientists could study it','to build a castle','to clean its wheels','to feed a pet']]],
+["Kenji's droid, Bolt, beeped three times. That was Bolt's way of saying, \"I'm hungry!\" Kenji laughed and plugged Bolt into the charger. Bolt's lights turned from red to green, and he spun in a happy circle.",
+ [['infer','What does Bolt mean when he says he is hungry?','He needs to be charged.','He wants pizza.','He is sleepy.','He is lost.'],['detail','What color did Bolt\'s lights turn after charging?','green','red','blue','purple']]],
+["Amara practiced her soccer kicks every day after school. At first, the ball went everywhere except the goal. She kept trying anyway. After two weeks, she could kick it into the corner of the net almost every time.",
+ [['main','What is the lesson of this story?','Practice helps you get better.','Soccer is too hard.','Never try new things.','Balls are round.'],['feel','Which word best describes Amara?','hard-working','lazy','mean','silly']]],
+["The Moon does not make its own light. It looks bright because sunlight bounces off it. As the Moon travels around Earth, we see different amounts of its sunny side. That is why the Moon seems to change shape.",
+ [['detail','Why does the Moon look bright?','Sunlight bounces off it.','It has lamps on it.','It is on fire.','It is made of glass.'],['main','What is the main idea?','The Moon seems to change shape because we see different sunny parts.','The Moon is made of cheese.','Earth is flat.','Stars are tiny.']]],
+["Omar heard a tiny squeak coming from the cargo bay. He tiptoed closer and lifted a blanket. Underneath was a little kitten with silver fur! It was shivering, so Omar wrapped it in the blanket and gave it some warm milk.",
+ [['cause','Why did Omar wrap the kitten in the blanket?','It was shivering.','It was hungry.','It was dirty.','It was sleepy.'],['word','What does "tiptoed" mean?','walked quietly on the front of his feet','ran very fast','jumped high','crawled on the floor']]],
+["Priya's team needed one more point to win the spelling bee. Her word was \"beautiful.\" She took a deep breath and spelled it slowly: B-E-A-U-T-I-F-U-L. The judge smiled and rang the bell. Her whole team cheered!",
+ [['detail','What word did Priya spell?','beautiful','because','believe','balloon'],['infer','Did Priya spell the word correctly?','Yes, because the judge smiled and her team cheered.','No, she missed a letter.','She did not try.','The story does not give any clues.']]],
+["Astronauts on the space station drink water from pouches with straws. If they poured water into a cup, it would float out in wobbly blobs! There is very little gravity on the station, so things do not fall down.",
+ [['cause','Why do astronauts drink from pouches with straws?','Water would float out of a cup.','They like straws.','Cups are too heavy.','The water is too hot.'],['main','What is this passage mostly about?','how astronauts drink in space','how to grow plants','what rockets are made of','why the sky is blue']]],
+["Theo built a tower of blocks as tall as his little brother. Then the station rocked as a ship docked. The tower wobbled and fell with a crash! His brother started to cry, but Theo said, \"Let's build an even taller one together.\"",
+ [['cause','What made the tower fall?','The station rocked when a ship docked.','Theo kicked it.','His brother pushed it.','A droid bumped it.'],['feel','What kind of brother is Theo?','kind','mean','lazy','scared']]],
+["Saturn is the second-largest planet. It is famous for its beautiful rings. The rings are made of billions of chunks of ice and rock. Some chunks are as small as a grain of sand, and some are as big as a house.",
+ [['detail','What are Saturn\'s rings made of?','chunks of ice and rock','ribbons','gold','clouds of candy'],['detail','How big are the biggest chunks in the rings?','as big as a house','as big as the Moon','as small as a crumb','as big as a shoe']]],
+["Diego looked at the clock. It said 7:55, and school started at 8:00! He grabbed his helmet, stuffed his lunch in his bag, and zoomed down the hallway on his scooter. He slid into his seat just as the bell rang.",
+ [['infer','How do you think Diego felt when he saw the clock?','worried he would be late','bored','sleepy','angry at his friend'],['detail','What time did school start?','8:00','7:55','9:00','7:00']]],
+["The droid's trail led into a cave full of glowing mushrooms. The mushrooms gave off a soft green light, so the cave was not scary at all. In the mud were tiny wheel tracks. \"The droid came this way!\" said Little Cadet.",
+ [['infer','How did they know the droid went into the cave?','There were tiny wheel tracks in the mud.','They heard it beep.','They saw a map.','The mushrooms told them.'],['word','The mushrooms "gave off" light. What does "gave off" mean?','made or sent out','took away','ate','hid']]],
+["Before a rocket launches, the crew checks everything. They test the engines, check the fuel, and make sure the radios work. They even check the seat belts. If something is wrong, they fix it before blasting off.",
+ [['main','What is the main idea?','The crew checks everything before launch to stay safe.','Rockets are loud.','Seat belts are blue.','Radios are fun.'],['detail','What does the crew do if something is wrong?','They fix it before blasting off.','They launch anyway.','They go home.','They take a nap.']]],
+["Zuri and her mom made star cookies for the station party. They mixed flour, sugar, and butter. Then they rolled the dough flat and cut out star shapes. While the cookies baked, the whole hallway smelled sweet.",
+ [['seq','What did they do right before cutting out the stars?','They rolled the dough flat.','They baked the cookies.','They ate the cookies.','They went to the party.'],['cause','Why did the hallway smell sweet?','The cookies were baking.','Flowers were blooming.','Someone sprayed perfume.','A droid was cleaning.']]],
+["A meteor shower happens when Earth passes through a trail of space dust. The tiny bits burn up high in the sky and make streaks of light. People call them \"shooting stars,\" but they are not really stars at all.",
+ [['detail','What makes the streaks of light?','tiny bits of space dust burning up','stars falling down','airplanes','fireworks'],['main','What is the author\'s main point?','Shooting stars are really burning bits of space dust.','Stars fall to Earth every night.','Meteors are planets.','The sky is dark at night.']]],
+["Little Cadet found a shiny bolt on the path. \"This looks like part of my droid!\" she said. A little farther, she found a tiny antenna. \"And this too!\" Each piece was a clue that led them closer to the missing droid.",
+ [['main','What is this part of the story mostly about?','finding clues that lead to the droid','baking cookies','playing soccer','going to school'],['infer','Why was Little Cadet excited about the bolt?','It looked like part of her droid.','It was made of gold.','She wanted to build a rocket.','She collects bolts.']]],
+["Gus the space hamster was the class pet. Every Friday, a different student took him home. When it was Amara's turn, she built Gus a little maze out of tubes. Gus ran through it again and again, squeaking with joy.",
+ [['detail','When did a student take Gus home?','every Friday','every day','on Mondays','never'],['feel','How did Gus feel about the maze?','He loved it.','He was scared.','He was bored.','He was angry.']]],
+["The station's water recycler is very important. It cleans used water so people can use it again. Without it, the crew would need to bring huge tanks of new water from Earth, which would be hard and expensive.",
+ [['word','What is a "recycler" in this passage?','a machine that cleans water so it can be used again','a bicycle','a trash can','a kind of snack'],['cause','What would happen without the recycler?','The crew would need to bring lots of water from Earth.','They would have extra water.','Nothing would change.','Plants would grow faster.']]],
+["Leo dropped his ice cream on the floor and felt like crying. His friend Kenji split his own ice cream in half and handed one part to Leo. \"Now we both have some,\" Kenji said. Leo grinned.",
+ [['feel','Which word describes Kenji?','generous','selfish','grumpy','sleepy'],['feel','How did Leo feel at the end?','happy','sad','mad','scared']]],
+["At last, the trail ended at the Eclipse Base. Through a window, the crew saw Little Cadet's droid! It was helping the Troopers fix a broken engine. \"It wasn't stolen,\" Mom said. \"It wanted to help!\"",
+ [['infer','Why was the droid at the Eclipse Base?','It wanted to help fix an engine.','It was lost forever.','It was hiding from everyone.','It wanted ice cream.'],['detail','What was the droid doing?','helping fix a broken engine','sleeping','painting a wall','dancing']]]
+];
+const RQS=[]; PASSAGES.forEach(([p,qs],pi)=>qs.forEach(q=>RQS.push({pi,p,t:q[0],q:q[1],a:q[2],d:[q[3],q[4],q[5]]})));
+function pickRead(){
+  if(!S.rReview) S.rReview=[];
+  if(S.rReview.length&&Math.random()<.35){ const i=S.rReview.shift(); save(); if(RQS[i]) return {i,review:true}; }
+  const types=Object.keys(RTYPES), ws=types.map(t=>{const st=S.stats['r_'+t]||{r:0,w:0}; return Math.min(3,Math.max(.6,(st.w+1)/(st.r+1)*1.5));});
+  let x=Math.random()*ws.reduce((a,b)=>a+b,0), ty=types[0]; for(let k=0;k<types.length;k++){x-=ws[k]; if(x<=0){ty=types[k];break}}
+  const recent=S.rRecent||[];
+  let pool=RQS.map((q,i)=>i).filter(i=>RQS[i].t===ty&&!recent.includes(RQS[i].pi)); if(!pool.length) pool=RQS.map((q,i)=>i).filter(i=>!recent.includes(RQS[i].pi));
+  const i=pick(pool); S.rRecent=[RQS[i].pi,...recent].slice(0,8); return {i};
+}
+const RKIND={clue:{t:'Droid clue!',s:'Read the clue. Answer right to power up your tractor beam.',ok:'Tractor beam on!'},rock:{t:'Rock slide!',s:'Answer right to get a shield bubble.',ok:'Shield bubble on!'}};
+let RQ=null;
+function openRead(kind,cb){
+  const {i,review}=pickRead(), it=RQS[i];
+  RQ={i,it,cb,kind,locked:false,choices:shuffle([it.a,...it.d])};
+  const K=RKIND[kind];
+  $('#mqTitle').textContent=K.t; $('#mqSub').textContent=K.s+(review?' (Practice round)':'');
+  $('#mqText').innerHTML=`<div class="passage">${esc(it.p)}</div>${canSpeak?'<button class="btn alt small" data-readaloud="1">Read it to me</button>':''}<p class="rq">${esc(it.q)}</p>`;
+  $('#mqVisual').hidden=true; $('#mqHint').hidden=true; $('#mqAnswer').hidden=true; $('#mqKeypad').hidden=true;
+  const ch=$('#mqChoices'); ch.hidden=false; ch.innerHTML=RQ.choices.map((c,k)=>`<button data-r="${k}">${esc(c)}</button>`).join('');
+  $('#mqFb').hidden=true; $('#mqContinue').hidden=true;
+  $('#labHint').hidden=!perkC('lab'); $('#labHint').disabled=false;
+  $('#mathModal').classList.add('vocab','reading'); $('#mathModal').hidden=false;
+}
+function gradeRead(k,btn){
+  if(!RQ||RQ.locked) return; RQ.locked=true;
+  const it=RQ.it, given=RQ.choices[k], ok=given===it.a;
+  if(!ok&&useRescue()){ const fb=$('#mqFb'); fb.hidden=false; fb.className='fb bad'; fb.innerHTML='<strong>Rescue Pod!</strong>Not quite, but you get one more try. Look back at the story.'; sfx.wrong(); if(btn){btn.classList.add('wrong'); btn.disabled=true;} RQ.locked=false; return; }
+  const key='r_'+it.t, st=S.stats[key]||(S.stats[key]={r:0,w:0}); ok?st.r++:st.w++;
+  if(!ok){ if(!S.rReview) S.rReview=[]; if(!S.rReview.includes(RQ.i)) S.rReview.push(RQ.i); if(S.rReview.length>20) S.rReview.shift();
+    S.rMissed=[{q:it.q,a:it.a},...(S.rMissed||[])].slice(0,12); }
+  save(); RG.asked++; if(ok) RG.right++;
+  $$('#mqChoices button').forEach(b=>{const c=RQ.choices[+b.dataset.r]; if(c===it.a) b.classList.add('right'); else if(b===btn) b.classList.add('wrong');});
+  const fb=$('#mqFb'); fb.hidden=false;
+  if(ok){ fb.className='fb good'; fb.innerHTML=`<strong>${RKIND[RQ.kind].ok}</strong>+3 credits`; addCredits(3); RG.earned+=3; sfx.right(); setTimeout(()=>closeRead(true),1300); }
+  else { fb.className='fb bad'; fb.innerHTML=`<strong>Not quite</strong>The answer is: ${esc(it.a)} Look back at the story to find the clue.`; sfx.wrong(); $('#mqContinue').hidden=false; setTimeout(()=>$('#mqContinue').focus(),30); }
+}
+function closeRead(ok,silent){
+  if(!RQ) return; try{ if(canSpeak) speechSynthesis.cancel(); }catch(e){}
+  $('#mathModal').hidden=true; $('#mathModal').classList.remove('vocab','reading');
+  const cb=RQ.cb; RQ=null; RG.paused=false; if(!silent&&cb) cb(ok);
+}
+$('#mqChoices').addEventListener('click',e=>{const b=e.target.closest('button[data-r]'); if(!b||!RQ) return; gradeRead(+b.dataset.r,b);});
+$('#mqContinue').addEventListener('click',()=>{ if(RQ){ sfx.tap(); closeRead(false); } });
+$('#mqText').addEventListener('click',e=>{ if(e.target.closest('[data-readaloud]')&&RQ) say(`${RQ.it.p} ${RQ.it.q}`); });
+$('#labHint').addEventListener('click',()=>{ if(RQ&&!RQ.locked){ dropWrong('#mqChoices button',b=>RQ.choices[+b.dataset.r],RQ.it.a); sfx.tap(); $('#labHint').disabled=true; } });
+document.addEventListener('keydown',e=>{ if(!RQ||RQ.locked||$('#mathModal').hidden) return; if(/^[1-4]$/.test(e.key)){const b=$$('#mqChoices button')[+e.key-1]; if(b&&!b.disabled) gradeRead(+e.key-1,b);} });
+
+/* ---------- chapter 5: the missing droid (rescue run, reading) ---------- */
+const RESCUE=[
+  {name:'Glow Caves',short:'Glow Caves',col:'#43E5B0',part:'a shiny bolt'},
+  {name:'Lava Moon',short:'Lava Moon',col:'#FF6F59',part:'its little antenna'},
+  {name:'Ice Rings',short:'Ice Rings',col:'#5FD8FF',part:'one of its wheels'},
+  {name:'Comet Trail',short:'Comet Trail',col:'#FFC547',part:'its blinking light'},
+  {name:'Eclipse Base',short:'Eclipse Base',col:'#9B6BFF',part:'the droid itself',boss:true}
+];
+const planetSVG=c=>`<svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="20" fill="${c}"/><circle cx="23" cy="24" r="5" fill="${shade(c,.35)}" opacity=".7"/><circle cx="36" cy="37" r="3.5" fill="${shade(c,-.3)}"/><ellipse cx="30" cy="30" rx="28" ry="7" fill="none" stroke="${shade(c,.4)}" stroke-width="2.5" transform="rotate(-18 30 30)"/></svg>`;
+const RG={active:false,parts:[],paused:false};
+const rcv=$('#trail'), rctx=rcv.getContext('2d');
+let RW=300,RH=300,RF=null;
+const rSkill=()=>Math.max(.2,Math.min(.85,TEAMS[RG.team||0].skill+(S.settings.level==='easy'?-.08:S.settings.level==='hard'?.08:0)));
+function rlater(fn,ms){const id=RG.id; setTimeout(()=>{if(RG.active&&RG.id===id) fn()},ms)}
+function rResize(){
+  const r=rcv.getBoundingClientRect(), d=Math.min(2,window.devicePixelRatio||1);
+  RW=Math.max(200,r.width); RH=Math.max(180,r.height);
+  rcv.width=Math.round(RW*d); rcv.height=Math.round(RH*d); rctx.setTransform(d,0,0,d,0,0);
+  const wide=RW/RH>1.2; $('#rLanePad').classList.toggle('side',wide);
+  const w=wide?RW-250:RW-20, h=wide?RH-20:RH-126;
+  RF={x:10,y:10,w,h}; RF.k=Math.min(h*.11,w*.09); RF.px=RF.x+w*.2;
+}
+window.addEventListener('resize',()=>{if(cur==='rescue') rResize();});
+const RLY=l=>RF.y+RF.h*(.5+l*.27);
+function rPad(m){ $('#rLanePad').hidden=m!=='lanes'; RG.ctl=m; rMark(); }
+function rMark(){ $$('#rLanePad button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.l===RG.lane)); }
+function rtoast(text,cls='',tip=''){ const t=$('#rToast'); t.innerHTML=esc(text)+(tip?`<span class="tip">${esc(tip)}</span>`:''); t.className='show '+cls; clearTimeout(rtoast.h); rtoast.h=setTimeout(()=>{t.className=''},tip?2600:1500); }
+function rHUD(){
+  $('#rHearts').innerHTML=heartsHTML(RG.hearts,3);
+  $('#rLegVal').textContent=`LEG ${Math.min(RG.leg+1,3)} OF 3`;
+  $('#rGears').textContent=RG.gears;
+  const bd=$('#rBadge'), on=RG.beam>0||RG.bubble; bd.hidden=!on; bd.textContent=RG.bubble&&RG.beam>0?'Beam + bubble':RG.bubble?'Shield bubble on':'Tractor beam on';
+}
+function rMatch(t){
+  resetPerks();
+  Object.assign(RG,{active:true,team:t,leg:0,hearts:3,lane:0,y:null,obs:[],gears:0,items:[],beam:0,bubble:false,path:'cave',phase:'idle',paused:false,
+    clock:0,last:0,parts:[],earned:0,right:0,asked:0,dist:0,id:(RG.id||0)+1});
+  $('#rPlace').textContent=RESCUE[t].short; S.progress.lastCh=5; save();
+  rPad('none'); show('rescue'); RG.active=true;
+  requestAnimationFrame(()=>{ rResize(); rHUD(); if(!RG.loop){RG.loop=true; RG.last=performance.now(); requestAnimationFrame(rLoop);}
+    rlater(()=>{rtoast(RESCUE[t].name,'gold','Follow the droid\'s trail. Dodge rocks and grab gears!'); rlater(rLeg,2200);},300); });
+}
+function rLeg(){
+  if(!RG.active) return;
+  const L=S.settings.level, T=rSkill();
+  RG.legDur=(L==='easy'?16:L==='hard'?22:19); RG.legT=0; RG.obs=[]; RG.items=[]; RG.spawnT=1.2;
+  RG.extraAt=Math.random()<EXTRA[S.settings.freq]+.15?R(60,120)/10:null;
+  RG.phase='clue'; rHUD();
+  rlater(()=>{ RG.paused=true; openRead('clue',ok=>{ if(ok){ RG.beam=perkC('sports')?12:8; } rHUD(); rStartRun(); }); },600);
+}
+function rStartRun(){ RG.phase='run'; rPad('lanes'); rtoast(`Leg ${RG.leg+1} of 3`,'gold',RG.path==='sky'?'Sky bridge: fewer rocks.':'Cave tunnel: more gears!'); }
+function setRLane(l){ if(!RG.active||RG.paused||RG.phase!=='run') return; RG.lane=l; sfx.tap(); rMark(); }
+function rUpdate(dt){
+  if(RG.y===null) RG.y=RLY(0);
+  RG.y+=(RLY(RG.lane)-RG.y)*Math.min(1,dt*14);
+  if(RG.phase!=='run') return;
+  const T=rSkill(), cave=RG.path==='cave';
+  const spd=Math.min(RF.w,560)*(.34+T*.3)*(perkF('scout')?.87:1)*(cave?1.08:.95);
+  RG.legT+=dt; RG.dist+=spd*dt; if(RG.beam>0){ RG.beam-=dt; if(RG.beam<=0) rHUD(); }
+  if(RG.extraAt!==null&&RG.legT>=RG.extraAt){ RG.extraAt=null; RG.paused=true; openRead('rock',ok=>{ if(ok){ RG.bubble=true; } rHUD(); }); return; }
+  RG.spawnT-=dt;
+  if(RG.spawnT<=0&&RG.legT<RG.legDur-1.5){
+    RG.spawnT=(1.25-T*.45)*(cave?.95:1.3)*(.85+Math.random()*.3);
+    const two=Math.random()<T*.55*(cave?1:.6), lanes=shuffle([-1,0,1]), block=two?lanes.slice(0,2):[lanes[0]];
+    const x=RF.x+RF.w+30;
+    block.forEach(l=>RG.obs.push({x,lane:l,kind:pick(['rock','crystal','meteor']),rot:Math.random()*6}));
+    const free=lanes.filter(l=>!block.includes(l));
+    if(Math.random()<(cave?.85:.55)) RG.items.push({x:x+RF.k*1.5,lane:pick(free),got:false});
+  }
+  RG.obs.forEach(o=>{ o.x-=spd*dt; o.rot+=dt*2; });
+  RG.items.forEach(g=>{ g.x-=spd*dt;
+    if(RG.beam>0&&!g.got&&g.x<RF.px+RF.w*.45&&g.x>RF.px-RF.k){ g.x+=(RF.px-g.x)*Math.min(1,dt*4); g.lane=RG.lane; } });
+  const hb=RF.k*(perkC('drones')?.45:.65);
+  RG.obs=RG.obs.filter(o=>{
+    if(!o.hit&&Math.abs(o.x-RF.px)<hb&&Math.abs(RLY(o.lane)-RG.y)<RF.h*.12){ o.hit=true;
+      if(RG.bubble){ RG.bubble=false; rHUD(); rtoast('Bubble pop!','gold','Your shield bubble saved you.'); beep(600,.2,'sine',.1,400); rBurst(o.x,RLY(o.lane),12,['#5FD8FF','#fff']); return false; }
+      if(useShield()){ rtoast('Shield!','gold','Your Heavy Hauler shield blocked the rock.'); rBurst(o.x,RLY(o.lane),12,['#5FD8FF','#fff']); return false; }
+      RG.hearts--; sfx.strike(); RG.flash=.4; rHUD(); rBurst(RF.px,RG.y,14,['#FF6F59','#FFC547']);
+      if(RG.hearts<=0){ RG.phase='result'; rPad('none'); rtoast('Out of hearts!','coral'); rlater(()=>rEnd(false),1600); }
+      else rtoast('Ouch!','coral','Move to a lane with no rocks.');
+      return false; }
+    return o.x>RF.x-60; });
+  RG.items=RG.items.filter(g=>{ if(!g.got&&Math.abs(g.x-RF.px)<RF.k*.8&&Math.abs(RLY(g.lane)-RG.y)<RF.h*.14){ g.got=true; RG.gears++; addCredits(1); RG.earned+=1; beep(1100,.06,'triangle',.06); rHUD(); return false; } return g.x>RF.x-40; });
+  if(RG.flash>0) RG.flash-=dt;
+  if(RG.legT>=RG.legDur&&RG.phase==='run') rLegDone();
+}
+function rLegDone(){
+  RG.phase='between'; rPad('none'); RG.obs=[]; RG.items=[]; sfx.hr();
+  if(RG.leg>=2){ rtoast('You found it!','gold'); rlater(()=>rEnd(true),1500); return; }
+  rtoast(`Leg ${RG.leg+1} done!`,'gold');
+  rlater(()=>showMsg({title:'Pick your path',art:person(knightOf()),body:'The trail splits in two. Which way?',choices:[
+    {label:'Cave tunnel',sub:'More gears, more rocks',art:`<svg viewBox="0 0 60 60"><path d="M6 52Q8 10 30 8Q52 10 54 52Z" fill="#3A3260"/><path d="M18 52Q19 26 30 24Q41 26 42 52Z" fill="#0A0F24"/><circle cx="30" cy="42" r="5" fill="#FFC547"/></svg>`,cb:()=>{RG.path='cave'; rNextLeg();}},
+    {label:'Sky bridge',sub:'Fewer rocks, fewer gears',art:`<svg viewBox="0 0 60 60"><path d="M4 40Q30 18 56 40" stroke="#5FD8FF" stroke-width="5" fill="none"/><path d="M12 34v14M30 26v22M48 34v14" stroke="#5FD8FF" stroke-width="3"/><circle cx="44" cy="14" r="6" fill="#FFC547"/></svg>`,cb:()=>{RG.path='sky'; rNextLeg();}}
+  ]}),1400);
+}
+function rNextLeg(){ RG.leg++; rHUD(); rlater(rLeg,600); }
+function rEnd(win){
+  RG.active=false; rPad('none');
+  const M=RESCUE[RG.team], bonus=(win?25:10)+(perkF('cruiser')?5:0); S.credits+=bonus; RG.earned+=bonus; S.progress.games++;
+  if(win){ awardTrophy(RG.team,RG.team>=(S.progress.rescueBeaten||0)); S.progress.wins++; if(RG.team>=(S.progress.rescueBeaten||0)) S.progress.rescueBeaten=RG.team+1; }
+  const champ=win&&RG.team===RESCUE.length-1; if(champ) S.progress.rescueCup=true;
+  save(); setCredits(true); if(win) sfx.win();
+  const next=RESCUE[RG.team+1];
+  const head=champ?'You found the droid!':win?`You found ${M.part}!`:'The trail got too bumpy';
+  const line=champ?'The droid was helping fix an engine at the Eclipse Base. Little Cadet gave it the biggest hug ever!':win?`One more clue for Little Cadet. Next stop: ${next.name}!`:'Try again. Read the clues carefully and dodge the rocks.';
+  $('#resultsWrap').innerHTML=`
+    <div class="result-head">
+      <div style="width:min(200px,50%)">${champ?droidSVG(S.ship.droidHead,S.ship.droidColor):win?person(FAMILY.cadet):planetSVG(M.col)}</div>
+      <div class="big">${head}</div>
+      <p style="font-size:19px;font-weight:700">${line}</p>
+    </div>
+    <div class="statgrid">
+      <div class="stat"><div class="v">${RG.gears}</div><div class="l">Gears found</div></div>
+      <div class="stat"><div class="v">${RG.right}/${RG.asked}</div><div class="l">Clues solved</div></div>
+      <div class="stat"><div class="v">+${RG.earned}</div><div class="l">Credits</div></div>
+    </div>
+    <div class="row" style="justify-content:center">
+      ${win&&next?`<button class="btn" id="nextBtn">Go to ${esc(next.name)}</button>`:`<button class="btn" id="againBtn">${champ?'Play again':'Try again'}</button>`}
+      <button class="btn alt" id="toBracket">Rescue map</button>
+      <button class="btn alt" id="toHangar">Spend credits</button>
+    </div>`;
+  const nb=$('#nextBtn'); if(nb) nb.onclick=()=>{sfx.tap(); rMatch(RG.team+1)};
+  const ab=$('#againBtn'); if(ab) ab.onclick=()=>{sfx.tap(); rMatch(RG.team)};
+  $('#toBracket').onclick=()=>{sfx.tap(); openBracket('rescue')};
+  $('#toHangar').onclick=()=>{sfx.tap(); openHangar('title')};
+  trophyPanel(); show('results');
+}
+$('#rLanePad').addEventListener('pointerdown',e=>{const b=e.target.closest('button[data-l]'); if(b){e.preventDefault(); setRLane(+b.dataset.l);}});
+$('#rLanePad').addEventListener('click',e=>{const b=e.target.closest('button[data-l]'); if(b&&e.detail===0) setRLane(+b.dataset.l);});
+rcv.addEventListener('pointerdown',e=>{ e.preventDefault(); if(!RF) return; const r=rcv.getBoundingClientRect(), y=e.clientY-r.top; setRLane(y<RLY(-.5)?-1:y>RLY(.5)?1:0); });
+document.addEventListener('keydown',e=>{
+  if(cur!=='rescue'||!$('#mathModal').hidden||!$('#msgModal').hidden) return;
+  if(e.key==='ArrowUp'){e.preventDefault(); setRLane(Math.max(-1,RG.lane-1));} else if(e.key==='ArrowDown'){e.preventDefault(); setRLane(Math.min(1,RG.lane+1));}
+});
+function rBurst(x,y,n,cols){ if(reduced) n=Math.ceil(n/3); for(let i=0;i<n;i++){const a=Math.random()*6.28,v=1+Math.random()*3; RG.parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:1,c:pick(cols)})} }
+function drawGear(x,y,r,rot){ cx.save(); cx.translate(x,y); cx.rotate(rot); cx.fillStyle='#FFC547';
+  cx.beginPath(); for(let i=0;i<16;i++){ const a=i/16*Math.PI*2, rr=i%2?r:r*.75; cx.lineTo(Math.cos(a)*rr,Math.sin(a)*rr);} cx.closePath(); cx.fill(); circle(0,0,r*.32,'#B9822A'); cx.restore(); }
+function drawObstacle(o){
+  const x=o.x, y=RLY(o.lane), k=RF.k, M=RESCUE[RG.team];
+  cx.save(); cx.translate(x,y);
+  if(o.kind==='crystal'){ cx.fillStyle=shade(M.col,-.2); cx.beginPath(); cx.moveTo(0,-k*.85); cx.lineTo(k*.5,0); cx.lineTo(0,k*.75); cx.lineTo(-k*.5,0); cx.closePath(); cx.fill(); cx.fillStyle='rgba(255,255,255,.35)'; cx.beginPath(); cx.moveTo(0,-k*.85); cx.lineTo(k*.15,0); cx.lineTo(0,k*.75); cx.closePath(); cx.fill(); }
+  else if(o.kind==='meteor'){ cx.fillStyle='rgba(255,159,67,.45)'; cx.beginPath(); cx.moveTo(k*.4,-k*.4); cx.lineTo(k*1.6,-k*.2); cx.lineTo(k*1.6,k*.2); cx.lineTo(k*.4,k*.4); cx.closePath(); cx.fill(); cx.rotate(o.rot); circle(0,0,k*.5,'#8B5A44'); circle(-k*.15,-k*.1,k*.12,'#5A3A2C'); circle(k*.18,k*.15,k*.09,'#5A3A2C'); }
+  else { cx.rotate(o.rot*.2); cx.fillStyle='#6B5A8E'; cx.beginPath(); for(let i=0;i<8;i++){ const a=i/8*Math.PI*2, rr=k*(.5+((i*37)%5)/20); cx.lineTo(Math.cos(a)*rr,Math.sin(a)*rr);} cx.closePath(); cx.fill(); circle(-k*.15,-k*.1,k*.1,'#4E3A8E'); }
+  cx.restore();
+}
+function drawRescue(now){
+  const {x,y,w,h,k}=RF, M=RESCUE[RG.team||0];
+  cx.clearRect(0,0,RW,RH);
+  cx.save(); roundRect(x,y,w,h,14); cx.clip();
+  const g=cx.createLinearGradient(0,y,0,y+h); g.addColorStop(0,'#0D1330'); g.addColorStop(1,shade(M.col,-.75)); cx.fillStyle=g; cx.fillRect(x,y,w,h);
+  const off=(RG.dist||0);
+  cx.fillStyle='#fff'; for(let i=0;i<40;i++){ const sx=x+((i*173-off*.1)%w+w)%w, sy=y+((i*97)%100)/100*h*.9; cx.globalAlpha=.25+(i%4)*.12; cx.fillRect(sx,sy,2,2);} cx.globalAlpha=1;
+  // far hills
+  cx.fillStyle=shade(M.col,-.6); cx.beginPath(); cx.moveTo(x,y+h); for(let i=0;i<=24;i++){ const px=x+i*w/24, py=y+h*.82+Math.sin(i*1.3+off*.004)*h*.05; cx.lineTo(px,py);} cx.lineTo(x+w,y+h); cx.closePath(); cx.fill();
+  // lanes
+  cx.setLineDash([6,10]); cx.strokeStyle='rgba(255,255,255,.12)'; cx.lineWidth=2; [-.5,.5].forEach(l=>{ const ly=RF.y+RF.h*(.5+l*.27); cx.beginPath(); cx.moveTo(x,ly); cx.lineTo(x+w,ly); cx.stroke(); }); cx.setLineDash([]);
+  // progress
+  if(RG.legDur){ const p=Math.min(1,RG.legT/RG.legDur), bw=w*.5, bx=x+w*.25, by=y+8; cx.fillStyle='rgba(10,15,36,.8)'; roundRect(bx,by,bw,8,4); cx.fill(); cx.fillStyle=M.col; roundRect(bx,by,bw*p,8,4); cx.fill(); circle(bx+bw,by+4,6,'#FFC547'); }
+  (RG.items||[]).forEach(gi=>drawGear(gi.x,RLY(gi.lane),k*.32,now*.003));
+  (RG.obs||[]).forEach(drawObstacle);
+  // tractor beam
+  if(RG.beam>0){ cx.save(); cx.globalAlpha=.18+.08*Math.sin(now*.01); cx.fillStyle='#43E5B0'; cx.beginPath(); cx.moveTo(RF.px,RG.y-k*.3); cx.lineTo(RF.px+w*.45,RG.y-h*.35); cx.lineTo(RF.px+w*.45,RG.y+h*.35); cx.lineTo(RF.px,RG.y+k*.3); cx.closePath(); cx.fill(); cx.restore(); }
+  // her, with jetpack
+  const py=(RG.y===null||RG.y===undefined)?RLY(0):RG.y, bob=Math.sin(now*.008)*2;
+  cx.fillStyle='#8A93B8'; roundRect(RF.px-k*.75,py-k*.55+bob,k*.35,k*.7,4); cx.fill();
+  cx.fillStyle=`rgba(255,197,71,${.7+.3*Math.sin(now*.03)})`; cx.beginPath(); cx.moveTo(RF.px-k*.72,py+k*.15+bob); cx.lineTo(RF.px-k*1.3-Math.random()*k*.3,py+k*.3+bob); cx.lineTo(RF.px-k*.45,py+k*.2+bob); cx.closePath(); cx.fill();
+  drawMate(RF.px,py+k*.55+bob,k*1.05,knightOf(),0);
+  if(RG.bubble){ cx.save(); cx.strokeStyle='#5FD8FF'; cx.shadowColor='#5FD8FF'; cx.shadowBlur=14; cx.lineWidth=3; cx.beginPath(); cx.arc(RF.px,py,k*1.05,0,Math.PI*2); cx.stroke(); cx.restore(); }
+  if(PERK.shield>0){ cx.save(); cx.strokeStyle='rgba(95,216,255,.45)'; cx.lineWidth=2; cx.beginPath(); cx.arc(RF.px,py,k*1.2,0,Math.PI*2); cx.stroke(); cx.restore(); }
+  if(RG.flash>0){ cx.fillStyle=`rgba(255,111,89,${RG.flash*.5})`; cx.fillRect(x,y,w,h); }
+  RG.parts=RG.parts.filter(p=>p.life>0); RG.parts.forEach(p=>{p.x+=p.vx; p.y+=p.vy; p.life-=.025; cx.globalAlpha=Math.max(0,p.life); circle(p.x,p.y,2.4,p.c);}); cx.globalAlpha=1;
+  cx.restore();
+  cx.strokeStyle='rgba(95,216,255,.35)'; cx.lineWidth=2; roundRect(x,y,w,h,14); cx.stroke();
+}
+function rLoop(){
+  if(cur!=='rescue'){RG.loop=false; return;}
+  const now=performance.now(), dt=Math.min(.05,(now-RG.last)/1000); RG.last=now;
+  if(RG.active&&RF&&!RG.paused&&$('#msgModal').hidden&&$('#mathModal').hidden){ RG.clock+=dt; rUpdate(dt); }
+  if(RF){ const prev=cx; cx=rctx; drawRescue(now); cx=prev; }
+  requestAnimationFrame(rLoop);
+}
+
 /* ---------- ship powers: science lab hints ---------- */
 function dropWrong(sel,getVal,answer){ const opts=$$(sel).filter(b=>!b.disabled&&getVal(b)!==answer); if(!opts.length) return false; const b=pick(opts); b.disabled=true; b.classList.add('gone'); return true; }
 $('#labHint').addEventListener('click',()=>{
@@ -3065,7 +3639,7 @@ function openParent(){
     <h2>Grown-ups corner</h2>
     <div class="statgrid">
       <div class="stat"><div class="v">${S.progress.games}</div><div class="l">Games played</div></div>
-      <div class="stat"><div class="v">${(S.progress.beaten||0)+(S.progress.soccerBeaten||0)+(S.progress.hoopsBeaten||0)}/15</div><div class="l">Teams beaten</div></div>
+      <div class="stat"><div class="v">${(S.progress.beaten||0)+(S.progress.soccerBeaten||0)+(S.progress.hoopsBeaten||0)+(S.progress.ambushBeaten||0)+(S.progress.rescueBeaten||0)}/25</div><div class="l">Levels won</div></div>
       <div class="stat"><div class="v">${S.credits}</div><div class="l">Credits</div></div>
     </div>
     <div class="panel"><h3 style="margin-bottom:6px">Math accuracy by skill</h3>${rows}
@@ -3075,6 +3649,8 @@ function openParent(){
       <p class="note" style="margin-top:8px">Missed words come back later for practice. Words from her weekly list come up most of the time.</p></div>
     <div class="panel"><h3 style="margin-bottom:6px">Vocabulary &amp; language arts</h3>${Object.keys(VTYPES).map(t=>{const st=S.stats['v_'+t]||{r:0,w:0}, n=st.r+st.w, pct=n?Math.round(st.r/n*100):0; return `<div class="skillrow"><span>${VTYPES[t]}</span><div class="bar"><i class="${pct>=80?'':pct>=60?'mid':'low'}" style="width:${n?pct:0}%"></i></div><span class="n">${n?`${st.r}/${n}`:'—'}</span></div>`;}).join('')}
       <h3 style="margin:12px 0 8px">Recently missed word questions</h3>${(S.vMissed||[]).length?`<ul class="missed">${S.vMissed.map(m=>`<li><span>${esc(m.q)}</span><span>${esc(m.a)}</span></li>`).join('')}</ul>`:'<p class="dim">Nothing missed yet.</p>'}</div>
+    <div class="panel"><h3 style="margin-bottom:6px">Reading</h3>${Object.keys(RTYPES).map(t=>{const st=S.stats['r_'+t]||{r:0,w:0}, n=st.r+st.w, pct=n?Math.round(st.r/n*100):0; return `<div class="skillrow"><span>${RTYPES[t]}</span><div class="bar"><i class="${pct>=80?'':pct>=60?'mid':'low'}" style="width:${n?pct:0}%"></i></div><span class="n">${n?`${st.r}/${n}`:'—'}</span></div>`;}).join('')}
+      <h3 style="margin:12px 0 8px">Recently missed reading questions</h3>${(S.rMissed||[]).length?`<ul class="missed">${S.rMissed.map(m=>`<li><span>${esc(m.q)}</span><span>${esc(m.a)}</span></li>`).join('')}</ul>`:'<p class="dim">Nothing missed yet.</p>'}</div>
     <div class="panel"><h3 style="margin-bottom:8px">Recently missed math</h3>${S.missed.length?`<ul class="missed">${S.missed.map(m=>`<li><span>${esc(m.text)}</span><span>${esc(m.answer)}</span></li>`).join('')}</ul>`:'<p class="dim">Nothing missed yet.</p>'}</div>
     <div class="panel" style="display:grid;gap:14px">
       <div><h3 style="margin-bottom:8px">Level</h3>${seg('level',[['easy','Easier'],['on','3rd grade'],['hard','Challenge']],S.settings.level)}</div>
@@ -3086,15 +3662,15 @@ function openParent(){
       <p class="note" style="margin-top:6px">Saved on this device. Hover-Soccer (Chapter 2) uses these words. Without a list, it uses a built-in 3rd-grade word bank.</p></div>
     ${prizeSettingsHTML()}
     <div class="panel" style="display:grid;gap:10px"><h3>Reset one game</h3><p class="note">Locks that game's teams again, replays its story, and clears its learning history. Her Star Knight, ship, credits, and trophy points stay.</p>
-      <div class="resetrow"><button class="btn alt small" data-reset="baseball">Reset Baseball</button><button class="btn alt small" data-reset="soccer">Reset Soccer</button><button class="btn alt small" data-reset="hoops">Reset Basketball</button></div></div>
-    <div class="panel" style="display:grid;gap:10px"><h3>Start over</h3><p class="note">Clears everything on this device: her Star Knight, ship, credits, trophy points, prizes, phone numbers, and all three games.</p>
+      <div class="resetrow"><button class="btn alt small" data-reset="baseball">Reset Baseball</button><button class="btn alt small" data-reset="soccer">Reset Soccer</button><button class="btn alt small" data-reset="hoops">Reset Basketball</button><button class="btn alt small" data-reset="ambush">Reset Space Battle</button><button class="btn alt small" data-reset="rescue">Reset Rescue</button></div></div>
+    <div class="panel" style="display:grid;gap:10px"><h3>Start over</h3><p class="note">Clears everything on this device: her Star Knight, ship, credits, trophy points, prizes, phone numbers, and all five chapters.</p>
       <div class="row"><button class="btn alt small" id="resetBtn">Reset everything</button></div></div>`;
   show('parent');
 }
 $('#s-parent').addEventListener('click',e=>{
   const b=e.target.closest('.seg button'); if(b){const set=b.parentElement.dataset.set; S.settings[set]=b.dataset.v; save(); $$(`[data-set="${set}"] button`).forEach(x=>x.setAttribute('aria-pressed',x===b)); sfx.tap(); return;}
   const rb=e.target.closest('[data-reset]');
-  if(rb){ const g=rb.dataset.reset, nm={baseball:'Baseball',soccer:'Soccer',hoops:'Basketball'}[g];
+  if(rb){ const g=rb.dataset.reset, nm={baseball:'Baseball',soccer:'Soccer',hoops:'Basketball',ambush:'Space Battle',rescue:'Rescue'}[g];
     showMsg({title:`Reset ${nm}?`,body:`This locks the ${nm} teams again and clears its learning history. Her Star Knight, ship, and credits stay.`,btn:'Reset',alt:'Cancel',cb:()=>{ resetGame(g); openParent(); showMsg({title:`${nm} reset`,body:'Start it again from the title screen.',btn:'OK'}); }}); return; }
   if(e.target.id==='resetBtn'){ showMsg({title:'Reset everything?',body:'This clears progress on this device. It cannot be undone.',btn:'Reset',alt:'Cancel',cb:()=>{try{localStorage.removeItem(KEY)}catch(err){} S=load(); S.profile=null; save(); setCredits(); setTrophy(); renderSoundBtn(); show('title'); renderTitle();}}); }
 });
@@ -3102,6 +3678,8 @@ function resetGame(g){
   const P=S.progress;
   if(g==='baseball'){ P.beaten=0; P.cupWon=false; P.storySeen=false; Object.keys(SKILLS).forEach(k=>delete S.stats[k]); S.review=[]; S.missed=[]; }
   if(g==='soccer'){ P.soccerBeaten=0; P.soccerCup=false; P.story2Seen=false; delete S.stats.spell; S.spellReview=[]; S.spellMissed=[]; }
+  if(g==='ambush'){ P.ambushBeaten=0; P.ambushCup=false; P.story4Seen=false; }
+  if(g==='rescue'){ P.rescueBeaten=0; P.rescueCup=false; P.story5Seen=false; Object.keys(RTYPES).forEach(t=>delete S.stats['r_'+t]); S.rReview=[]; S.rMissed=[]; S.rRecent=[]; }
   if(g==='hoops'){ P.hoopsBeaten=0; P.hoopsCup=false; P.story3Seen=false; Object.keys(VTYPES).forEach(t=>delete S.stats['v_'+t]); S.vReview=[]; S.vMissed=[]; }
   save();
 }
