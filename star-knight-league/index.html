@@ -224,6 +224,46 @@ p{margin:0}
 #hLanePad .ctlrow button{min-height:58px}
 .resetrow{display:flex;flex-wrap:wrap;gap:10px}
 
+.credits.trophy{color:var(--mint);cursor:pointer;font:inherit;font-family:var(--display);font-size:17px}
+.credits.trophy.bump{animation:bump .4s}
+.trophy-panel{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;border-color:var(--gold)}
+.trophy-ico{flex:none}
+.trophy-panel .tp-body{display:grid;gap:6px;min-width:0;justify-items:start}
+.tp-big{font-family:var(--display);font-size:22px;color:var(--mint)}
+.tp-prog{display:grid;gap:4px;width:100%;font-weight:700;font-size:15px}
+.tp-prog .bar i,.prize .bar i{background:var(--gold)}
+.prize-head{display:flex;gap:14px;align-items:center}
+.gold{color:var(--gold)}
+.howto p{margin-top:4px}
+.ptsrow{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.ptchip{display:inline-flex;gap:6px;align-items:center;background:var(--space);border-radius:999px;padding:4px 12px;font-weight:700;font-size:14px}
+.ptchip b{font-family:var(--display);font-weight:400;color:var(--gold)}
+.tierh{margin-top:6px}
+.prize{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--panel);border:2px solid var(--line);border-radius:18px;padding:12px 14px}
+.prize.can{border-color:var(--gold);box-shadow:0 0 0 4px #FFC54722}
+.pz-main{display:grid;gap:4px;min-width:0}
+.pz-name{font-weight:800;font-size:18px;line-height:1.2}
+.pz-cost{display:flex;gap:4px;align-items:center;font-weight:800;color:var(--gold);font-size:15px}
+.pz-need{font-size:13px;color:var(--ink-dim);font-weight:700}
+.prize.can .pz-need{color:var(--mint)}
+.claims{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.claim{display:grid;justify-items:center;gap:4px;text-align:center;background:var(--panel);border:2px solid var(--gold);border-radius:16px;padding:10px;cursor:pointer}
+.claim .cn{font-weight:800;font-size:15px;line-height:1.2}
+.claim .cd{font-size:12px;color:var(--ink-dim)}
+.certbox{border-radius:16px;overflow:hidden;border:3px solid var(--gold);background:var(--space)}
+.certbox canvas{display:block;width:100%;height:auto;max-width:100%}
+.phone-display{font-family:var(--display);font-size:clamp(24px,7vw,34px);letter-spacing:.06em;text-align:center;background:var(--space);border:3px solid var(--cyan);border-radius:16px;padding:10px;margin-bottom:10px;min-height:64px;font-variant-numeric:tabular-nums}
+.phone-display.peek{color:var(--gold)}
+.phone-display .ok{color:var(--mint)}
+.phone-display .bad{color:var(--coral);text-decoration:underline}
+.dialpad{max-width:360px;margin:10px auto}
+#dialExtra{margin-top:10px}
+.ctrow,.pzrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:8px;margin-bottom:8px}
+.pzrow{grid-template-columns:minmax(0,1fr) 86px 44px;align-items:center}
+.text-in.sm{min-height:44px;font-size:16px;padding:6px 10px}
+.given{display:flex;gap:6px;align-items:center;font-weight:700;color:var(--ink)}
+.given input{width:20px;height:20px;accent-color:var(--gold)}
+
 /* results */
 .result-head{text-align:center;display:grid;gap:8px;justify-items:center}
 .result-head .big{font-family:var(--display);font-size:clamp(30px,8vw,46px);line-height:1;color:var(--gold);text-shadow:0 4px 0 var(--coral-deep)}
@@ -323,6 +363,10 @@ textarea.text-in{min-height:120px;font-size:17px;font-weight:600;resize:vertical
       <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17l-6.1 3.4 1.5-6.8L2.2 9l6.9-.7z" fill="#FFC547"/></svg>
       <span id="creditVal">0</span>
     </div>
+    <button class="credits trophy" id="trophyChip" title="Trophy points" aria-label="Trophy points: open the Prize Shop">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v4a5 5 0 01-10 0z" fill="#43E5B0"/><path d="M7 4H4v1a4 4 0 004 4M17 4h3v1a4 4 0 01-4 4" stroke="#43E5B0" stroke-width="1.8" fill="none"/><rect x="10.5" y="11" width="3" height="5" fill="#2EB58A"/><rect x="7" y="16" width="10" height="3" rx="1" fill="#43E5B0"/></svg>
+      <span id="trophyVal">0</span>
+    </button>
     <button id="soundBtn" class="iconbtn" aria-label="Sound on" aria-pressed="true"></button>
   </header>
 
@@ -338,6 +382,7 @@ textarea.text-in{min-height:120px;font-size:17px;font-weight:600;resize:vertical
             <button class="btn" id="playBtn">Play</button>
             <button class="btn alt" id="hangarBtn">Hangar</button>
             <button class="btn alt" id="storyBtn">Story</button>
+            <button class="btn alt" id="prizesBtn">Prizes</button>
           </div>
         </div>
         <div class="chapters" aria-label="Chapters">
@@ -510,6 +555,20 @@ textarea.text-in{min-height:120px;font-size:17px;font-weight:600;resize:vertical
       </div>
     </section>
 
+    <!-- PRIZES -->
+    <section class="screen gut" id="s-prizes" hidden><div class="wrap" id="prizeWrap"></div></section>
+
+    <!-- CERTIFICATE -->
+    <section class="screen gut" id="s-cert" hidden>
+      <div class="wrap">
+        <h2 id="certTitle">You earned a prize!</h2>
+        <div class="certbox"><canvas id="certCanvas" width="1200" height="900" aria-label="Prize certificate"></canvas></div>
+        <p id="certNote" style="font-weight:700;font-size:18px"></p>
+        <div class="row"><button class="btn" id="sendBtn">Send to my parents</button><button class="btn alt" id="certDone">Done</button></div>
+        <div class="panel" id="sendPanel" hidden></div>
+      </div>
+    </section>
+
     <!-- RESULTS -->
     <section class="screen gut" id="s-results" hidden>
       <div class="wrap" id="resultsWrap"></div>
@@ -625,7 +684,7 @@ const FREQ={light:0.3,normal:0.5,lots:0.8};
 
 /* ---------- save ---------- */
 const KEY='star-knight-league-v1';
-const DEFAULT={profile:null,ship:{frame:'scout',cargo:'rescue',paint:'teal',droidHead:'dome',droidColor:'gold',crew:[0,1]},credits:0,unlocked:{paint:['white','teal','gold'],droid:['dome','square']},stats:{},review:[],missed:[],settings:{level:'on',freq:'normal',skills:{mult:true,div:true,addsub:true,round:true,fraction:true,area:true,time:true,word:true}},spelling:'',progress:{games:0,wins:0,storySeen:false,best:0},sound:true};
+const DEFAULT={profile:null,ship:{frame:'scout',cargo:'rescue',paint:'teal',droidHead:'dome',droidColor:'gold',crew:[0,1]},credits:0,unlocked:{paint:['white','teal','gold'],droid:['dome','square']},stats:{},review:[],missed:[],settings:{level:'on',freq:'normal',dailyCap:'30',skills:{mult:true,div:true,addsub:true,round:true,fraction:true,area:true,time:true,word:true}},spelling:'',trophy:0,claims:[],contacts:[{name:'Mom',phone:''},{name:'Dad',phone:''}],progress:{games:0,wins:0,storySeen:false,best:0},sound:true};
 function load(){
   let d={}; try{d=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){d={}}
   const s=JSON.parse(JSON.stringify(DEFAULT));
@@ -863,6 +922,8 @@ $('#playBtn').addEventListener('click',()=>{
     {label:'Basketball',sub:`Chapter 3 · words · ${S.progress.hoopsBeaten||0} of 5 won`,art:`<svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="22" fill="#E9873A"/><path d="M8 30h44M30 8v44" stroke="#5A2A0E" stroke-width="2.5"/><path d="M14 14q10 16 0 32M46 14q-10 16 0 32" stroke="#5A2A0E" stroke-width="2.5" fill="none"/></svg>`,cb:()=>playChapter(3)}
   ]});
 });
+$('#prizesBtn').addEventListener('click',()=>{sfx.tap(); openPrizes();});
+$('#trophyChip').addEventListener('click',()=>{sfx.tap(); closeVocab(null,true); closeMath(null,true); closeSpell(null,true); hideMsg(); openPrizes();});
 $('#hangarBtn').addEventListener('click',()=>{sfx.tap(); if(!S.profile){openSetup();return} openHangar('title')});
 $('#storyBtn').addEventListener('click',()=>{sfx.tap(); if(!S.profile){openSetup();return} startStory(S.progress.lastCh||1)});
 $('#homeBtn').addEventListener('click',()=>{sfx.tap(); closeVocab(null,true); closeMath(null,true); closeSpell(null,true); hideMsg(); show('title'); renderTitle();});
@@ -1432,6 +1493,7 @@ function endGame(){
   G.active=false; setControls('none');
   const us=G.score.us, them=G.score.them, win=us>them, tie=us===them, T=TEAMS[G.team];
   const bonus=win?25:10; S.credits+=bonus; G.earned+=bonus;
+  if(win) awardTrophy(G.team,G.team>=(S.progress.beaten||0));
   S.progress.games++; if(win){S.progress.wins++; if(G.team>=(S.progress.beaten||0)) S.progress.beaten=G.team+1;}
   const champ=win&&G.team===TEAMS.length-1;
   if(champ) S.progress.cupWon=true;
@@ -1465,7 +1527,7 @@ function endGame(){
   const ab=$('#againBtn'); if(ab) ab.onclick=()=>{sfx.tap(); startMatch(G.team)};
   $('#toBracket').onclick=()=>{sfx.tap(); openBracket('baseball')};
   $('#toHangar').onclick=()=>{sfx.tap(); openHangar('title')};
-  show('results');
+  trophyPanel(); show('results');
 }
 
 /* ----- controls ----- */
@@ -2027,7 +2089,7 @@ function sEnd(){
   SG.active=false; setPad('none');
   const us=SG.us, them=SG.them, win=us>them, tie=us===them, T=TEAMS[SG.team];
   const bonus=win?25:10; S.credits+=bonus; SG.earned+=bonus; S.progress.games++;
-  if(win){ S.progress.wins++; if(SG.team>=(S.progress.soccerBeaten||0)) S.progress.soccerBeaten=SG.team+1; }
+  if(win){ awardTrophy(SG.team,SG.team>=(S.progress.soccerBeaten||0)); S.progress.wins++; if(SG.team>=(S.progress.soccerBeaten||0)) S.progress.soccerBeaten=SG.team+1; }
   const champ=win&&SG.team===TEAMS.length-1; if(champ) S.progress.soccerCup=true;
   save(); setCredits(true); if(win) sfx.win();
   const next=TEAMS[SG.team+1];
@@ -2054,7 +2116,7 @@ function sEnd(){
   const ab=$('#againBtn'); if(ab) ab.onclick=()=>{sfx.tap(); sMatch(SG.team)};
   $('#toBracket').onclick=()=>{sfx.tap(); openBracket('soccer')};
   $('#toHangar').onclick=()=>{sfx.tap(); openHangar('title')};
-  show('results');
+  trophyPanel(); show('results');
 }
 /* controls */
 $('#lanePad').addEventListener('pointerdown',e=>{const b=e.target.closest('button[data-l]'); if(b){e.preventDefault(); setLane(+b.dataset.l);}});
@@ -2568,7 +2630,7 @@ function hEnd(){
   HG.active=false; hPad('none');
   const us=HG.us, them=HG.them, win=us>them, tie=us===them, T=TEAMS[HG.team];
   const bonus=win?25:10; S.credits+=bonus; HG.earned+=bonus; S.progress.games++;
-  if(win){ S.progress.wins++; if(HG.team>=(S.progress.hoopsBeaten||0)) S.progress.hoopsBeaten=HG.team+1; }
+  if(win){ awardTrophy(HG.team,HG.team>=(S.progress.hoopsBeaten||0)); S.progress.wins++; if(HG.team>=(S.progress.hoopsBeaten||0)) S.progress.hoopsBeaten=HG.team+1; }
   const champ=win&&HG.team===TEAMS.length-1; if(champ) S.progress.hoopsCup=true;
   save(); setCredits(true); if(win) sfx.win();
   const next=TEAMS[HG.team+1];
@@ -2595,7 +2657,7 @@ function hEnd(){
   const ab=$('#againBtn'); if(ab) ab.onclick=()=>{sfx.tap(); hMatch(HG.team)};
   $('#toBracket').onclick=()=>{sfx.tap(); openBracket('hoops')};
   $('#toHangar').onclick=()=>{sfx.tap(); openHangar('title')};
-  show('results');
+  trophyPanel(); show('results');
 }
 /* controls */
 $('#hLanePad').addEventListener('pointerdown',e=>{const b=e.target.closest('button[data-l]'); if(b){e.preventDefault(); setHLane(+b.dataset.l);}});
@@ -2725,6 +2787,218 @@ function hLoop(){
   requestAnimationFrame(hLoop);
 }
 
+/* ---------- prize shop & certificates ---------- */
+const DEFAULT_PRIZES=[
+  {id:'candy',name:'Chocolate candy',cost:40},
+  {id:'laundry',name:'Get out of folding clothes pass',cost:60},
+  {id:'game30',name:'30 minutes of video games',cost:80},
+  {id:'mac',name:'Mac and cheese dinner',cost:100},
+  {id:'shake',name:'Milkshake',cost:140},
+  {id:'game60',name:'1 hour of video games',cost:160},
+  {id:'movie',name:'Movie night',cost:220},
+  {id:'mcd',name:'McDonald\'s with a Sprite',cost:260},
+  {id:'friend',name:'Playtime with a favorite friend',cost:320},
+  {id:'playcity',name:'Play City',cost:500},
+  {id:'bullwinkle',name:'Bullwinkle\'s',cost:700}
+];
+const TEAM_PTS=[4,6,9,12,18];
+const todayKey=()=>{const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
+const niceDate=()=>new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+function prizeList(){ if(!Array.isArray(S.prizes)) S.prizes=DEFAULT_PRIZES.map(p=>Object.assign({},p)); return S.prizes; }
+function dayEarned(){ if(!S.trophyDay||S.trophyDay.d!==todayKey()) S.trophyDay={d:todayKey(),n:0}; return S.trophyDay; }
+const trophySVG=(s=24)=>`<svg class="trophy-ico" width="${s}" height="${s}" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v4a5 5 0 01-10 0z" fill="#FFC547"/><path d="M7 4H4v1a4 4 0 004 4M17 4h3v1a4 4 0 01-4 4" stroke="#FFC547" stroke-width="1.8" fill="none"/><rect x="10.5" y="11" width="3" height="5" fill="#E0A630"/><rect x="7" y="16" width="10" height="3" rx="1" fill="#FFC547"/><rect x="6" y="19" width="12" height="2" rx="1" fill="#B9822A"/></svg>`;
+let LAST_TP=null;
+function awardTrophy(team,first){
+  let pts=TEAM_PTS[team]*(first?2:1); if(first&&team===TEAMS.length-1) pts+=20;
+  const cap=+S.settings.dailyCap||0, day=dayEarned(); let capped=false;
+  if(cap>0){ const room=Math.max(0,cap-day.n); if(pts>=room){ capped=pts>room||room===0; pts=room; } }
+  day.n+=pts; S.trophy=(S.trophy||0)+pts; save(); setTrophy(pts>0);
+  LAST_TP={pts,first,capped}; return LAST_TP;
+}
+function setTrophy(bump){ $('#trophyVal').textContent=S.trophy||0; if(bump){const c=$('#trophyChip'); c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump');} }
+function nextPrize(){ return prizeList().filter(p=>p.name).slice().sort((a,b)=>a.cost-b.cost).find(p=>p.cost>(S.trophy||0)); }
+function trophyPanel(){
+  const tp=LAST_TP; LAST_TP=null; const np=nextPrize(), pts=S.trophy||0;
+  let top;
+  if(tp){ top=tp.pts>0?`<div class="tp-big">+${tp.pts} trophy points</div><p class="dim">${tp.first?'First win against this team: double points!':'Beat a new team to get double points.'}</p>`:`<div class="tp-big">No trophy points this time</div>`;
+    if(tp.capped) top+=`<p class="note">You reached today's trophy point limit. Come back tomorrow for more!</p>`; }
+  else top=`<p style="font-weight:700">Win a game to earn trophy points for real prizes.</p>`;
+  const prog=np?`<div class="tp-prog"><div class="bar"><i style="width:${Math.min(100,pts/np.cost*100)}%"></i></div><span>${np.cost-pts} more points to <b>${esc(np.name)}</b></span></div>`:'<p class="note">You have enough points for any prize!</p>';
+  $('#resultsWrap .result-head').insertAdjacentHTML('afterend',`<div class="panel trophy-panel">${trophySVG(48)}<div class="tp-body">${top}${prog}<button class="btn small" id="toPrizes">Prize Shop · ${pts} points</button></div></div>`);
+  $('#toPrizes').onclick=()=>{sfx.tap(); openPrizes();};
+}
+function openPrizes(){
+  const pts=S.trophy||0, list=prizeList().filter(p=>p.name&&p.cost>0).slice().sort((a,b)=>a.cost-b.cost), day=dayEarned(), cap=+S.settings.dailyCap||0;
+  const tier=c=>c<100?'Quick treats':c<250?'Fun times':'Big adventures';
+  let html=`<div class="prize-head">${trophySVG(64)}<div><h2>Prize Shop</h2><p class="dim" style="font-size:18px">You have <b class="gold">${pts}</b> trophy points</p></div></div>
+    <div class="panel howto"><h3>How to earn trophy points</h3><p>Win games. Tougher teams give more points:</p>
+      <div class="ptsrow">${TEAMS.map((t,i)=>`<span class="ptchip"><b>${TEAM_PTS[i]}</b>${esc(t.short)}</span>`).join('')}</div>
+      <p class="note">The first time you beat a team, you get double points. Winning the final the first time adds 20 more.${cap?` You can earn up to ${cap} points a day. Today you have earned ${day.n}.`:''}</p></div>`;
+  let last='';
+  list.forEach(p=>{ const t=tier(p.cost); if(t!==last){ html+=`<h3 class="tierh">${t}</h3>`; last=t; }
+    const can=pts>=p.cost;
+    html+=`<div class="prize${can?' can':''}"><div class="pz-main"><span class="pz-name">${esc(p.name)}</span><span class="pz-cost">${trophySVG(18)}${p.cost} points</span>
+      <div class="bar"><i style="width:${Math.min(100,pts/p.cost*100)}%"></i></div><span class="pz-need">${can?'You have enough points!':`${p.cost-pts} more points to go`}</span></div>
+      <button class="btn small" data-claim="${esc(p.id)}" ${can?'':'disabled'}>${can?'Get it':'Locked'}</button></div>`; });
+  const cl=S.claims||[];
+  if(cl.length) html+=`<h3 class="tierh">My trophies</h3><div class="claims">${cl.map((c,i)=>({c,i})).reverse().map(({c,i})=>`<button class="claim" data-cert="${i}">${trophySVG(24)}<span class="cn">${esc(c.name)}</span><span class="cd">${esc(c.date)}${c.given?' · received':''}</span></button>`).join('')}</div>`;
+  $('#prizeWrap').innerHTML=html; show('prizes');
+}
+$('#prizeWrap').addEventListener('click',e=>{
+  const b=e.target.closest('[data-claim]');
+  if(b&&!b.disabled){ sfx.tap(); const p=prizeList().find(x=>x.id===b.dataset.claim); if(!p) return;
+    showMsg({title:`Get ${p.name}?`,art:`<div style="display:grid;place-items:center">${trophySVG(90)}</div>`,body:`This uses <b>${p.cost}</b> of your ${S.trophy||0} trophy points. You'll get a certificate to show your parents.`,btn:'Yes, get it!',alt:'Not yet',cb:()=>{
+      S.trophy=(S.trophy||0)-p.cost; if(!S.claims) S.claims=[]; S.claims.push({id:p.id,name:p.name,cost:p.cost,date:niceDate(),given:false}); save(); setTrophy(true); sfx.win(); openCert(S.claims.length-1,true);
+    }}); return; }
+  const c=e.target.closest('[data-cert]'); if(c){ sfx.tap(); openCert(+c.dataset.cert,false); }
+});
+/* certificate */
+let CERT=null;
+function wrapLines(ctx,text,maxW){ const words=text.split(' '), lines=[]; let line='';
+  words.forEach(w=>{ const t=line?line+' '+w:w; if(ctx.measureText(t).width>maxW&&line){ lines.push(line); line=w; } else line=t; }); if(line) lines.push(line); return lines; }
+async function drawCert(c){
+  const cv=$('#certCanvas'), x=cv.getContext('2d'), W=1200, H=900;
+  try{ await Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,1500))]); }catch(e){}
+  const g=x.createLinearGradient(0,0,0,H); g.addColorStop(0,'#141B3A'); g.addColorStop(1,'#0A0F24'); x.fillStyle=g; x.fillRect(0,0,W,H);
+  x.fillStyle='#fff'; for(let i=0;i<120;i++){ x.globalAlpha=.2+((i*37)%10)/20; x.fillRect((i*197)%W,(i*131)%H,2,2);} x.globalAlpha=1;
+  x.strokeStyle='#FFC547'; x.lineWidth=10; x.strokeRect(30,30,W-60,H-60); x.lineWidth=3; x.strokeRect(52,52,W-104,H-104);
+  const star=(cx0,cy0,r,col)=>{ x.fillStyle=col; x.beginPath(); for(let i=0;i<10;i++){ const a=i*Math.PI/5-Math.PI/2, rr=i%2?r*.45:r; x.lineTo(cx0+Math.cos(a)*rr,cy0+Math.sin(a)*rr);} x.closePath(); x.fill(); };
+  [[82,82],[W-82,82],[82,H-82],[W-82,H-82]].forEach(([a,b])=>star(a,b,22,'#FFC547'));
+  x.textAlign='center'; x.fillStyle='#5FD8FF'; x.font='400 30px Bungee, "Arial Black", sans-serif'; x.fillText('STAR KNIGHT LEAGUE',W/2,140);
+  x.fillStyle='#F3F1FF'; x.font='400 62px Bungee, "Arial Black", sans-serif'; x.fillText('CERTIFICATE OF',W/2,225); x.fillText('ACHIEVEMENT',W/2,295);
+  x.fillStyle='#A9B0D6'; x.font='700 34px "Baloo 2", "Trebuchet MS", sans-serif'; x.fillText('This award goes to',W/2,365);
+  const nm=(S.profile&&S.profile.name)||'Star Knight'; x.fillStyle='#FFC547'; x.font='400 76px Bungee, "Arial Black", sans-serif'; x.fillText(nm,W/2,450);
+  x.fillStyle='#A9B0D6'; x.font='700 34px "Baloo 2", "Trebuchet MS", sans-serif'; x.fillText('for winning the prize',W/2,515);
+  let fs=64; x.font=`800 ${fs}px "Baloo 2", "Trebuchet MS", sans-serif`; let lines=wrapLines(x,c.name,760);
+  while((lines.length>2||lines.some(l=>x.measureText(l).width>760))&&fs>36){ fs-=4; x.font=`800 ${fs}px "Baloo 2", "Trebuchet MS", sans-serif`; lines=wrapLines(x,c.name,760); }
+  x.fillStyle='#43E5B0'; lines.forEach((l,i)=>x.fillText(l,W/2,600+i*fs*1.05-(lines.length-1)*fs*.3));
+  x.fillStyle='#F3F1FF'; x.font='700 28px "Baloo 2", "Trebuchet MS", sans-serif';
+  x.textAlign='left'; x.fillText(c.date,120,790); x.fillText(`${c.cost} trophy points`,120,825);
+  x.textAlign='right'; x.fillText('Grown-up signature',W-120,825); x.strokeStyle='#A9B0D6'; x.lineWidth=2; x.beginPath(); x.moveTo(W-440,785); x.lineTo(W-120,785); x.stroke();
+  // trophy
+  x.save(); x.translate(W/2,780); x.scale(4.2,4.2); x.translate(-12,-12);
+  x.fillStyle='#FFC547'; x.beginPath(); x.moveTo(7,3); x.lineTo(17,3); x.lineTo(17,7); x.arc(12,7,5,0,Math.PI); x.closePath(); x.fill();
+  x.strokeStyle='#FFC547'; x.lineWidth=1.8; x.beginPath(); x.moveTo(7,4); x.lineTo(4,4); x.lineTo(4,5); x.quadraticCurveTo(4,9,8,9); x.moveTo(17,4); x.lineTo(20,4); x.lineTo(20,5); x.quadraticCurveTo(20,9,16,9); x.stroke();
+  x.fillStyle='#E0A630'; x.fillRect(10.5,11,3,5); x.fillStyle='#FFC547'; x.fillRect(7,16,10,3); x.fillStyle='#B9822A'; x.fillRect(6,19,12,2); x.restore();
+  // knight portrait
+  try{ const img=new Image(); img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(person(knightOf()));
+    await new Promise(r=>{img.onload=r; img.onerror=r; setTimeout(r,1200);});
+    if(img.complete&&img.naturalWidth!==0){ x.save(); x.beginPath(); x.arc(205,470,105,0,Math.PI*2); x.fillStyle='#1D2650'; x.fill(); x.clip(); x.drawImage(img,105,370,200,200); x.restore();
+      x.strokeStyle='#FFC547'; x.lineWidth=5; x.beginPath(); x.arc(205,470,105,0,Math.PI*2); x.stroke(); }
+  }catch(e){}
+  star(W-205,470,70,'#FFC547'); star(W-205,470,40,'#FFF3C4');
+}
+function openCert(i,fresh){
+  const c=(S.claims||[])[i]; if(!c) return; CERT={i,c};
+  $('#certTitle').textContent=fresh?'You earned a prize!':'Your trophy';
+  $('#certNote').textContent='Show this certificate to your parents to get your prize.';
+  $('#sendPanel').hidden=true; $('#sendBtn').hidden=false;
+  show('cert'); drawCert(c);
+}
+$('#certDone').addEventListener('click',()=>{sfx.tap(); openPrizes();});
+/* send to parents: she types the number from memory */
+let SEND=null;
+const digitsOf=s=>String(s||'').replace(/\D/g,'');
+const tenOf=s=>{const d=digitsOf(s); return d.length===11&&d[0]==='1'?d.slice(1):d;};
+const fmtPhone=d=>{ if(d.length<=3) return d; if(d.length<=6) return `(${d.slice(0,3)}) ${d.slice(3)}`; return `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6,10)}`; };
+function contacts(){ return (S.contacts||[]).filter(c=>tenOf(c.phone).length>=7); }
+$('#sendBtn').addEventListener('click',()=>{
+  sfx.tap(); const cs=contacts(), sp=$('#sendPanel'); sp.hidden=false; $('#sendBtn').hidden=true;
+  if(!cs.length){ sp.innerHTML=`<p style="font-weight:700">Ask a grown-up to add your parent's phone number in the Grown-ups corner first.</p>`; return; }
+  if(cs.length===1){ startDial(cs[0]); return; }
+  sp.innerHTML=`<h3 style="margin-bottom:10px">Who do you want to send it to?</h3><div class="row">${cs.map((c,i)=>`<button class="btn" data-who="${i}">${esc(c.name||'Parent '+(i+1))}</button>`).join('')}</div>`;
+});
+function startDial(c){
+  SEND={c,typed:'',tries:0,target:tenOf(c.phone)};
+  const who=esc(c.name||'your parent');
+  $('#sendPanel').innerHTML=`<h3 style="margin-bottom:4px">Type ${who}'s phone number</h3><p class="note" style="margin-bottom:10px">Can you remember it? Type it in with the number pad.</p>
+    <div class="phone-display" id="phoneDisp" aria-live="polite"></div>
+    <div class="fb" id="dialFb" hidden></div>
+    <div class="keypad dialpad" id="dialPad">${['1','2','3','4','5','6','7','8','9','back','0','go'].map(k=>k==='back'?'<button class="back" data-k="back" aria-label="Delete">⌫</button>':k==='go'?'<button class="go" data-k="go">Check</button>':`<button data-k="${k}">${k}</button>`).join('')}</div>
+    <div class="row" id="dialExtra"></div>`;
+  renderDial();
+}
+function renderDial(state){
+  const t=SEND.typed, el=$('#phoneDisp');
+  if(state==='marks'){ el.innerHTML=[...t].map((d,i)=>`<span class="${d===SEND.target[i]?'ok':'bad'}">${d}</span>`).join(''); return; }
+  el.textContent=t?fmtPhone(t):'(   )    -    ';
+}
+function checkDial(){
+  const ok=SEND.typed===SEND.target, fb=$('#dialFb'); fb.hidden=false;
+  if(ok){ sfx.right(); fb.className='fb good'; fb.innerHTML=`<strong>You know it!</strong>That's ${esc(SEND.c.name||'your parent')}'s number.`; $('#dialPad').hidden=true; showShare(); return; }
+  SEND.tries++; sfx.wrong(); fb.className='fb bad';
+  if(SEND.tries===1){ fb.innerHTML='<strong>Not quite</strong>Check each number and try again.'; SEND.typed=''; renderDial(); }
+  else { fb.innerHTML='<strong>Almost!</strong>Green numbers are right. Red numbers need to change.'; renderDial('marks'); SEND.marked=true; }
+  if(SEND.tries>=3&&!$('#peekNum')){ $('#dialExtra').innerHTML='<button class="btn alt small" id="peekNum">Peek at the number</button>'; }
+}
+$('#sendPanel').addEventListener('click',e=>{
+  const w=e.target.closest('[data-who]'); if(w){ sfx.tap(); startDial(contacts()[+w.dataset.who]); return; }
+  if(e.target.id==='peekNum'){ const el=$('#phoneDisp'); el.textContent=fmtPhone(SEND.target); el.classList.add('peek'); e.target.disabled=true;
+    setTimeout(()=>{ if(!SEND) return; el.classList.remove('peek'); SEND.typed=''; renderDial(); e.target.disabled=false; },3000); return; }
+  const k=e.target.closest('#dialPad button'); if(k&&SEND){ const v=k.dataset.k;
+    if(SEND.marked){ SEND.marked=false; SEND.typed=''; }
+    if(v==='back') SEND.typed=SEND.typed.slice(0,-1);
+    else if(v==='go'){ if(SEND.typed.length) checkDial(); return; }
+    else if(SEND.typed.length<SEND.target.length){ SEND.typed+=v; sfx.tap(); }
+    renderDial(); if(SEND.typed.length===SEND.target.length) checkDial(); return; }
+  if(e.target.id==='shareBtn'){ doShare(); return; }
+});
+function certText(){ const nm=(S.profile&&S.profile.name)||'Your Star Knight'; return `${nm} earned "${CERT.c.name}" in Star Knight League! Here is the certificate.`; }
+function showShare(){
+  const sms=`sms:${SEND.target}?&body=${encodeURIComponent(certText())}`;
+  $('#dialExtra').innerHTML=`<button class="btn" id="shareBtn">Send the certificate</button>`;
+  SEND.sms=sms;
+}
+function doShare(){
+  const cv=$('#certCanvas');
+  cv.toBlob(async blob=>{
+    let shared=false;
+    try{
+      const file=new File([blob],'star-knight-prize.png',{type:'image/png'});
+      if(navigator.canShare&&navigator.canShare({files:[file]})){ await navigator.share({files:[file],text:certText(),title:'Star Knight prize'}); shared=true; }
+    }catch(err){ if(err&&err.name==='AbortError') return; }
+    const ex=$('#dialExtra');
+    if(shared){ ex.innerHTML=`<p style="font-weight:700">Shared! Pick Messages and type ${esc(SEND.c.name||'your parent')}'s number if it asks.</p>`; return; }
+    let url=''; try{ url=URL.createObjectURL(blob); }catch(e){}
+    ex.innerHTML=`<p class="note" style="width:100%">If Messages opens without the picture, save the picture first and add it to the message.</p>
+      <a class="btn" href="${esc(SEND.sms)}">Open Messages</a>${url?`<a class="btn alt" href="${url}" download="star-knight-prize.png">Save the picture</a>`:''}`;
+  },'image/png');
+}
+/* grown-ups: prize settings */
+function prizeSettingsHTML(){
+  const cap=String(S.settings.dailyCap), day=dayEarned(), cs=S.contacts&&S.contacts.length?S.contacts:[{name:'Mom',phone:''},{name:'Dad',phone:''}];
+  if(!S.contacts||!S.contacts.length) S.contacts=cs;
+  const pl=prizeList().slice().sort((a,b)=>a.cost-b.cost);
+  return `<div class="panel" id="prizeSettings" style="display:grid;gap:14px">
+    <div><h3 style="margin-bottom:6px">Prizes and trophy points</h3>
+      <p class="note">She has <b>${S.trophy||0}</b> trophy points. Earned today: ${day.n}${+cap?` of ${cap}`:''}. Wins earn ${TEAM_PTS.join(' / ')} points by team (double for the first win against a team, +20 for the first Cup).</p>
+      <div class="row" style="margin-top:8px"><button class="btn alt small" id="tpPlus">Give 10 bonus points</button><button class="btn alt small" id="tpMinus">Take away 10</button></div></div>
+    <div><h3 style="margin-bottom:8px">Daily trophy point limit</h3><div class="seg" data-set="dailyCap">${[['20','20 a day'],['30','30 a day'],['45','45 a day'],['0','No limit']].map(([v,l])=>`<button data-v="${v}" aria-pressed="${cap===v}">${l}</button>`).join('')}</div>
+      <p class="note" style="margin-top:6px">At 30 a day, the smallest prizes take a couple of days and the biggest take a few months.</p></div>
+    <div><h3 style="margin-bottom:4px">Parent phone numbers</h3><p class="note" style="margin-bottom:8px">To send a certificate, she has to type the number from memory and it must match. Saved only on this device.</p>
+      ${cs.map((c,i)=>`<div class="ctrow"><input class="text-in sm" id="ctn${i}" data-ct="${i}" data-f="name" value="${esc(c.name||'')}" placeholder="Name" aria-label="Parent ${i+1} name"><input class="text-in sm" id="ctp${i}" type="tel" inputmode="tel" autocomplete="off" data-ct="${i}" data-f="phone" value="${esc(c.phone||'')}" placeholder="Phone number" aria-label="Parent ${i+1} phone"></div>`).join('')}</div>
+    <div><h3 style="margin-bottom:4px">Prize list</h3><p class="note" style="margin-bottom:8px">Change names or point costs. Cheaper prizes show first.</p>
+      ${pl.map(p=>`<div class="pzrow"><input class="text-in sm" id="pzn-${esc(p.id)}" data-pz="${esc(p.id)}" data-f="name" value="${esc(p.name)}" aria-label="Prize name"><input class="text-in sm cost" id="pzc-${esc(p.id)}" type="number" min="1" inputmode="numeric" data-pz="${esc(p.id)}" data-f="cost" value="${p.cost}" aria-label="Points"><button class="iconbtn" data-pzdel="${esc(p.id)}" aria-label="Remove ${esc(p.name)}">✕</button></div>`).join('')}
+      <div class="row" style="margin-top:8px"><button class="btn alt small" id="pzAdd">Add a prize</button><button class="btn alt small" id="pzRestore">Restore default prizes</button></div></div>
+    <div><h3 style="margin-bottom:8px">Trophies she has earned</h3>${(S.claims||[]).length?`<ul class="missed">${S.claims.map((c,i)=>({c,i})).reverse().map(({c,i})=>`<li><span>${esc(c.name)} <span class="dim">· ${esc(c.date)}</span></span><label class="given"><input type="checkbox" id="gv${i}" data-given="${i}" ${c.given?'checked':''}> Given</label></li>`).join('')}</ul>`:'<p class="dim">No prizes yet.</p>'}</div>
+  </div>`;
+}
+function refreshPrizeSettings(){ const el=$('#prizeSettings'); if(el) el.outerHTML=prizeSettingsHTML(); }
+$('#s-parent').addEventListener('input',e=>{
+  const t=e.target;
+  if(t.dataset.ct!==undefined){ const c=S.contacts[+t.dataset.ct]; if(c){ c[t.dataset.f]=t.value; save(); } }
+  if(t.dataset.pz!==undefined){ const p=prizeList().find(x=>x.id===t.dataset.pz); if(p){ if(t.dataset.f==='cost'){ const v=parseInt(t.value,10); if(v>0) p.cost=v; } else p.name=t.value; save(); } }
+});
+$('#s-parent').addEventListener('change',e=>{ const t=e.target; if(t.dataset.given!==undefined){ const c=S.claims[+t.dataset.given]; if(c){ c.given=t.checked; save(); } } if(t.dataset.f==='cost') refreshPrizeSettings(); });
+$('#s-parent').addEventListener('click',e=>{
+  const t=e.target.closest('button'); if(!t) return;
+  if(t.id==='tpPlus'){ S.trophy=(S.trophy||0)+10; save(); setTrophy(true); refreshPrizeSettings(); }
+  else if(t.id==='tpMinus'){ S.trophy=Math.max(0,(S.trophy||0)-10); save(); setTrophy(); refreshPrizeSettings(); }
+  else if(t.id==='pzAdd'){ prizeList().push({id:'c'+Date.now(),name:'New prize',cost:100}); save(); refreshPrizeSettings(); }
+  else if(t.id==='pzRestore'){ S.prizes=DEFAULT_PRIZES.map(p=>Object.assign({},p)); save(); refreshPrizeSettings(); }
+  else if(t.dataset.pzdel){ S.prizes=prizeList().filter(p=>p.id!==t.dataset.pzdel); save(); refreshPrizeSettings(); }
+});
+
 /* ---------- grown-ups ---------- */
 function openParent(){
   sfx.tap();
@@ -2754,9 +3028,10 @@ function openParent(){
     <div class="panel"><label class="field-label" for="spellIn">This week's spelling and vocabulary words</label>
       <textarea class="text-in" id="spellIn" placeholder="One word per line, from her teacher's list">${esc(S.spelling)}</textarea>
       <p class="note" style="margin-top:6px">Saved on this device. Hover-Soccer (Chapter 2) uses these words. Without a list, it uses a built-in 3rd-grade word bank.</p></div>
-    <div class="panel" style="display:grid;gap:10px"><h3>Reset one game</h3><p class="note">Locks that game's teams again, replays its story, and clears its learning history. Her Star Knight, ship, and credits stay.</p>
+    ${prizeSettingsHTML()}
+    <div class="panel" style="display:grid;gap:10px"><h3>Reset one game</h3><p class="note">Locks that game's teams again, replays its story, and clears its learning history. Her Star Knight, ship, credits, and trophy points stay.</p>
       <div class="resetrow"><button class="btn alt small" data-reset="baseball">Reset Baseball</button><button class="btn alt small" data-reset="soccer">Reset Soccer</button><button class="btn alt small" data-reset="hoops">Reset Basketball</button></div></div>
-    <div class="panel" style="display:grid;gap:10px"><h3>Start over</h3><p class="note">Clears everything on this device: her Star Knight, ship, credits, and all three games.</p>
+    <div class="panel" style="display:grid;gap:10px"><h3>Start over</h3><p class="note">Clears everything on this device: her Star Knight, ship, credits, trophy points, prizes, phone numbers, and all three games.</p>
       <div class="row"><button class="btn alt small" id="resetBtn">Reset everything</button></div></div>`;
   show('parent');
 }
@@ -2765,7 +3040,7 @@ $('#s-parent').addEventListener('click',e=>{
   const rb=e.target.closest('[data-reset]');
   if(rb){ const g=rb.dataset.reset, nm={baseball:'Baseball',soccer:'Soccer',hoops:'Basketball'}[g];
     showMsg({title:`Reset ${nm}?`,body:`This locks the ${nm} teams again and clears its learning history. Her Star Knight, ship, and credits stay.`,btn:'Reset',alt:'Cancel',cb:()=>{ resetGame(g); openParent(); showMsg({title:`${nm} reset`,body:'Start it again from the title screen.',btn:'OK'}); }}); return; }
-  if(e.target.id==='resetBtn'){ showMsg({title:'Reset everything?',body:'This clears progress on this device. It cannot be undone.',btn:'Reset',alt:'Cancel',cb:()=>{try{localStorage.removeItem(KEY)}catch(err){} S=load(); S.profile=null; save(); setCredits(); renderSoundBtn(); show('title'); renderTitle();}}); }
+  if(e.target.id==='resetBtn'){ showMsg({title:'Reset everything?',body:'This clears progress on this device. It cannot be undone.',btn:'Reset',alt:'Cancel',cb:()=>{try{localStorage.removeItem(KEY)}catch(err){} S=load(); S.profile=null; save(); setCredits(); setTrophy(); renderSoundBtn(); show('title'); renderTitle();}}); }
 });
 function resetGame(g){
   const P=S.progress;
@@ -2796,7 +3071,7 @@ function drawStars(t){
 function starLoop(t){ if(cur!=='game') drawStars(t); requestAnimationFrame(starLoop); }
 
 /* ---------- boot ---------- */
-sizeStars(); renderSoundBtn(); setCredits(); renderTitle(); show('title');
+sizeStars(); renderSoundBtn(); setCredits(); setTrophy(); renderTitle(); show('title');
 if(!reduced) requestAnimationFrame(starLoop);
 })();
 </script>
