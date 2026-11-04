@@ -146,15 +146,15 @@ p{margin:0}
 .counts .ou b.on{background:var(--coral)}
 .minibases{width:30px;height:30px}
 .fieldwrap{position:relative;flex:1;min-height:0;border-radius:22px;overflow:hidden;border:2px solid var(--line);background:radial-gradient(100% 70% at 50% 100%,#1A2350 0%,#0D1330 70%)}
-#field{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:manipulation;cursor:pointer}
-#toast{position:absolute;left:50%;top:12px;transform:translateX(-50%) scale(.8);max-width:calc(100% - 24px);text-align:center;font-family:var(--display);font-size:clamp(20px,6vw,30px);line-height:1.1;color:var(--ink);text-shadow:0 3px 0 #070B1C,0 0 18px #000;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
-#toast.show{opacity:1;transform:translateX(-50%) scale(1)}
-#toast.gold{color:var(--gold)}
-#toast.coral{color:var(--coral)}
-#toast .tip{display:block;font-family:var(--body);font-weight:800;font-size:16px;color:var(--ink);margin-top:6px;text-shadow:0 2px 6px #000}
-#boostBadge{position:absolute;left:12px;bottom:14px;font-family:var(--display);font-size:13px;letter-spacing:.06em;color:#0A0F24;background:var(--cyan);border-radius:999px;padding:8px 12px;box-shadow:0 0 18px var(--cyan)}
-#swingBtn{position:absolute;right:max(12px,env(safe-area-inset-right,0px));bottom:12px;width:clamp(92px,24vw,120px);aspect-ratio:1;border-radius:50%;border:4px solid #FFD3CB;background:var(--coral);color:#fff;font-family:var(--display);font-size:clamp(18px,5vw,22px);box-shadow:0 6px 0 var(--coral-deep),0 0 24px #FF6F5966;cursor:pointer;touch-action:manipulation;user-select:none;-webkit-user-select:none}
-#swingBtn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--coral-deep)}
+#field,#pitch{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:manipulation;cursor:pointer}
+#toast,#sToast{position:absolute;left:50%;top:12px;transform:translateX(-50%) scale(.8);max-width:calc(100% - 24px);text-align:center;font-family:var(--display);font-size:clamp(20px,6vw,30px);line-height:1.1;color:var(--ink);text-shadow:0 3px 0 #070B1C,0 0 18px #000;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
+#toast.show,#sToast.show{opacity:1;transform:translateX(-50%) scale(1)}
+#toast.gold,#sToast.gold{color:var(--gold)}
+#toast.coral,#sToast.coral{color:var(--coral)}
+#toast .tip,#sToast .tip{display:block;font-family:var(--body);font-weight:800;font-size:16px;color:var(--ink);margin-top:6px;text-shadow:0 2px 6px #000}
+#boostBadge,#sBadge{position:absolute;left:12px;bottom:14px;font-family:var(--display);font-size:13px;letter-spacing:.06em;color:#0A0F24;background:var(--cyan);border-radius:999px;padding:8px 12px;box-shadow:0 0 18px var(--cyan)}
+#swingBtn,#shootBtn{position:absolute;right:max(12px,env(safe-area-inset-right,0px));bottom:12px;width:clamp(92px,24vw,120px);aspect-ratio:1;border-radius:50%;border:4px solid #FFD3CB;background:var(--coral);color:#fff;font-family:var(--display);font-size:clamp(18px,5vw,22px);box-shadow:0 6px 0 var(--coral-deep),0 0 24px #FF6F5966;cursor:pointer;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+#swingBtn:active,#shootBtn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--coral-deep)}
 .gamehint{position:absolute;left:12px;top:12px;font-size:13px;font-weight:700;color:var(--ink-dim);pointer-events:none}
 
 .counts .ba b.on{background:var(--mint)}
@@ -184,6 +184,37 @@ p{margin:0}
 .match.won .mnum{color:var(--mint)}
 .tag.next{background:var(--gold);color:#2A1A00}
 .tag.won{color:var(--mint)}
+
+#sHint{display:none!important}
+.ctlpanel.side{left:auto;width:220px;right:max(10px,env(safe-area-inset-right,0px))}
+.chap{width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+.chap[disabled]{cursor:default}
+.chap:not([disabled]):active{transform:translateY(2px)}
+.finalscore{display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap}
+.finalscore>div{display:flex;align-items:center;gap:10px}
+.fs-v{font-family:var(--display);font-size:44px;color:var(--gold);line-height:1;font-variant-numeric:tabular-nums}
+.fs-n{font-weight:800;font-size:16px;color:var(--ink-dim)}
+.fs-dash{font-family:var(--display);font-size:30px;color:var(--ink-dim)}
+.match .s.unlock{color:var(--gold)}
+.tile .need{font-size:12px;font-weight:800;color:var(--gold)}
+.sentence{font-size:clamp(20px,5.4vw,26px);font-weight:800;line-height:1.35}
+.sentence .blank{display:inline-block;min-width:4ch;border-bottom:4px solid var(--cyan);margin:0 4px;vertical-align:-2px}
+.sp-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.sp-tools svg{width:20px;height:20px}
+#spPeekBox{font-family:var(--display);font-size:clamp(26px,8vw,38px);letter-spacing:.12em;color:var(--gold);text-align:center;padding:6px;border-radius:14px;background:var(--space)}
+.sp-prompt{font-weight:800;color:var(--ink-dim);font-size:15px}
+.slots{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;cursor:pointer}
+.slot{width:clamp(30px,9vw,42px);height:clamp(40px,11vw,52px);border-radius:10px;border:3px solid var(--line);background:var(--space);display:grid;place-items:center;font-family:var(--display);font-size:clamp(20px,6vw,28px);text-transform:lowercase}
+.slot.full{border-color:var(--cyan)}
+.slot.right{border-color:var(--mint);background:#123D33}
+.slot.wrong{border-color:var(--coral);background:#45201C}
+.ltiles{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.ltiles button{width:clamp(44px,12vw,56px);height:clamp(48px,13vw,58px);border-radius:14px;border:2px solid var(--line);background:var(--panel-2);font-family:var(--display);font-size:clamp(22px,6.5vw,28px);cursor:pointer;touch-action:manipulation;box-shadow:0 3px 0 #070B1C}
+.ltiles button:active{transform:translateY(2px);box-shadow:0 1px 0 #070B1C}
+.ltiles button[disabled]{opacity:.25;box-shadow:none}
+.ltiles .back{font-size:20px;width:auto;padding:0 14px}
+#spChoices button{font-family:var(--body);font-weight:800;font-size:clamp(20px,5.6vw,24px)}
+.spelled{font-family:var(--display);letter-spacing:.06em}
 
 /* results */
 .result-head{text-align:center;display:grid;gap:8px;justify-items:center}
@@ -294,7 +325,7 @@ textarea.text-in{min-height:120px;font-size:17px;font-weight:600;resize:vertical
         <div class="hero">
           <div class="hero-art" id="heroArt"></div>
           <h1 class="logo">Star Knight<span>League</span></h1>
-          <p class="chapline">Chapter 1 · The Station Cup</p>
+          <p class="chapline" id="chapline">Chapter 1 · The Station Cup</p>
           <div class="row">
             <button class="btn" id="playBtn">Play</button>
             <button class="btn alt" id="hangarBtn">Hangar</button>
@@ -303,8 +334,8 @@ textarea.text-in{min-height:120px;font-size:17px;font-weight:600;resize:vertical
         </div>
         <div class="chapters" aria-label="Chapters">
           <h3>Chapters</h3>
-          <div class="chap"><div class="num">1</div><div><div class="t">The Station Cup</div><div class="s">Asteroid Baseball · 5 teams · math</div></div><span class="tag" style="color:var(--mint)">Play now</span></div>
-          <div class="chap locked"><div class="num">2</div><div><div class="t">Meteor Storm</div><div class="s">Hover-Soccer · spelling</div></div><span class="tag">Coming soon</span></div>
+          <button class="chap" data-ch="1"><div class="num">1</div><div><div class="t">The Station Cup</div><div class="s">Asteroid Baseball · math</div></div><span class="tag" id="ch1Tag" style="color:var(--mint)">Play</span></button>
+          <button class="chap" data-ch="2"><div class="num">2</div><div><div class="t">Meteor Storm</div><div class="s">Hover-Soccer · spelling</div></div><span class="tag" id="ch2Tag" style="color:var(--mint)">Play</span></button>
           <div class="chap locked"><div class="num">3</div><div><div class="t">The Lost Signal</div><div class="s">Zero-G Basketball · vocabulary</div></div><span class="tag">Coming soon</span></div>
           <div class="chap locked"><div class="num">4</div><div><div class="t">Eclipse Ambush</div><div class="s">Ship battle · mixed review</div></div><span class="tag">Coming soon</span></div>
           <div class="chap locked"><div class="num">5</div><div><div class="t">The Missing Droid</div><div class="s">Rescue mission · reading</div></div><span class="tag">Coming soon</span></div>
@@ -411,10 +442,37 @@ textarea.text-in{min-height:120px;font-size:17px;font-weight:600;resize:vertical
     <section class="screen gut" id="s-bracket" hidden>
       <div class="wrap">
         <div>
-          <h2>The Station Cup</h2>
-          <p class="dim" style="margin-top:4px">Beat all five teams to win the Cup. Each match: you bat, then you choose to pitch or catch.</p>
+          <h2 id="bracketTitle">The Station Cup</h2>
+          <p class="dim" id="bracketSub" style="margin-top:4px"></p>
         </div>
         <div class="bracket" id="bracketList"></div>
+      </div>
+    </section>
+
+    <!-- SOCCER -->
+    <section class="screen game gut" id="s-soccer" hidden>
+      <div class="board" aria-live="polite">
+        <div class="team"><span class="tn" id="sUsName">Star Knights</span><span class="sc" id="sScoreUs">0</span></div>
+        <div class="mid">
+          <span class="inn" id="sHalfVal">YOU ATTACK</span>
+          <div class="counts"><span class="c ou" id="sTurns" aria-label="Turns used">TURNS <b></b><b></b><b></b></span></div>
+        </div>
+        <div class="team r"><span class="tn" id="sThemName">Troopers</span><span class="sc" id="sScoreThem">0</span></div>
+      </div>
+      <div class="fieldwrap">
+        <canvas id="pitch" aria-label="Hover-soccer field"></canvas>
+        <div class="gamehint" id="sHint" hidden></div>
+        <div id="sToast" role="status"></div>
+        <div id="sBadge" hidden></div>
+        <button id="shootBtn" hidden>Shoot</button>
+        <div class="ctlpanel" id="lanePad" hidden>
+          <span class="ctl-l" id="laneLabel">Move</span>
+          <div class="ctlrow">
+            <button data-l="-1" aria-pressed="false">◀ Left</button>
+            <button data-l="0" aria-pressed="true">Middle</button>
+            <button data-l="1" aria-pressed="false">Right ▶</button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -450,6 +508,28 @@ textarea.text-in{min-height:120px;font-size:17px;font-weight:600;resize:vertical
           <button class="btn" id="mqContinue" hidden>Got it</button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- SPELL MODAL -->
+  <div class="modal" id="spellModal" hidden role="dialog" aria-modal="true" aria-labelledby="spTitle">
+    <div class="card">
+      <div>
+        <div class="ttl" id="spTitle">Meteor Kick!</div>
+        <p class="dim" id="spSub"></p>
+      </div>
+      <div class="sentence" id="spSentence"></div>
+      <div class="sp-tools">
+        <button class="btn alt small" id="spHear"><svg viewBox="0 0 24 24" fill="none" stroke="#F3F1FF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#F3F1FF"/><path d="M16 9a4 4 0 010 6M18.5 6.5a8 8 0 010 11"/></svg>Hear it</button>
+        <button class="btn alt small" id="spPeek">Peek</button>
+      </div>
+      <div id="spPeekBox" hidden></div>
+      <div class="sp-prompt" id="spPrompt"></div>
+      <div class="slots" id="spSlots" aria-live="polite"></div>
+      <div class="ltiles" id="spTiles"></div>
+      <div class="choices" id="spChoices" hidden></div>
+      <div class="fb" id="spFb" hidden></div>
+      <button class="btn" id="spContinue" hidden>Got it</button>
     </div>
   </div>
 
@@ -691,6 +771,7 @@ function show(id){
   $$('.screen').forEach(s=>{s.hidden=(s.id!=='s-'+id)});
   cur=id; $('#homeBtn').hidden=(id==='title');
   if(id!=='game'){G.active=false}
+  if(id!=='soccer'&&typeof SG!=='undefined'){SG.active=false}
   const sc=$('#s-'+id); if(sc) sc.scrollTop=0;
 }
 function setCredits(bump){
@@ -723,16 +804,26 @@ function renderTitle(){
   $('#heroArt').innerHTML=`<div class="float">${shipSVG(S.ship,'ship')}</div><div class="knight">${person(knightOf())}</div>`;
   $('#heroArt').firstElementChild.style.cssText='position:absolute;inset:0';
   $('#playBtn').textContent=S.progress.games>0?'Play again':'Play';
+  const ch=S.progress.lastCh||1;
+  $('#chapline').textContent=ch===2?'Chapter 2 · Meteor Storm':'Chapter 1 · The Station Cup';
+  $('#ch1Tag').textContent=S.progress.cupWon?'Cup won':`${S.progress.beaten||0} of 5 won`;
+  $('#ch2Tag').textContent=S.progress.soccerCup?'Cup won':(S.progress.soccerBeaten||0)?`${S.progress.soccerBeaten} of 5 won`:'New!';
 }
+function playChapter(ch){
+  if(!S.profile){openSetup(); return;}
+  S.progress.lastCh=ch; save();
+  if(ch===2){ if(!S.progress.story2Seen){startStory(2); return;} openBracket('soccer'); return; }
+  if(!S.progress.storySeen){startStory(1); return;}
+  openBracket('baseball');
+}
+$$('.chap[data-ch]').forEach(b=>b.addEventListener('click',()=>{sfx.tap(); playChapter(+b.dataset.ch);}));
 $('#playBtn').addEventListener('click',()=>{
   sfx.tap();
-  if(!S.profile){openSetup(); return;}
-  if(!S.progress.storySeen){startStory(); return;}
-  openBracket();
+  playChapter(S.progress.lastCh||1);
 });
 $('#hangarBtn').addEventListener('click',()=>{sfx.tap(); if(!S.profile){openSetup();return} openHangar('title')});
-$('#storyBtn').addEventListener('click',()=>{sfx.tap(); if(!S.profile){openSetup();return} startStory()});
-$('#homeBtn').addEventListener('click',()=>{sfx.tap(); closeMath(null,true); hideMsg(); show('title'); renderTitle();});
+$('#storyBtn').addEventListener('click',()=>{sfx.tap(); if(!S.profile){openSetup();return} startStory(S.progress.lastCh||1)});
+$('#homeBtn').addEventListener('click',()=>{sfx.tap(); closeMath(null,true); closeSpell(null,true); hideMsg(); show('title'); renderTitle();});
 $('#soundBtn').addEventListener('click',()=>{S.sound=!S.sound; save(); renderSoundBtn(); sfx.tap();});
 
 // grown-ups gate: press and hold
@@ -778,18 +869,19 @@ function renderHangar(){
   $('#cargoTiles').innerHTML=Object.keys(CARGO).map(k=>`<button class="tile" data-k="${k}" aria-pressed="${sh.cargo===k}">${shipSVG(Object.assign({},sh,{cargo:k}),'')}<span class="nm">${CARGO[k].name}</span></button>`).join('');
   $('#paintTiles').innerHTML=Object.keys(PAINTS).map(k=>{const p=PAINTS[k], own=S.unlocked.paint.includes(k);
     const bg=p.stripes?'linear-gradient(#FF6F59 0 20%,#FFC547 0 40%,#43E5B0 0 60%,#5FD8FF 0 80%,#9B6BFF 0)':p.hex;
-    return `<button class="tile" data-k="${k}" aria-pressed="${sh.paint===k}">${own?'':lockBadge(p.cost)}<span class="swatch" style="background:${bg}"></span><span class="nm">${p.name}</span></button>`}).join('');
+    return `<button class="tile" data-k="${k}" aria-pressed="${sh.paint===k}">${own?'':lockBadge(p.cost)}<span class="swatch" style="background:${bg}"></span><span class="nm">${p.name}</span>${own?'':needLine(p.cost)}</button>`}).join('');
   $('#droidTiles').innerHTML=Object.keys(DROID_HEADS).map(k=>{const d=DROID_HEADS[k], own=S.unlocked.droid.includes(k);
-    return `<button class="tile" data-k="${k}" aria-pressed="${sh.droidHead===k}">${own?'':lockBadge(d.cost)}${droidSVG(k,sh.droidColor)}<span class="nm">${d.name}</span></button>`}).join('');
+    return `<button class="tile" data-k="${k}" aria-pressed="${sh.droidHead===k}">${own?'':lockBadge(d.cost)}${droidSVG(k,sh.droidColor)}<span class="nm">${d.name}</span>${own?'':needLine(d.cost)}</button>`}).join('');
   $('#droidColorTiles').innerHTML=Object.keys(DROID_COLORS).map(k=>`<button class="tile" data-k="${k}" aria-pressed="${sh.droidColor===k}" aria-label="${k} droid"><span class="swatch" style="background:${DROID_COLORS[k]}"></span></button>`).join('');
   $('#crewTiles').innerHTML=CREW.map((c,i)=>`<button class="tile" data-i="${i}" aria-pressed="${sh.crew.includes(i)}">${person(c)}<span class="nm">${c.role}</span>${c.chair?'<span class="sub">Hover-chair</span>':''}</button>`).join('');
 }
+const needLine=c=>`<span class="need">${S.credits>=c?'Tap to unlock':`${c-S.credits} more ★ needed`}</span>`;
 function tryBuy(kind,k,cost,name,apply){
   if(S.unlocked[kind].includes(k)){apply(); return;}
   if(S.credits>=cost){
     showMsg({title:`Unlock ${name}?`,body:`It costs <b>${cost}</b> credits. You have <b>${S.credits}</b>.`,btn:'Unlock',alt:'Not now',cb:()=>{S.credits-=cost; S.unlocked[kind].push(k); apply(); setCredits(true); sfx.right(); save(); renderHangar();}});
   } else {
-    showMsg({title:'Keep playing!',body:`${esc(name)} costs ${cost} credits. You need <b>${cost-S.credits}</b> more. Get hits and solve Power Pitches to earn credits.`,btn:'OK'});
+    showMsg({title:'Keep playing!',body:`${esc(name)} costs ${cost} credits. You have ${S.credits}, so you need <b>${cost-S.credits}</b> more. Earn credits by getting hits, scoring goals, and solving problems.`,btn:'OK'});
   }
 }
 $('#s-hangar').addEventListener('click',e=>{
@@ -803,13 +895,22 @@ $('#s-hangar').addEventListener('click',e=>{
   else if(box==='crewTiles'){const i=+t.dataset.i; if(sh.crew.includes(i)){ if(sh.crew.length>1) sh.crew=sh.crew.filter(x=>x!==i);} else {sh.crew.push(i); if(sh.crew.length>2) sh.crew.shift();}}
   save(); renderHangar();
 });
-$('#hangarDone').addEventListener('click',()=>{sfx.tap(); if(hangarReturn==='story') startStory(); else {show('title'); renderTitle();}});
+$('#hangarDone').addEventListener('click',()=>{sfx.tap(); if(hangarReturn==='story') startStory(1); else {show('title'); renderTitle();}});
 
 /* ---------- story ---------- */
-let story=[],si=0;
-function startStory(){
+let story=[],si=0,storyCh=1;
+function startStory(ch){
+  storyCh=ch||1;
   const name=esc((S.profile&&S.profile.name)||'Star Knight');
   const c0=CREW[S.ship.crew[0]]||CREW[0];
+  if(storyCh===2){ story=[
+    {art:person(FAMILY.dad),who:'Dad',text:`Uh oh, ${name}! A meteor storm knocked out the station's shields.`},
+    {art:person(FAMILY.mom),who:'Mom',text:`We need five shield crystals. The Hover Cup on the ice moon gives one to every winner.`},
+    {art:person(FAMILY.cadet),who:'Little Cadet',text:`Me kick! Me kick the ball so far!`},
+    {art:commanderSVG(),who:'Eclipse Commander',text:`My teams will grab those crystals first. Good luck dodging my defenders!`},
+    {art:person(knightOf()),who:name,text:`Team spells T-E-A-M. Let's go!`},
+    {art:droidSVG(S.ship.droidHead,S.ship.droidColor),who:'Coach Droid',text:`First you attack: tap Left or Right to dodge, then tap SHOOT when the arrow points at a corner. Then pick goalie or defender. Spell words right to power up!`}
+  ]; si=0; renderStory(); show('story'); return; }
   story=[
     {art:person(FAMILY.mom),who:'Mom',text:`Big news, ${name}! The Station Cup starts today. Beat five teams to win it.`},
     {art:person(FAMILY.cadet),who:'Little Cadet',text:`Me play too! Me hit the ball!`},
@@ -825,11 +926,11 @@ function renderStory(){
   const s=story[si];
   $('#storyPortrait').innerHTML=s.art; $('#storyWho').innerHTML=s.who; $('#storyText').innerHTML=s.text;
   $('#storyDots').innerHTML=story.map((_,i)=>`<i class="${i<=si?'on':''}"></i>`).join('');
-  $('#storyNext').textContent=si===story.length-1?'Play ball!':'Next';
+  $('#storyNext').textContent=si===story.length-1?(storyCh===2?'Kick off!':'Play ball!'):'Next';
 }
 $('#storyNext').addEventListener('click',()=>{sfx.tap(); if(si<story.length-1){si++; renderStory();} else endStory();});
 $('#storySkip').addEventListener('click',()=>{sfx.tap(); endStory();});
-function endStory(){S.progress.storySeen=true; save(); openBracket();}
+function endStory(){ if(storyCh===2){S.progress.story2Seen=true; save(); openBracket('soccer');} else {S.progress.storySeen=true; save(); openBracket('baseball');} }
 
 /* ---------- math generators (CA Common Core, grade 3) ---------- */
 const LV=()=>S.settings.level;
@@ -1000,7 +1101,7 @@ const TEAMS=[
 const teamSkill=()=>Math.max(.2,Math.min(.85,TEAMS[G.team||0].skill+(S.settings.level==='easy'?-.08:S.settings.level==='hard'?.08:0)));
 const EXTRA={light:0,normal:.1,lots:.3};
 const G={active:false,parts:[]};
-const cv=$('#field'), cx=cv.getContext('2d');
+const cv=$('#field'); let cx=cv.getContext('2d');
 let FW=300,FH=400,P=null;
 const ROCK=Array.from({length:30},()=>0.9+Math.random()*0.14);
 const STARS2=Array.from({length:40},()=>({x:Math.random(),y:Math.random()*.5,r:Math.random()*1.2+.3}));
@@ -1019,6 +1120,7 @@ function later(fn,ms){const id=G.id; setTimeout(()=>{if(G.active&&G.id===id) fn(
 function startMatch(t){
   Object.assign(G,{active:true,team:t,inning:1,half:'bat',role:null,score:{us:0,them:0},outs:0,strikes:0,balls:0,bases:[0,0,0],obases:[0,0,0],boost:false,star:false,phase:'idle',earned:0,hits:0,ks:0,right:0,asked:0,lineUs:[],lineThem:[],inRuns:0,pitch:null,dp:null,fly:null,swingT:-9999,oppSwingT:-9999,chase:null,parts:[],tips:0,glove:0,meter:null,id:(G.id||0)+1});
   $('#usName').textContent=(S.profile&&S.profile.name)?S.profile.name+"'s Knights":'Star Knights';
+  S.progress.lastCh=1; save();
   $('#themName').textContent=TEAMS[t].short;
   setControls('none'); show('game'); G.active=true;
   requestAnimationFrame(()=>{resizeField(); updateHUD(); if(!G.loop){G.loop=true; requestAnimationFrame(loop);}
@@ -1286,7 +1388,7 @@ function endGame(){
   save(); setCredits(true); if(win) sfx.win();
   const next=TEAMS[G.team+1];
   const head=champ?'Station Cup Champions!':win?`You beat the ${T.short}!`:tie?'A tie game!':`The ${T.short} won this one`;
-  const line=champ?'You beat the Eclipse Elite and saved the power crystals. Chapter 2, Meteor Storm, is coming soon.':win?`Next up in the Station Cup: the ${next.name}.`:'Every game makes you stronger. Want a rematch?';
+  const line=champ?'You beat the Eclipse Elite and saved the power crystals. Chapter 2, Meteor Storm, is ready to play!':win?`You unlocked the ${next.name}! Play them next.`:'Every game makes you stronger. Want a rematch?';
   const n=Math.max(G.lineUs.length,G.lineThem.length), cells=a=>Array.from({length:n},(_,i)=>`<td>${a[i]??'-'}</td>`).join('');
   $('#resultsWrap').innerHTML=`
     <div class="result-head">
@@ -1311,7 +1413,7 @@ function endGame(){
     </div>`;
   const nb=$('#nextBtn'); if(nb) nb.onclick=()=>{sfx.tap(); startMatch(G.team+1)};
   const ab=$('#againBtn'); if(ab) ab.onclick=()=>{sfx.tap(); startMatch(G.team)};
-  $('#toBracket').onclick=()=>{sfx.tap(); openBracket()};
+  $('#toBracket').onclick=()=>{sfx.tap(); openBracket('baseball')};
   $('#toHangar').onclick=()=>{sfx.tap(); openHangar('title')};
   show('results');
 }
@@ -1330,18 +1432,24 @@ cv.addEventListener('pointerdown',e=>{
 });
 
 /* ---------- bracket ---------- */
-function openBracket(){
-  const beaten=S.progress.beaten||0;
+let bracketSport='baseball';
+function openBracket(sport){
+  bracketSport=sport||bracketSport;
+  const soc=bracketSport==='soccer', beaten=(soc?S.progress.soccerBeaten:S.progress.beaten)||0;
+  $('#bracketTitle').textContent=soc?'The Hover Cup':'The Station Cup';
+  $('#bracketSub').textContent=(soc?'Each match: you attack, then you choose goalie or defender.':'Each match: you bat, then you choose to pitch or catch.')+' Win a match to unlock the next team.';
+  const desc=soc?['Rookie team','Fast dribblers','Big goalie','Tricky strikers']:['Rookie team','Tough hitters','Fast pitchers','Tricky fielders'];
   $('#bracketList').innerHTML=TEAMS.map((t,i)=>{
     const st=i<beaten?'won':i===beaten?'next':'locked';
+    const sub=st==='locked'?`<span class="s unlock">Win against the ${TEAMS[i-1].short} to unlock</span>`:`<span class="s">${t.boss?'Final · coached by the Eclipse Commander':desc[i]}</span>`;
     return `<button class="match ${st}" data-t="${i}" ${st==='locked'?'disabled':''}>
       <span class="mnum">${i+1}</span>
       <span class="mart">${t.boss?commanderSVG():trooperSVG(i)}</span>
-      <span class="minfo"><span class="t">${t.name}</span><span class="s">${t.boss?'Final · coached by the Eclipse Commander':['Rookie team','Tough hitters','Fast pitchers','Tricky fielders'][i]}</span></span>
+      <span class="minfo"><span class="t">${t.name}</span>${sub}</span>
       <span class="tag ${st}">${st==='won'?'Won':st==='next'?'Play':'Locked'}</span></button>`;}).join('');
   show('bracket');
 }
-$('#bracketList').addEventListener('click',e=>{const b=e.target.closest('.match'); if(!b||b.disabled) return; sfx.tap(); startMatch(+b.dataset.t);});
+$('#bracketList').addEventListener('click',e=>{const b=e.target.closest('.match'); if(!b||b.disabled) return; sfx.tap(); if(bracketSport==='soccer') sMatch(+b.dataset.t); else startMatch(+b.dataset.t);});
 
 /* ---------- drawing ---------- */
 const knightBlade=()=>BLADES[(S.profile&&S.profile.blade)||'cyan']||BLADES.cyan;
@@ -1480,6 +1588,552 @@ function loop(){
   if(P) drawField(now);
   requestAnimationFrame(loop);
 }
+/* ---------- spelling (grade 3 patterns) ---------- */
+const WORDS=[
+['paint','We used gold ___ on our ship.'],['train','The space ___ zooms to the moon base.'],['stay','Please ___ in your seat for takeoff.'],
+['play','I like to ___ soccer on the ice moon.'],['sweet','The station bakery makes ___ star cookies.'],['dream','I ___ about flying past Saturn.'],
+['team','Our ___ worked together to win.'],['float','Things ___ when there is no gravity.'],['goal','She kicked the ball into the ___.'],
+['throw','Can you ___ the ball to second base?'],['snow','The ice moon is covered in ___.'],['cloud','A dust ___ covered the planet.'],
+['round','A planet is ___ like a ball.'],['shout','Fans ___ when we score.'],['boil','Water will ___ in the hot pot.'],
+['toy','My little sister has a droid ___.'],['chew','Little Cadet likes to ___ space gum.'],['star','The Sun is a ___.'],
+['score','What is the ___ of the game?'],['corner','Kick the ball into the ___ of the net.'],['first','I want to bat ___.'],
+['turn','It is your ___ to kick.'],['circle','Stand inside the glowing ___.'],['storm','A meteor ___ is coming!'],
+['earth','We can see ___ from the station window.'],['catch','I will ___ the ball in my glove.'],['pitch','Watch me ___ a fastball.'],
+['splash','The droid fell in the pool with a big ___.'],['strong','You need ___ legs to kick far.'],['thumb','Give me a ___ up!'],
+['knee','I bumped my ___ on the hatch.'],['write','I will ___ my name on the ship.','right'],['right','Turn ___ at the engine room.','write'],
+['light','Turn on the ___ in the hangar.'],['night','The stars shine at ___.'],['bright','The comet was very ___.'],
+['jumped','The robot ___ over the box.'],['kicked','She ___ the winning goal.'],['running','We were ___ to the launch pad.'],
+['smiled','Mom ___ when we won.'],['hopped','Little Cadet ___ like a frog.'],['cried','The baby ___ when the alarm rang.'],
+['boxes','We packed the ___ into the cargo bay.'],['stories','Dad tells ___ about the planets.'],['leaves','The space garden has green ___.'],
+['babies','The ___ were asleep in the nursery pod.'],['baseball','We played ___ on an asteroid.'],['spaceship','Our ___ is ready to launch.'],
+['sunlight','The solar panels need ___.'],['everyone','___ on the station came to the game.'],['sometimes','___ the station gets very quiet.'],
+['outside','Wear a helmet when you go ___.'],['because','We cheered ___ we scored a goal.'],['friend','My best ___ lives on Deck 4.'],
+['people','Many ___ came to watch the Cup.'],['again','Let\'s play that game ___!'],['enough','Do we have ___ fuel to get home?'],
+['laugh','The silly droid made me ___.'],['through','The ship flew ___ the asteroid field.'],['thought','I ___ we would lose, but we won!'],
+['beautiful','The rings of Saturn are ___.'],['different','Every planet looks ___.'],['favorite','Soccer is my ___ sport.'],
+['special','Today is a ___ day.'],['answer','I know the ___ to the problem.'],['believe','I ___ we can win.'],
+['together','We fixed the ship ___.'],['before','Buckle up ___ takeoff.'],['always','I ___ wear my helmet.'],
+['unhappy','The Troopers were ___ when they lost.'],['rewrite','I will ___ my answer neatly.'],['careful','Be ___ near the airlock.'],
+['helpful','Our droid is very ___.'],['quickly','The comet moved ___.'],['slowly','The moon turned ___.'],
+['their','The Troopers lost ___ helmets.','there'],['there','Put the ball over ___.','their'],['two','I scored ___ goals today.','too'],
+['too','Can I come ___?','two'],['know','I ___ how to fly the ship.','no'],['would','I ___ like to visit Mars.','wood'],
+['should','You ___ drink water after the game.'],['could','I ___ see the moon from my bed.'],['school','My ___ has a space club.'],
+['happen','What will ___ next?'],['rocket','The ___ blasted off.'],['planet','Mars is a red ___.'],
+['orbit','The moon goes in an ___ around Earth.'],['gravity','___ pulls things down.']
+];
+const WORDMAP={}; WORDS.forEach(w=>WORDMAP[w[0]]=w);
+const canSpeak=(()=>{try{return 'speechSynthesis' in window && typeof SpeechSynthesisUtterance!=='undefined'}catch(e){return false}})();
+function say(text){ if(!canSpeak) return; try{ speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.rate=.82; u.pitch=1.05; u.lang='en-US'; speechSynthesis.speak(u);}catch(e){} }
+function parentWords(){ return Array.from(new Set(String(S.spelling||'').toLowerCase().split(/[\s,;]+/).map(w=>w.replace(/[^a-z]/g,'')).filter(w=>w.length>=2&&w.length<=14))); }
+function pickWord(){
+  if(!S.spellReview) S.spellReview=[];
+  if(S.spellReview.length&&Math.random()<.35){ const w=S.spellReview.shift(); save(); return {w,review:true}; }
+  const pw=parentWords();
+  if(pw.length&&Math.random()<.75) return {w:pick(pw)};
+  const L=S.settings.level;
+  let pool=WORDS.map(x=>x[0]);
+  if(L==='easy') pool=pool.filter(w=>w.length<=6); else if(L==='hard') pool=pool.filter(w=>w.length>=6);
+  let w=pick(pool), tries=0; while(w===SG.lastWord&&tries++<5) w=pick(pool);
+  return {w};
+}
+function misspellings(w){
+  const rules=[
+    x=>x.replace(/([bcdfglmnprstz])\1/,'$1'), x=>x.replace(/([aeiou])([bdglmnprt])(ed|ing|er|y)$/,'$1$2$2$3'),
+    x=>x.replace('ea','ee'), x=>x.replace('ee','ea'), x=>x.replace('ai','ay'), x=>x.replace('ay','ai'), x=>x.replace('ou','ow'), x=>x.replace('ow','ou'),
+    x=>x.replace('oa','o'), x=>x.replace(/([^aeiou])e$/,'$1'), x=>x.replace(/^kn/,'n'), x=>x.replace(/^wr/,'r'), x=>x.replace('mb','m'), x=>x.replace('igh','ite'),
+    x=>x.replace('ck','k'), x=>x.replace(/c([aou])/,'k$1'), x=>x.replace('tch','ch'), x=>x.replace('ie','ei'), x=>x.replace(/ed$/,'d'), x=>x.replace(/ed$/,'t'),
+    x=>x.replace(/ies$/,'ys'), x=>x.replace(/ful$/,'full'), x=>x.replace(/ly$/,'ley'), x=>x.replace('au','aw'), x=>x.replace('ough','uff'), x=>x.replace('augh','aff'),
+    x=>x.replace(/er$/,'ur'), x=>x.replace('ir','ur'), x=>x.replace('or','er'), x=>x.replace('ei','ie'), x=>x.replace('ph','f'), x=>x.replace(/le$/,'el'),
+    x=>{ if(x.length<4) return x; const i=R(1,x.length-3); return x.slice(0,i)+x[i+1]+x[i]+x.slice(i+2); },
+    x=>{ const v='aeiou', idx=[...x].map((c,i)=>v.includes(c)?i:-1).filter(i=>i>=0); if(!idx.length) return x; const i=pick(idx); return x.slice(0,i)+pick([...v].filter(c=>c!==x[i]))+x.slice(i+1); }
+  ];
+  const out=new Set(); const ws=WORDMAP[w]; if(ws&&ws[2]) out.add(ws[2]);
+  for(const f of shuffle(rules)){ if(out.size>=3) break; const m=f(w); if(m&&m!==w&&m.length>1) out.add(m); }
+  let guard=0; while(out.size<3&&guard++<40){ const i=R(0,w.length-1); const m=w.slice(0,i+1)+w[i]+w.slice(i+1); if(m!==w) out.add(m); }
+  return [...out].slice(0,3);
+}
+function decoys(w,n){
+  const confuse={a:'e',e:'i',i:'e',o:'u',u:'o',c:'k',k:'c',s:'c',y:'i',b:'d',d:'b',m:'n',n:'m',f:'v',g:'j',t:'d'};
+  const out=[]; let g=0;
+  while(out.length<n&&g++<60){ const src=pick([...w]); let c=confuse[src]||pick([...'aeioustnrl']); if(Math.random()<.3) c=pick([...'aeiourstln']); out.push(c); }
+  return out;
+}
+const SPELLKIND={
+  hover:{t:'Defender closing in!',s:'Spell it right to hover-jump over them.',ok:'Hover boots charged!'},
+  kick:{t:'Meteor Kick!',s:'Spell it right to power up your shot.',ok:'Meteor Kick ready!'},
+  save:{t:'Super Save!',s:'Spell it right to see where their shot is going.',ok:'Super Save ready!'},
+  slide:{t:'Slide tackle!',s:'Spell it right for a giant slide tackle.',ok:'Slide tackle ready!'}
+};
+let SQ=null;
+function openSpell(kind,cb){
+  const {w,review}=pickWord(); SG.lastWord=w;
+  const entry=WORDMAP[w], sentence=entry?entry[1]:'';
+  const L=S.settings.level, mode=Math.random()<(L==='easy'?.45:.3)?'choice':'tiles';
+  SQ={w,kind,cb,mode,input:[],locked:false,sentence};
+  const K=SPELLKIND[kind];
+  $('#spTitle').textContent=K.t; $('#spSub').textContent=K.s+(review?' (Practice word)':'');
+  const blank='<span class="blank"></span>';
+  $('#spSentence').innerHTML=sentence?esc(sentence).replace('___',blank):(mode==='choice'?'Which word did you hear?':'Spell the word you hear.');
+  $('#spPrompt').textContent=mode==='choice'?'Which spelling is right?':'Tap the letters in order.';
+  $('#spHear').hidden=!canSpeak;
+  $('#spPeekBox').hidden=true;
+  $('#spFb').hidden=true; $('#spContinue').hidden=true;
+  if(mode==='choice'){
+    $('#spSlots').hidden=true; $('#spTiles').hidden=true; $('#spChoices').hidden=false;
+    SQ.choices=shuffle([w,...misspellings(w)]);
+    $('#spChoices').innerHTML=SQ.choices.map((c,i)=>`<button data-i="${i}">${esc(c)}</button>`).join('');
+    $('#spPeek').hidden=true;
+  } else {
+    $('#spSlots').hidden=false; $('#spTiles').hidden=false; $('#spChoices').hidden=true; $('#spPeek').hidden=false;
+    const n=L==='easy'?2:L==='hard'?4:3;
+    SQ.tiles=shuffle([...w,...decoys(w,n)]).map(c=>({c,used:false}));
+    renderSpellTiles();
+  }
+  SG.paused=true; $('#spellModal').hidden=false;
+  if(canSpeak) setTimeout(()=>{ if(SQ&&SQ.w===w) hearWord(); },250);
+  else if(mode==='tiles') peekWord();
+}
+function hearWord(){ if(!SQ) return; say(`${SQ.w}. ${SQ.sentence?SQ.sentence.replace('___',SQ.w)+' '+SQ.w+'.':''}`); }
+function peekWord(){
+  if(!SQ) return; const b=$('#spPeekBox'); b.textContent=SQ.w; b.hidden=false; $('#spPeek').disabled=true;
+  const w=SQ.w; setTimeout(()=>{ if(SQ&&SQ.w===w&&!SQ.locked){ b.hidden=true; $('#spPeek').disabled=false; } },2200);
+}
+function renderSpellTiles(){
+  const w=SQ.w;
+  $('#spSlots').innerHTML=[...w].map((_,i)=>`<span class="slot${SQ.input[i]!==undefined?' full':''}">${SQ.input[i]!==undefined?esc(SQ.tiles[SQ.input[i]].c):''}</span>`).join('');
+  $('#spTiles').innerHTML=SQ.tiles.map((t,i)=>`<button data-i="${i}" ${t.used?'disabled':''}>${esc(t.c)}</button>`).join('')+`<button class="back" data-back="1" aria-label="Delete">⌫</button>`;
+}
+function tapTile(i){
+  if(!SQ||SQ.locked||SQ.mode!=='tiles') return; const t=SQ.tiles[i]; if(!t||t.used) return;
+  t.used=true; SQ.input.push(i); sfx.tap(); renderSpellTiles();
+  if(SQ.input.length===SQ.w.length) gradeSpell(SQ.input.map(j=>SQ.tiles[j].c).join(''));
+}
+function spellBack(){ if(!SQ||SQ.locked||!SQ.input.length) return; const j=SQ.input.pop(); SQ.tiles[j].used=false; renderSpellTiles(); }
+function gradeSpell(given,btn){
+  if(!SQ||SQ.locked) return; SQ.locked=true;
+  const w=SQ.w, ok=given===w;
+  const st=S.stats.spell||(S.stats.spell={r:0,w:0}); ok?st.r++:st.w++;
+  if(!ok){ if(!S.spellReview) S.spellReview=[]; if(!S.spellReview.includes(w)) S.spellReview.push(w); if(S.spellReview.length>20) S.spellReview.shift();
+    S.spellMissed=[{w,given},...(S.spellMissed||[])].slice(0,12); }
+  save(); SG.asked++; if(ok) SG.right++;
+  if(SQ.mode==='choice') $$('#spChoices button').forEach(b=>{const c=SQ.choices[+b.dataset.i]; if(c===w) b.classList.add('right'); else if(b===btn) b.classList.add('wrong');});
+  else $$('#spSlots .slot').forEach((s,i)=>s.classList.add(given[i]===w[i]?'right':'wrong'));
+  const fb=$('#spFb'); fb.hidden=false;
+  if(ok){ fb.className='fb good'; fb.innerHTML=`<strong>${SPELLKIND[SQ.kind].ok}</strong>+3 credits`; addCredits(3); SG.earned+=3; sfx.right(); setTimeout(()=>closeSpell(true),1200); }
+  else { fb.className='fb bad'; fb.innerHTML=`<strong>Not quite</strong>It's spelled <span class="spelled">${[...w].map(c=>esc(c.toUpperCase())).join('-')}</span>`; sfx.wrong(); $('#spContinue').hidden=false; setTimeout(()=>$('#spContinue').focus(),30); say(`${w}. ${[...w].join(', ')}.`); }
+}
+function closeSpell(ok,silent){
+  $('#spellModal').hidden=true; try{ if(canSpeak) speechSynthesis.cancel(); }catch(e){}
+  if(!SQ) return; const cb=SQ.cb; SQ=null; SG.paused=false;
+  if(!silent&&cb) cb(ok);
+}
+$('#spTiles').addEventListener('click',e=>{const b=e.target.closest('button'); if(!b) return; if(b.dataset.back) spellBack(); else tapTile(+b.dataset.i);});
+$('#spSlots').addEventListener('click',()=>spellBack());
+$('#spChoices').addEventListener('click',e=>{const b=e.target.closest('button'); if(!b||!SQ) return; gradeSpell(SQ.choices[+b.dataset.i],b);});
+$('#spHear').addEventListener('click',()=>hearWord());
+$('#spPeek').addEventListener('click',()=>peekWord());
+$('#spContinue').addEventListener('click',()=>{sfx.tap(); closeSpell(false);});
+document.addEventListener('keydown',e=>{
+  if($('#spellModal').hidden||!SQ||SQ.locked) return;
+  if(SQ.mode==='tiles'){
+    if(/^[a-z]$/i.test(e.key)){ const i=SQ.tiles.findIndex(t=>!t.used&&t.c===e.key.toLowerCase()); if(i>=0) tapTile(i); e.preventDefault(); }
+    else if(e.key==='Backspace'){ e.preventDefault(); spellBack(); }
+  } else if(/^[1-4]$/.test(e.key)){ const b=$$('#spChoices button')[+e.key-1]; if(b) gradeSpell(SQ.choices[+e.key-1],b); }
+},true);
+
+/* ---------- hover-soccer ---------- */
+const SG={active:false,parts:[],paused:false,asked:0,right:0,earned:0};
+const scv=$('#pitch'), sctx=scv.getContext('2d');
+let SW=300,SH=400,F=null;
+const sSkill=()=>Math.max(.2,Math.min(.85,TEAMS[SG.team||0].skill+(S.settings.level==='easy'?-.08:S.settings.level==='hard'?.08:0)));
+function slater(fn,ms){const id=SG.id; setTimeout(()=>{if(SG.active&&SG.id===id) fn()},ms)}
+function sResize(){
+  const r=scv.getBoundingClientRect(), d=Math.min(2,window.devicePixelRatio||1);
+  SW=Math.max(200,r.width); SH=Math.max(180,r.height);
+  scv.width=Math.round(SW*d); scv.height=Math.round(SH*d); sctx.setTransform(d,0,0,d,0,0);
+  const wide=SW/SH>1.2; $('#lanePad').classList.toggle('side',wide);
+  const aw=wide?SW-250:SW-20, ah=wide?SH-20:SH-126, fh=ah, fw=Math.min(aw,fh*.78);
+  F={x:(wide?10:10)+(aw-fw)/2,y:10,w:fw,h:fh};
+  F.lw=fw*.28; F.gw=fw*.5; F.cx=F.x+fw/2; F.k=Math.min(F.lw*.42,fh*.075);
+}
+window.addEventListener('resize',()=>{if(cur==='soccer') sResize();});
+const LX=l=>F.cx+l*F.lw, FY=f=>F.y+F.h*f;
+function setPad(m,label){
+  const lp=$('#lanePad'); lp.hidden=m!=='lanes'; $('#shootBtn').hidden=m!=='shoot';
+  if(label) $('#laneLabel').textContent=label;
+  SG.ctl=m; markPad();
+}
+function markPad(){ const v=SG.half==='att'?(SG.p&&SG.p.lane):SG.role==='goalie'?SG.gk&&SG.gk.pos:SG.me&&SG.me.lane; $$('#lanePad button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.l===v)); }
+function stoast(text,cls='',tip=''){
+  const t=$('#sToast'); t.innerHTML=esc(text)+(tip?`<span class="tip">${esc(tip)}</span>`:''); t.className='show '+cls;
+  clearTimeout(stoast.h); stoast.h=setTimeout(()=>{t.className=''},tip?2600:1500);
+}
+function sHUD(){
+  $('#sScoreUs').textContent=SG.us; $('#sScoreThem').textContent=SG.them;
+  const what=SG.pk?'SHOOTOUT':SG.half==='att'?'YOU ATTACK':SG.role==='goalie'?'YOU ARE GOALIE':'YOU DEFEND';
+  $('#sHalfVal').textContent=what;
+  $$('#sTurns b').forEach((b,i)=>b.classList.toggle('on',i<SG.turn));
+  $('#sTurns').hidden=!!SG.pk;
+  const bd=$('#sBadge'), on=SG.hover||SG.power||SG.superSave||SG.slide;
+  bd.hidden=!on; bd.textContent=SG.hover?'Hover boots on':SG.power?'Meteor Kick ready':SG.superSave?'Super Save on':'Slide tackle ready';
+}
+function spellDue(){
+  if(!SG.spellUsed&&(SG.turn>=SG.spellAt||SG.turn>=SG.turns-1)) return true;
+  return SG.spellUsed&&Math.random()<EXTRA[S.settings.freq];
+}
+function sMatch(t){
+  Object.assign(SG,{active:true,team:t,half:'att',role:null,us:0,them:0,turn:0,turns:3,phase:'idle',paused:false,pk:false,pkRound:0,
+    p:null,defs:[],ball:null,shot:null,gk:null,me:null,st:null,hover:false,power:false,superSave:false,slide:false,
+    clock:0,last:0,parts:[],earned:0,goals:0,saves:0,tackles:0,right:0,asked:0,id:(SG.id||0)+1});
+  $('#sUsName').textContent=(S.profile&&S.profile.name)?S.profile.name+"'s Knights":'Star Knights';
+  $('#sThemName').textContent=TEAMS[t].short;
+  S.progress.lastCh=2; save();
+  setPad('none'); show('soccer'); SG.active=true;
+  requestAnimationFrame(()=>{ sResize(); sHUD(); if(!SG.loop){SG.loop=true; SG.last=performance.now(); requestAnimationFrame(sLoop);}
+    slater(()=>{stoast(`vs ${TEAMS[t].name}`,'gold','You attack first!'); slater(sAttHalf,2000);},300); });
+}
+function sNewHalf(){ SG.turn=0; SG.spellUsed=false; SG.spellAt=R(0,2); }
+/* attack */
+function sAttHalf(){ SG.half='att'; SG.role=null; sNewHalf(); sHUD(); sAttTurn(); }
+function sAttTurn(){
+  if(!SG.active) return;
+  SG.hover=false; SG.power=false; SG.shot=null; SG.gk={x:F.cx,to:F.cx,t:0}; SG.p={lane:0,x:LX(0),y:.86};
+  const T=sSkill(), n=Math.min(4,Math.floor(1.6+T*3.5)), rows=[];
+  for(let i=0;i<n;i++) rows.push(.74-(.34*(i/(Math.max(1,n-1)))));
+  SG.defs=rows.map((y,i)=>{const lane=i===0?pick([-1,1]):pick([-1,0,1]); return {y,lane,x:LX(lane),tgt:null,warnT:0,hopAt:SG.clock+R(5,14)/10,passed:false};});
+  SG.plan=spellDue()?(SG.turn>=SG.turns-1&&!SG.spellUsed?'mid':pick(['mid','kick'])):null; SG.midDone=false; SG.kickDone=false;
+  SG.phase='intro'; setPad('lanes','Dodge: move left or right'); sHUD();
+  $('#sHint').textContent='Tap Left, Middle or Right to dodge the defenders'; $('#sHint').hidden=SG.tips>1;
+  stoast(`Turn ${SG.turn+1} of 3`,'gold','Dodge the defenders!');
+  slater(()=>{SG.phase='run';},1200);
+}
+function setLane(l){
+  if(!SG.active||SG.paused) return;
+  if(SG.half==='att'&&SG.phase==='run'||SG.half==='att'&&SG.phase==='intro'){ SG.p.lane=l; }
+  else if(SG.half==='def'&&SG.role==='goalie'&&SG.gk&&!SG.gk.locked){ SG.gk.pos=l; }
+  else if(SG.half==='def'&&SG.role==='defender'&&SG.me){ SG.me.lane=l; }
+  else return;
+  sfx.tap(); markPad();
+}
+function nudgeLane(dir){ const cur= SG.half==='att'?SG.p&&SG.p.lane:SG.role==='goalie'?SG.gk&&SG.gk.pos:SG.me&&SG.me.lane; if(cur===undefined||cur===null) return; setLane(Math.max(-1,Math.min(1,cur+dir))); }
+function runUpdate(dt){
+  const p=SG.p, T=sSkill(), L=S.settings.level;
+  const dur=(L==='easy'?5.4:L==='hard'?4.2:4.8)-T*.8, spd=(.86-.3)/dur;
+  p.y-=spd*dt; p.x+=(LX(p.lane)-p.x)*Math.min(1,dt*14);
+  const warnDur=L==='easy'?.62:L==='hard'?.42:.5;
+  SG.defs.forEach(d=>{
+    if(!d.passed){
+      if(d.tgt===null&&SG.clock>=d.hopAt){ const gap=p.y-d.y; if(!(gap>0&&gap<.13)){ const opts=[-1,0,1].filter(l=>Math.abs(l-d.lane)===1); d.tgt=pick(opts); d.warnT=SG.clock; } else d.hopAt=SG.clock+.3; }
+      if(d.tgt!==null&&SG.clock-d.warnT>=warnDur){ d.lane=d.tgt; d.tgt=null; d.hopAt=SG.clock+(R(8,18)/10)/(.6+T); }
+    }
+    d.x+=(LX(d.lane)-d.x)*Math.min(1,dt*9);
+    if(!d.passed&&p.y<=d.y){ d.passed=true;
+      if(Math.abs(p.x-d.x)<F.lw*.55){
+        if(SG.hover){ SG.hover=false; sHUD(); stoast('Hover jump!','gold'); beep(500,.25,'sine',.1,500); sBurst(p.x,FY(p.y),12,['#5FD8FF','#fff']); p.jumpT=SG.clock; }
+        else { sTackled(d); }
+      } else beep(740,.05,'triangle',.05);
+    }
+  });
+  if(SG.phase!=='run') return;
+  if(SG.plan==='mid'&&!SG.midDone&&p.y<=.8){ SG.midDone=true; SG.spellUsed=true; openSpell('hover',ok=>{SG.hover=!!ok; sHUD();}); return; }
+  if(p.y<=.3){ p.y=.3; SG.phase='aimwait';
+    const go=()=>{ SG.phase='aim'; SG.aimT=0; setPad('shoot'); $('#sHint').textContent='Tap SHOOT when the arrow points at an open corner'; $('#sHint').hidden=SG.tips>1; };
+    if(SG.plan==='kick'&&!SG.kickDone){ SG.kickDone=true; SG.spellUsed=true; setPad('none'); openSpell('kick',ok=>{SG.power=!!ok; sHUD(); go();}); }
+    else go();
+  }
+}
+function sTackled(d){
+  SG.phase='result'; setPad('none'); sfx.strike();
+  SG.tackler=d; stoast('Tackled!','coral','They stole the ball. Dodge sooner next time.');
+  sNextAtt(1800);
+}
+function aimX(){ const sp=(S.settings.level==='easy'?.5:S.settings.level==='hard'?.95:.72)*(SG.power?.7:1); return F.cx+Math.sin(SG.aimT*sp*Math.PI*2)*F.gw*.45; }
+function shoot(){
+  if(SG.phase!=='aim') return;
+  const ax=aimX(); setPad('none'); SG.phase='shot'; SG.tips=(SG.tips||0)+1; $('#sHint').hidden=true;
+  const T=sSkill(), side=ax>F.cx?1:-1, off=Math.abs(ax-F.cx)/(F.gw/2);
+  let guess=Math.random()<(SG.power?.1:.2+T*.6);
+  const dive=guess?ax:(Math.random()<.5?F.cx:F.cx-side*F.gw*.32);
+  const reach=F.gw*(.13+T*.1)*(SG.power?.6:1);
+  SG.gk={x:F.cx,from:F.cx,to:dive,t:0};
+  SG.shot={x0:SG.p.x,y0:FY(.3),x1:ax,y1:FY(.035),t:0,dur:.55,saved:Math.abs(ax-dive)<reach,power:SG.power};
+  sfx.hit();
+}
+function shotDone(){
+  const s=SG.shot; SG.phase='result';
+  if(s.saved){ stoast('Saved by the goalie!','coral','Aim for the corners!'); beep(300,.2,'sine',.08,-80); }
+  else { SG.us++; SG.goals++; addCredits(10); SG.earned+=10; sfx.hr(); stoast('GOAL!','gold','+10 credits'); for(let i=0;i<4;i++) slater(()=>sBurst(R(F.x+20,F.x+F.w-20),FY(R(5,30)/100),22,['#FFC547','#FF6F59','#43E5B0','#5FD8FF','#FF8AD8']),i*200); }
+  sHUD();
+  if(SG.pk){ slater(sPkDefend,1800); return; }
+  sNextAtt(s.saved?1700:2100);
+}
+function sNextAtt(ms){ SG.turn++; sHUD(); if(SG.turn>=SG.turns) slater(sAttEnd,ms); else slater(sAttTurn,ms); }
+function sAttEnd(){
+  setPad('none'); SG.p=null; SG.defs=[]; SG.shot=null;
+  const T=TEAMS[SG.team];
+  showMsg({title:`The ${T.short} attack!`,art:trooperSVG(SG.team),body:'Now they try to score on you. How do you want to stop them?',
+    choices:[
+      {label:'Goalie',sub:'Dive for their shots',art:`<svg viewBox="0 0 60 60"><rect x="6" y="14" width="48" height="32" rx="3" fill="none" stroke="#F3F1FF" stroke-width="3"/><path d="M6 24H54M6 34H54M18 14V46M30 14V46M42 14V46" stroke="#F3F1FF" stroke-width="1" opacity=".5"/><circle cx="30" cy="34" r="9" fill="#B9733F"/><circle cx="30" cy="34" r="4" fill="#fff"/></svg>`,cb:()=>sDefHalf('goalie')},
+      {label:'Defender',sub:'Block and tackle',art:`<svg viewBox="0 0 60 60"><path d="M14 40 L30 40 L36 30 L44 30 Q50 32 50 40 L50 46 L14 46 Z" fill="#43E5B0"/><path d="M14 46 H50" stroke="#F3F1FF" stroke-width="3"/><circle cx="22" cy="22" r="8" fill="#fff"/><path d="M18 18l8 8M26 18l-8 8" stroke="#15183A" stroke-width="1.5"/></svg>`,cb:()=>sDefHalf('defender')}
+    ]});
+}
+/* defend */
+function sDefHalf(role){ SG.half='def'; SG.role=role; sNewHalf(); sHUD();
+  stoast(role==='goalie'?'You\'re the goalie!':'You\'re on defense!','gold',role==='goalie'?'Watch the kicker, then tap Left, Middle or Right to dive.':'Stay in front of their striker to tackle the ball.');
+  slater(sDefTurn,2300); }
+function sDefTurn(){
+  if(!SG.active) return;
+  SG.superSave=false; SG.slide=false; SG.shot=null;
+  const lane=pick([-1,0,1]);
+  SG.st={lane,x:LX(lane),y:.1,tgt:null,warnT:0,hopAt:SG.clock+.8};
+  SG.gk={pos:0,x:F.cx,locked:false}; SG.me=SG.role==='defender'?{lane:0,x:LX(0)}:null;
+  SG.phase='intro'; sHUD();
+  setPad('lanes',SG.role==='goalie'?'Dive: left, middle or right':'Block: left, middle or right');
+  const go=()=>slater(()=>{SG.phase='drun';},500);
+  if(spellDue()){ SG.spellUsed=true; openSpell(SG.role==='goalie'?'save':'slide',ok=>{ if(SG.role==='goalie') SG.superSave=!!ok; else SG.slide=!!ok; sHUD(); go(); }); }
+  else { stoast(`Their turn ${SG.turn+1} of 3`); go(); }
+}
+function defUpdate(dt){
+  const st=SG.st, T=sSkill(), L=S.settings.level;
+  if(SG.role==='defender'&&SG.me) SG.me.x+=(LX(SG.me.lane)-SG.me.x)*Math.min(1,dt*14);
+  if(SG.gk){ const gx=F.cx+SG.gk.pos*F.gw*.34; SG.gk.x+=(gx-SG.gk.x)*Math.min(1,dt*12); }
+  if(SG.phase==='drun'){
+    const stopY=SG.role==='goalie'?.62:.8, spd=(L==='easy'?.16:L==='hard'?.24:.2)+T*.05;
+    st.y+=spd*dt;
+    const warnDur=L==='easy'?.55:L==='hard'?.36:.45, meY=.56;
+    if(st.tgt===null&&SG.clock>=st.hopAt&&!st.passed){
+      const gap=meY-st.y, nearMe=SG.role==='defender'&&gap>0&&gap<.08;
+      if(!nearMe){ st.tgt=pick([-1,0,1].filter(l=>Math.abs(l-st.lane)===1)); st.warnT=SG.clock; }
+      else st.hopAt=SG.clock+.2;
+    }
+    if(st.tgt!==null&&SG.clock-st.warnT>=warnDur){ st.lane=st.tgt; st.tgt=null; st.hopAt=SG.clock+(R(7,15)/10)/(.6+T); }
+    st.x+=(LX(st.lane)-st.x)*Math.min(1,dt*8);
+    if(SG.role==='defender'&&!st.passed&&st.y>=meY){ st.passed=true;
+      const reach=F.lw*(SG.slide?1.6:.55);
+      if(Math.abs(st.x-SG.me.x)<reach){ SG.phase='result'; SG.tackles++; addCredits(5); SG.earned+=5; sfx.right(); stoast(SG.slide?'Giant slide tackle!':'Tackle! Ball won!','gold','+5 credits'); sBurst(SG.me.x,FY(meY),14,[knightBlade(),'#fff']); sNextDef(1700); return; }
+      else { stoast('They got past!','coral'); }
+    }
+    if(st.y>=stopY){ st.y=stopY; sWindup(); }
+  }
+  if(SG.phase==='windup'&&SG.clock>=SG.kickAt) sKick();
+}
+function sWindup(){
+  SG.phase='windup'; const T=sSkill(), L=S.settings.level;
+  const r=Math.random(); SG.side=r<.4?-1:r<.8?1:0;
+  const dur=L==='easy'?1.2:L==='hard'?.8:1;
+  SG.windT=SG.clock; SG.kickAt=SG.clock+dur; SG.tellAt=SG.clock+dur*(.35+T*.35);
+}
+function sKick(){
+  const T=sSkill(), wide=Math.random()<(1-T)*.22, L=S.settings.level;
+  const tx=wide?F.cx+(SG.side||pick([-1,1]))*F.gw*.66:F.cx+SG.side*F.gw*.34;
+  const dur=SG.role==='goalie'?(L==='easy'?.85:L==='hard'?.55:.68):.6;
+  SG.shot={x0:SG.st.x,y0:FY(SG.st.y),x1:tx,y1:FY(.965),t:0,dur,wide,def:true};
+  SG.phase='dshot'; sfx.hit();
+  if(SG.role==='defender'){ // crew goalie
+    const goal=!wide&&Math.random()<.3+T*.45;
+    SG.gk={pos:goal?(SG.side===0?pick([-1,1]):-SG.side):SG.side,x:F.cx,locked:true,crew:true}; SG.shot.crewGoal=goal;
+  }
+}
+function dshotDone(){
+  const s=SG.shot; SG.phase='result'; if(SG.gk) SG.gk.locked=true;
+  let goal;
+  if(s.wide){ goal=false; stoast('Wide! They missed the goal.','gold'); }
+  else if(SG.role==='goalie'){ goal=SG.gk.pos!==SG.side;
+    if(!goal){ SG.saves++; addCredits(5); SG.earned+=5; sfx.right(); stoast('Great save!','gold','+5 credits'); sBurst(SG.gk.x,FY(.95),14,['#FFC547','#fff']); } }
+  else { goal=s.crewGoal; if(!goal){ stoast('Your goalie saved it!','gold'); sfx.right(); } }
+  if(goal){ SG.them++; sfx.strike(); stoast(`${TEAMS[SG.team].short} scored`,'coral',SG.role==='goalie'?'Watch which way the kicker leans.':''); }
+  sHUD();
+  if(SG.pk){ slater(sPkCheck,1800); return; }
+  sNextDef(1800);
+}
+function sNextDef(ms){ SG.turn++; sHUD(); if(SG.turn>=SG.turns) slater(sDefEnd,ms); else slater(sDefTurn,ms); }
+function sDefEnd(){
+  SG.st=null; SG.shot=null; setPad('none');
+  if(SG.us!==SG.them){ sEnd(); return; }
+  showMsg({title:'Tie game!',art:person(knightOf()),body:'Penalty shootout! You take one shot, then you\'re the goalie for one.',btn:'Let\'s go',cb:sPkRound});
+}
+/* shootout */
+function sPkRound(){
+  SG.pk=true; SG.pkRound++; SG.half='att'; SG.hover=false; SG.power=false; sHUD();
+  SG.p={lane:0,x:F.cx,y:.3}; SG.defs=[]; SG.gk={x:F.cx,to:F.cx,t:0};
+  stoast(`Penalty ${SG.pkRound}`,'gold','Aim for a corner!');
+  slater(()=>{ SG.phase='aim'; SG.aimT=0; setPad('shoot'); },1200);
+}
+function sPkDefend(){
+  SG.half='def'; SG.role='goalie'; SG.superSave=false; sHUD();
+  const lane=pick([-1,0,1]); SG.st={lane,x:LX(lane),y:.62,tgt:null,passed:true}; SG.gk={pos:0,x:F.cx,locked:false};
+  setPad('lanes','Dive: left, middle or right'); stoast('Your turn in goal!','gold');
+  slater(sWindup,1200);
+}
+function sPkCheck(){
+  if(SG.us!==SG.them||SG.pkRound>=3){ sEnd(); return; }
+  stoast('Still tied!','gold','Another round.'); slater(sPkRound,1800);
+}
+function sEnd(){
+  SG.active=false; setPad('none');
+  const us=SG.us, them=SG.them, win=us>them, tie=us===them, T=TEAMS[SG.team];
+  const bonus=win?25:10; S.credits+=bonus; SG.earned+=bonus; S.progress.games++;
+  if(win){ S.progress.wins++; if(SG.team>=(S.progress.soccerBeaten||0)) S.progress.soccerBeaten=SG.team+1; }
+  const champ=win&&SG.team===TEAMS.length-1; if(champ) S.progress.soccerCup=true;
+  save(); setCredits(true); if(win) sfx.win();
+  const next=TEAMS[SG.team+1];
+  const head=champ?'Hover Cup Champions!':win?`You beat the ${T.short}!`:tie?'A tie game!':`The ${T.short} won this one`;
+  const line=champ?'All five shield crystals are back. The station is safe from the meteor storm!':win?`You won a shield crystal and unlocked the ${next.name}!`:'Every game makes you stronger. Want a rematch?';
+  $('#resultsWrap').innerHTML=`
+    <div class="result-head">
+      <div style="width:min(220px,55%)">${win?person(knightOf()):(T.boss?commanderSVG():trooperSVG(SG.team))}</div>
+      <div class="big">${head}</div>
+      <p style="font-size:19px;font-weight:700">${line}</p>
+    </div>
+    <div class="panel finalscore"><div><span class="fs-n">${esc((S.profile&&S.profile.name)||'Star')} Knights</span><span class="fs-v">${us}</span></div><span class="fs-dash">–</span><div><span class="fs-v">${them}</span><span class="fs-n">${esc(T.short)}</span></div></div>
+    <div class="statgrid">
+      <div class="stat"><div class="v">${SG.goals}</div><div class="l">Goals</div></div>
+      <div class="stat"><div class="v">${SG.right}/${SG.asked}</div><div class="l">Words spelled</div></div>
+      <div class="stat"><div class="v">+${SG.earned}</div><div class="l">Credits</div></div>
+    </div>
+    <div class="row" style="justify-content:center">
+      ${win&&next?`<button class="btn" id="nextBtn">Play the ${esc(next.short)}</button>`:`<button class="btn" id="againBtn">${champ?'Play again':'Rematch'}</button>`}
+      <button class="btn alt" id="toBracket">Hover Cup</button>
+      <button class="btn alt" id="toHangar">Spend credits</button>
+    </div>`;
+  const nb=$('#nextBtn'); if(nb) nb.onclick=()=>{sfx.tap(); sMatch(SG.team+1)};
+  const ab=$('#againBtn'); if(ab) ab.onclick=()=>{sfx.tap(); sMatch(SG.team)};
+  $('#toBracket').onclick=()=>{sfx.tap(); openBracket('soccer')};
+  $('#toHangar').onclick=()=>{sfx.tap(); openHangar('title')};
+  show('results');
+}
+/* controls */
+$('#lanePad').addEventListener('pointerdown',e=>{const b=e.target.closest('button[data-l]'); if(b){e.preventDefault(); setLane(+b.dataset.l);}});
+$('#lanePad').addEventListener('click',e=>{const b=e.target.closest('button[data-l]'); if(b&&e.detail===0) setLane(+b.dataset.l);});
+$('#shootBtn').addEventListener('pointerdown',e=>{e.preventDefault(); e.stopPropagation(); shoot();});
+$('#shootBtn').addEventListener('click',e=>{if(e.detail===0) shoot();});
+scv.addEventListener('pointerdown',e=>{
+  e.preventDefault(); if(SG.paused) return;
+  if(SG.phase==='aim'){ shoot(); return; }
+  const r=scv.getBoundingClientRect(), x=e.clientX-r.left; if(!F) return;
+  setLane(x<F.cx-F.lw*.5?-1:x>F.cx+F.lw*.5?1:0);
+});
+document.addEventListener('keydown',e=>{
+  if(cur!=='soccer'||!$('#spellModal').hidden||!$('#msgModal').hidden) return;
+  if(e.key===' '||e.code==='Space'){ e.preventDefault(); shoot(); }
+  else if(e.key==='ArrowLeft'){ e.preventDefault(); nudgeLane(-1); } else if(e.key==='ArrowRight'){ e.preventDefault(); nudgeLane(1); }
+});
+/* drawing */
+function sBurst(x,y,n,cols){ if(reduced) n=Math.ceil(n/3); for(let i=0;i<n;i++){const a=Math.random()*6.28,v=1+Math.random()*3.2; SG.parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-1,life:1,c:pick(cols)})} }
+function glowUnder(x,y,k,col){ cx.save(); cx.globalAlpha=.55; cx.shadowColor=col; cx.shadowBlur=14; ell(x,y+k*.06,k*.5,k*.14,col); cx.restore(); }
+function drawBall(x,y,r,glow){
+  cx.save(); if(glow){cx.shadowColor=glow; cx.shadowBlur=18;}
+  circle(x,y,r,'#fff'); cx.restore();
+  cx.fillStyle='#15183A'; cx.beginPath(); for(let i=0;i<5;i++){const a=i/5*Math.PI*2-Math.PI/2; const px=x+Math.cos(a)*r*.38, py=y+Math.sin(a)*r*.38; i?cx.lineTo(px,py):cx.moveTo(px,py);} cx.closePath(); cx.fill();
+}
+function drawPitch(now){
+  const {x,y,w,h}=F;
+  cx.clearRect(0,0,SW,SH);
+  cx.save(); cx.shadowColor='#5FD8FF'; cx.shadowBlur=24; cx.fillStyle='#14566A'; roundRect(x-6,y-6,w+12,h+12,18); cx.fill(); cx.restore();
+  cx.save(); roundRect(x,y,w,h,12); cx.clip();
+  const bands=10; for(let i=0;i<bands;i++){ cx.fillStyle=i%2?'#1A6E7E':'#187586'; cx.fillRect(x,y+h*i/bands,w,h/bands+1); }
+  // ice sparkle
+  cx.fillStyle='rgba(255,255,255,.18)'; for(let i=0;i<24;i++){ const sx=x+((i*97)%100)/100*w, sy=y+((i*61)%100)/100*h; const tw=.5+.5*Math.sin(now*.003+i); cx.globalAlpha=.25*tw; cx.fillRect(sx,sy,2,2);} cx.globalAlpha=1;
+  cx.restore();
+  cx.strokeStyle='rgba(233,248,255,.85)'; cx.lineWidth=2;
+  roundRect(x+4,y+4,w-8,h-8,10); cx.stroke();
+  cx.beginPath(); cx.moveTo(x+4,y+h/2); cx.lineTo(x+w-4,y+h/2); cx.stroke();
+  cx.beginPath(); cx.arc(F.cx,y+h/2,w*.16,0,Math.PI*2); cx.stroke();
+  const bw=w*.64, bh=h*.15;
+  cx.strokeRect(F.cx-bw/2,y+4,bw,bh); cx.strokeRect(F.cx-bw/2,y+h-4-bh,bw,bh);
+  // goals
+  [[y+4,-1],[y+h-4,1]].forEach(([gy,dir])=>{
+    const gh=Math.min(16,h*.04);
+    cx.fillStyle='rgba(10,15,36,.6)'; cx.fillRect(F.cx-F.gw/2,dir<0?gy-gh:gy,F.gw,gh);
+    cx.strokeStyle='rgba(255,255,255,.35)'; cx.lineWidth=1;
+    for(let i=0;i<=10;i++){ const gx=F.cx-F.gw/2+F.gw*i/10; cx.beginPath(); cx.moveTo(gx,gy); cx.lineTo(gx,gy+dir*gh); cx.stroke(); }
+    cx.strokeStyle='#FFC547'; cx.lineWidth=4; cx.shadowColor='#FFC547'; cx.shadowBlur=10;
+    cx.beginPath(); cx.moveTo(F.cx-F.gw/2,gy); cx.lineTo(F.cx-F.gw/2,gy+dir*gh); cx.lineTo(F.cx+F.gw/2,gy+dir*gh); cx.lineTo(F.cx+F.gw/2,gy); cx.stroke(); cx.shadowBlur=0;
+  });
+  // lane guides during dribble
+  if((SG.half==='att'&&(SG.phase==='run'||SG.phase==='intro'))||(SG.half==='def'&&SG.role==='defender'&&SG.phase==='drun')){
+    cx.setLineDash([4,8]); cx.strokeStyle='rgba(95,216,255,.22)'; cx.lineWidth=2;
+    [-.5,.5].forEach(l=>{const lx=F.cx+l*F.lw; cx.beginPath(); cx.moveTo(lx,y+h*.2); cx.lineTo(lx,y+h*.85); cx.stroke();}); cx.setLineDash([]);
+  }
+}
+function drawSoccer(now){
+  const k=F.k, bob=t=>Math.sin(now*.005+t)*1.6;
+  drawPitch(now);
+  const crewG=CREW[S.ship.crew[0]]||CREW[0];
+  if(SG.half==='att'||!SG.half){
+    // their goalie (top)
+    let gx=F.cx; if(SG.gk&&SG.shot&&!SG.shot.def){ const t=Math.min(1,SG.shot.t/(.4)); gx=SG.gk.from+(SG.gk.to-SG.gk.from)*(1-Math.pow(1-t,2)); } else if(SG.gk&&SG.phase==='aim'){ gx=F.cx+Math.sin(now*.004)*F.gw*.08; }
+    glowUnder(gx,FY(.07),k,TEAMS[SG.team||0].eye); drawTrooper(gx,FY(.07),k*1.1,bob(1),SG.team||0);
+    // your goalie (bottom, decor)
+    drawMate(F.cx,FY(.97),k*.95,crewG,bob(2));
+    // defenders
+    (SG.defs||[]).forEach((d,i)=>{
+      if(d.tgt!==null&&!d.passed){ const tx=LX(d.tgt); cx.strokeStyle='rgba(255,111,89,.9)'; cx.fillStyle='rgba(255,111,89,.9)'; cx.lineWidth=3; cx.beginPath(); cx.moveTo(d.x,FY(d.y)-k*1.5); cx.lineTo(tx,FY(d.y)-k*1.5); cx.stroke(); const dir=Math.sign(tx-d.x); cx.beginPath(); cx.moveTo(tx,FY(d.y)-k*1.5); cx.lineTo(tx-dir*8,FY(d.y)-k*1.5-6); cx.lineTo(tx-dir*8,FY(d.y)-k*1.5+6); cx.closePath(); cx.fill(); }
+      glowUnder(d.x,FY(d.y),k,TEAMS[SG.team||0].eye); drawTrooper(d.x,FY(d.y),k,bob(i+3),SG.team||0);
+    });
+    if(SG.p){
+      const p=SG.p, jy=p.jumpT!==undefined&&SG.clock-p.jumpT<.5?Math.sin((SG.clock-p.jumpT)/.5*Math.PI)*k*1.2:0;
+      const py=FY(p.y)-jy;
+      if(SG.hover){ cx.save(); cx.strokeStyle='#5FD8FF'; cx.lineWidth=3; cx.shadowColor='#5FD8FF'; cx.shadowBlur=16; cx.beginPath(); cx.arc(p.x,py-k*.5,k*.95,0,Math.PI*2); cx.stroke(); cx.restore(); }
+      glowUnder(p.x,FY(p.y),k,knightBlade()); drawMate(p.x,py,k*1.1,knightOf(),bob(0));
+      if(!SG.shot&&SG.phase!=='result') drawBall(p.x,py-k*.05,k*.28,SG.power?'#FF6F59':null);
+      else if(SG.phase==='result'&&SG.tackler&&!SG.shot) drawBall(SG.tackler.x+k*.4,FY(SG.tackler.y)+k*.1,k*.28);
+    }
+    if(SG.phase==='aim'){
+      const ax=aimX(), sy=FY(.3)-k*.2, gy=FY(.035);
+      cx.save(); cx.setLineDash([6,7]); cx.strokeStyle=SG.power?'#FF6F59':'#FFC547'; cx.lineWidth=3; cx.beginPath(); cx.moveTo(SG.p.x,sy); cx.lineTo(ax,gy+6); cx.stroke(); cx.restore();
+      cx.strokeStyle=SG.power?'#FF6F59':'#FFC547'; cx.lineWidth=3; cx.beginPath(); cx.arc(ax,gy+6,k*.35,0,Math.PI*2); cx.stroke();
+    }
+  } else {
+    // their keeper decor at top
+    drawTrooper(F.cx,FY(.07),k,bob(1),SG.team);
+    // striker
+    const st=SG.st;
+    if(st){
+      if(st.tgt!==null){ const tx=LX(st.tgt); cx.fillStyle='rgba(255,111,89,.9)'; const dir=Math.sign(tx-st.x); cx.beginPath(); cx.moveTo(st.x+dir*k*1.1,FY(st.y)-k*.5); cx.lineTo(st.x+dir*k*.6,FY(st.y)-k*.9); cx.lineTo(st.x+dir*k*.6,FY(st.y)-k*.1); cx.closePath(); cx.fill(); }
+      let lean=0; if(SG.phase==='windup'&&SG.clock>=SG.tellAt) lean=SG.side;
+      glowUnder(st.x,FY(st.y),k,TEAMS[SG.team].eye);
+      drawTrooper(st.x+lean*k*.25,FY(st.y),k*1.1,bob(4),SG.team);
+      if(SG.phase==='windup'&&SG.clock>=SG.tellAt&&SG.side!==0){ cx.strokeStyle='rgba(255,255,255,.7)'; cx.lineWidth=3; cx.beginPath(); cx.moveTo(st.x,FY(st.y)+k*.45); cx.lineTo(st.x+SG.side*k*.9,FY(st.y)+k*.8); cx.stroke(); }
+      if(!SG.shot) drawBall(st.x,FY(st.y)+k*.35,k*.28);
+      if(SG.superSave&&(SG.phase==='windup'||SG.phase==='dshot')){ const tx=F.cx+SG.side*F.gw*.34; cx.save(); cx.strokeStyle='#5FD8FF'; cx.shadowColor='#5FD8FF'; cx.shadowBlur=16; cx.lineWidth=4; cx.beginPath(); cx.arc(tx,FY(.95),k*.55,0,Math.PI*2); cx.stroke(); cx.restore(); }
+    }
+    // your defender
+    if(SG.role==='defender'&&SG.me){
+      if(SG.slide){ cx.save(); cx.fillStyle='rgba(67,229,176,.18)'; cx.fillRect(SG.me.x-F.lw*1.6,FY(.56)-k*.6,F.lw*3.2,k*1.2); cx.restore(); }
+      glowUnder(SG.me.x,FY(.56),k,knightBlade()); drawMate(SG.me.x,FY(.56),k*1.1,knightOf(),bob(0));
+    }
+    // goalie at bottom
+    if(SG.gk){
+      const gk=SG.gk, gx=gk.crew&&SG.shot?F.cx+gk.pos*F.gw*.34*Math.min(1,SG.shot.t/.35):gk.x, gy=FY(.95);
+      if(gk.crew||SG.role==='defender') drawMate(gx,gy,k*1.05,crewG,0);
+      else { glowUnder(gx,gy,k,knightBlade()); drawMate(gx,gy,k*1.15,knightOf(),0); circle(gx-k*.55,gy-k*.55,k*.22,'#B9733F'); circle(gx+k*.55,gy-k*.55,k*.22,'#B9733F'); }
+      if(SG.role==='goalie'&&(SG.phase==='windup'||SG.phase==='drun'||SG.phase==='intro')){ [-1,0,1].forEach(l=>{const lx=F.cx+l*F.gw*.34; cx.strokeStyle=l===gk.pos?'rgba(255,197,71,.9)':'rgba(255,255,255,.25)'; cx.lineWidth=l===gk.pos?3:2; cx.beginPath(); cx.arc(lx,FY(.93),k*.42,0,Math.PI*2); cx.stroke();}); }
+    }
+  }
+  // shot in flight
+  if(SG.shot){ const s=SG.shot, t=Math.min(1,s.t/s.dur), e=1-Math.pow(1-t,1.5);
+    let bx=s.x0+(s.x1-s.x0)*e, by=s.y0+(s.y1-s.y0)*e, h=Math.sin(Math.PI*t)*F.k*1.2;
+    if(t>=1&&s.saved){ bx=s.x1+(s.x1>F.cx?1:-1)*F.k*.8; }
+    ell(bx,by,F.k*.26,F.k*.1,'rgba(0,0,0,.35)'); drawBall(bx,by-h,F.k*.28,s.power?'#FF6F59':'#fff'); }
+  SG.parts=SG.parts.filter(p=>p.life>0);
+  SG.parts.forEach(p=>{p.x+=p.vx; p.y+=p.vy; p.vy+=.06; p.life-=.022; cx.globalAlpha=Math.max(0,p.life); circle(p.x,p.y,2.4,p.c);}); cx.globalAlpha=1;
+}
+function sLoop(){
+  if(cur!=='soccer'){SG.loop=false; return;}
+  const now=performance.now(); let dt=Math.min(.05,(now-SG.last)/1000); SG.last=now;
+  if(SG.active&&F&&!SG.paused&&$('#msgModal').hidden){
+    SG.clock+=dt;
+    if(SG.half==='att'&&SG.p&&SG.phase==='run') runUpdate(dt);
+    else if(SG.half==='att'&&SG.p) SG.p.x+=(LX(SG.p.lane)-SG.p.x)*Math.min(1,dt*14);
+    if(SG.phase==='aim') SG.aimT+=dt;
+    if(SG.half==='def') defUpdate(dt);
+    if(SG.shot&&(SG.phase==='shot'||SG.phase==='dshot')){ SG.shot.t+=dt; if(SG.shot.t>=SG.shot.dur){ if(SG.phase==='shot') shotDone(); else dshotDone(); } }
+  }
+  if(F){ const prev=cx; cx=sctx; drawSoccer(now); cx=prev; }
+  requestAnimationFrame(sLoop);
+}
+
 /* ---------- grown-ups ---------- */
 function openParent(){
   sfx.tap();
@@ -1490,20 +2144,23 @@ function openParent(){
     <h2>Grown-ups corner</h2>
     <div class="statgrid">
       <div class="stat"><div class="v">${S.progress.games}</div><div class="l">Games played</div></div>
-      <div class="stat"><div class="v">${S.progress.beaten||0}/5</div><div class="l">Teams beaten</div></div>
+      <div class="stat"><div class="v">${(S.progress.beaten||0)+(S.progress.soccerBeaten||0)}/10</div><div class="l">Teams beaten</div></div>
       <div class="stat"><div class="v">${S.credits}</div><div class="l">Credits</div></div>
     </div>
     <div class="panel"><h3 style="margin-bottom:6px">Math accuracy by skill</h3>${rows}
       <p class="note" style="margin-top:8px">Skills she misses come up more often. Missed problems come back later for practice.</p></div>
-    <div class="panel"><h3 style="margin-bottom:8px">Recently missed</h3>${S.missed.length?`<ul class="missed">${S.missed.map(m=>`<li><span>${esc(m.text)}</span><span>${esc(m.answer)}</span></li>`).join('')}</ul>`:'<p class="dim">Nothing missed yet.</p>'}</div>
+    <div class="panel"><h3 style="margin-bottom:6px">Spelling</h3>${(()=>{const st=S.stats.spell||{r:0,w:0}, t=st.r+st.w, pct=t?Math.round(st.r/t*100):0; return `<div class="skillrow"><span>Words spelled right</span><div class="bar"><i class="${pct>=80?'':pct>=60?'mid':'low'}" style="width:${t?pct:0}%"></i></div><span class="n">${t?`${st.r}/${t}`:'—'}</span></div>`;})()}
+      <h3 style="margin:12px 0 8px">Recently missed words</h3>${(S.spellMissed||[]).length?`<ul class="missed">${S.spellMissed.map(m=>`<li><span>She tried: ${esc(m.given)}</span><span>${esc(m.w)}</span></li>`).join('')}</ul>`:'<p class="dim">Nothing missed yet.</p>'}
+      <p class="note" style="margin-top:8px">Missed words come back later for practice. Words from her weekly list come up most of the time.</p></div>
+    <div class="panel"><h3 style="margin-bottom:8px">Recently missed math</h3>${S.missed.length?`<ul class="missed">${S.missed.map(m=>`<li><span>${esc(m.text)}</span><span>${esc(m.answer)}</span></li>`).join('')}</ul>`:'<p class="dim">Nothing missed yet.</p>'}</div>
     <div class="panel" style="display:grid;gap:14px">
       <div><h3 style="margin-bottom:8px">Level</h3>${seg('level',[['easy','Easier'],['on','3rd grade'],['hard','Challenge']],S.settings.level)}</div>
-      <div><h3 style="margin-bottom:8px">How often math pops up</h3>${seg('freq',[['light','Once per turn'],['normal','Once, plus a few'],['lots','Lots']],S.settings.freq)}</div>
+      <div><h3 style="margin-bottom:8px">How often questions pop up</h3>${seg('freq',[['light','Once per turn'],['normal','Once, plus a few'],['lots','Lots']],S.settings.freq)}</div>
       <div><h3 style="margin-bottom:8px">Skills to practice</h3><div class="checks">${Object.keys(SKILLS).map(k=>`<label><input type="checkbox" id="sk-${k}" data-skill="${k}" ${S.settings.skills[k]?'checked':''}>${SKILLS[k]}</label>`).join('')}</div></div>
     </div>
     <div class="panel"><label class="field-label" for="spellIn">This week's spelling and vocabulary words</label>
       <textarea class="text-in" id="spellIn" placeholder="One word per line, from her teacher's list">${esc(S.spelling)}</textarea>
-      <p class="note" style="margin-top:6px">Saved on this device. Hover-Soccer in Chapter 2 will use these words.</p></div>
+      <p class="note" style="margin-top:6px">Saved on this device. Hover-Soccer (Chapter 2) uses these words. Without a list, it uses a built-in 3rd-grade word bank.</p></div>
     <div class="panel" style="display:grid;gap:10px"><h3>Start over</h3><p class="note">Clears the Star Knight, ship, credits and progress on this device.</p>
       <div class="row"><button class="btn alt small" id="resetBtn">Reset progress</button></div></div>`;
   show('parent');
