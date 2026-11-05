@@ -287,7 +287,10 @@ p{margin:0}
 #lanePad.side.withpass{right:max(10px,env(safe-area-inset-right,0px));bottom:auto;top:12px}
 
 .ctlrow.four{grid-template-columns:repeat(4,1fr)}
-@media (orientation:landscape) and (max-height:520px){#pitchPanel,#glovePad,#throwPad{left:auto;right:max(10px,env(safe-area-inset-right,0px));width:190px;top:10px;bottom:auto}#pitchPanel .ctlrow,#glovePad .ctlrow,#throwPad .ctlrow{grid-template-columns:1fr 1fr}#pitchPanel .ctlrow button,#glovePad .ctlrow button,#throwPad .ctlrow button{min-height:48px}}
+@media (orientation:landscape) and (max-height:520px){#pitchPanel,#glovePad,#throwPad,#runPad{left:auto;right:max(10px,env(safe-area-inset-right,0px));width:190px;top:10px;bottom:auto}#pitchPanel .ctlrow,#glovePad .ctlrow,#throwPad .ctlrow,#runPad .ctlrow{grid-template-columns:1fr 1fr}#pitchPanel .ctlrow button,#glovePad .ctlrow button,#throwPad .ctlrow button,#runPad .ctlrow button{min-height:48px}}
+
+#runPad [data-r="go"]{border-color:var(--mint);color:var(--mint)}
+#runPad [data-r="stop"]{border-color:var(--coral);color:var(--coral)}
 
 /* results */
 .result-head{text-align:center;display:grid;gap:8px;justify-items:center}
@@ -505,6 +508,13 @@ textarea.text-in{min-height:120px;font-size:17px;font-weight:600;resize:vertical
         <div id="meter" hidden>
           <div class="mtrack"><span id="mMark"></span></div>
           <span class="ctl-l">Tap THROW in the green</span>
+        </div>
+        <div class="ctlpanel" id="runPad" hidden>
+          <span class="ctl-l" id="runLabel">Keep running?</span>
+          <div class="ctlrow two">
+            <button data-r="go">Run! ▶</button>
+            <button data-r="stop">Stop ✋</button>
+          </div>
         </div>
         <div class="ctlpanel" id="throwPad" hidden>
           <span class="ctl-l">Throw to a base! Where is the runner going?</span>
@@ -1352,7 +1362,7 @@ function later(fn,ms){const id=G.id; setTimeout(()=>{if(G.active&&G.id===id) fn(
 /* match flow: you bat one half, then pick pitch or catch for theirs */
 function startMatch(t){
   resetPerks();
-  Object.assign(G,{active:true,team:t,inning:1,half:'bat',role:null,score:{us:0,them:0},outs:0,strikes:0,balls:0,bases:[0,0,0],obases:[0,0,0],boost:false,star:false,phase:'idle',earned:0,hits:0,ks:0,right:0,asked:0,lineUs:[],lineThem:[],inRuns:0,pitch:null,dp:null,fly:null,swingT:-9999,oppSwingT:-9999,chase:null,parts:[],tips:0,glove:0,meter:null,id:(G.id||0)+1});
+  Object.assign(G,{run:null,field:null,active:true,team:t,inning:1,half:'bat',role:null,score:{us:0,them:0},outs:0,strikes:0,balls:0,bases:[0,0,0],obases:[0,0,0],boost:false,star:false,phase:'idle',earned:0,hits:0,ks:0,right:0,asked:0,lineUs:[],lineThem:[],inRuns:0,pitch:null,dp:null,fly:null,swingT:-9999,oppSwingT:-9999,chase:null,parts:[],tips:0,glove:0,meter:null,id:(G.id||0)+1});
   $('#usName').textContent=(S.profile&&S.profile.name)?S.profile.name+"'s Knights":'Star Knights';
   S.progress.lastCh=1; save();
   $('#themName').textContent=TEAMS[t].short;
@@ -1377,6 +1387,7 @@ function setControls(m){
   $('#meter').hidden=m!=='meter';
   $('#glovePad').hidden=m!=='glove';
   $('#throwPad').hidden=m!=='throw';
+  $('#runPad').hidden=m!=='run';
   G.controls=m;
 }
 function updateHUD(){
@@ -1485,12 +1496,85 @@ function finishBat(res){
   G.phase='result';
   if(res.type==='foul'){ if(G.strikes<2) G.strikes++; toast('Foul ball!'); updateHUD(); later(nextPitch,1300); return; }
   if(res.type==='groundout'||res.type==='flyout'){ toast(res.type==='groundout'?'Grounded out!':'Caught! You\'re out.','coral'); batOut(); return; }
+  if(res.type!=='hr'){ startRun(res); return; }
   const {nb,runs}=advanceOn(G.bases,res.bases); G.bases=nb; G.score.us+=runs; G.inRuns+=runs; G.hits++; G.strikes=0;
   const label={single:'Single!',double:'Double!',triple:'Triple!',hr:'HOME RUN!'}[res.type];
   const tip=(res.bobble?'They dropped the ball! ':'')+(runs?`+${runs} run${runs>1?'s':''}`:'');
   const cr=res.type==='hr'?15:5; addCredits(cr); G.earned+=cr;
   if(res.type==='hr'){ sfx.hr(); for(let i=0;i<4;i++) later(()=>burst(R(FW*.2,FW*.8),R(FH*.1,FH*.4),24,['#FFC547','#FF6F59','#43E5B0','#5FD8FF','#FF8AD8']),i*220); }
   toast(label,'gold',tip); updateHUD(); later(nextPitch,res.type==='hr'?2000:1500);
+}
+/* base running: she decides at each base */
+const BNAME=n=>n>=4?'home':['','1st','2nd','3rd'][n];
+const posAlong=f=>{ const i=Math.min(3,Math.floor(f)), t=f-i, a=BASEPOS(i===0?4:i), b=BASEPOS(i+1); return {x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t}; };
+function startRun(res){
+  const L=S.settings.level, leg=(L==='easy'?.8:L==='hard'?1:.9)*(perkF('scout')?.85:1);
+  const f=G.chase?G.chase.to:{x:P.mound.x,y:P.mound.y};
+  G.run={res,at:0,from:0,to:1,goal:res.bases,leg,t:performance.now(),fielder:{x:f.x,y:f.y},deciding:false,throwTo:null,extra:0,willOut:false};
+  G.phase='running'; setControls('none');
+  const label={single:'Base hit!',double:'Double!',triple:'Triple!'}[res.type]||'Base hit!';
+  toast(label,'gold',res.bobble?'They dropped the ball! Run!':'Run! At each base, decide: keep going or stop.');
+  sfx.hit();
+}
+function runTick(now){
+  const r=G.run; if(!r) return;
+  if(r.deciding){ if(now-r.decideT>=r.window){ runStop(true); } return; }
+  const prog=(now-r.t)/(r.leg*1000); if(prog<1) return;
+  r.at=r.to;
+  if(r.willOut){ runOut(); return; }
+  if(r.at>=4){ runFinish(4); return; }
+  if(r.at<r.goal){ r.from=r.at; r.to=r.at+1; r.t=now; return; }
+  r.deciding=true; r.decideT=now; r.window=(S.settings.level==='easy'?2600:S.settings.level==='hard'?1500:2000)*(perkF('scout')?1.3:1);
+  $('#runLabel').textContent=`Safe at ${BNAME(r.at)}! Run to ${BNAME(r.at+1)}?`; setControls('run');
+  if(r.extra===0) toast(`Safe at ${BNAME(r.at)}!`,'gold','Watch the fielder. Run if you can beat the throw!');
+}
+function runGo(){
+  const r=G.run; if(!r||!r.deciding) return;
+  const now=performance.now(), delay=(now-r.decideT)/1000, T=sSkill();
+  const base={single:.66,double:.58,triple:.5}[r.res.type]||.55;
+  let pOk=base-T*.22-delay*.22-r.extra*.18+(S.settings.level==='easy'?.1:0)+(r.res.bobble?.15:0);
+  r.willOut=Math.random()>Math.max(.12,Math.min(.9,pOk));
+  r.extra++; r.deciding=false; r.from=r.at; r.to=r.at+1; r.t=now; setControls('none'); sfx.tap();
+  r.throwTo=r.to; r.throwT0=now+(r.leg*1000)*.25; r.throwDur=(r.leg*1000)*(r.willOut?.6:1.05);
+  toast('Go, go, go!','gold');
+}
+function runStop(timeout){
+  const r=G.run; if(!r||!r.deciding) return; r.deciding=false; setControls('none');
+  if(!timeout) sfx.tap();
+  runFinish(r.at);
+}
+function runOut(){
+  const r=G.run; G.run=null; G.phase='result'; setControls('none'); sfx.strike();
+  const {nb,runs}=advanceOn(G.bases,r.res.bases); if(r.res.bases<4) nb[r.res.bases-1]=0;
+  G.bases=nb; G.hits++; G.strikes=0; G.outs++;
+  const counted=G.outs>=3?0:runs; G.score.us+=counted; G.inRuns+=counted;
+  addCredits(5); G.earned+=5;
+  toast(`Out at ${BNAME(r.to)}!`,'coral',`The throw beat you.${counted?` But ${counted} run${counted>1?'s':''} scored!`:' Stop when the fielder has the ball close by.'}`);
+  updateHUD();
+  if(G.outs>=3) later(endBatHalf,1900); else later(nextPitch,1900);
+}
+function runFinish(at){
+  const r=G.run; G.run=null; G.phase='result'; setControls('none');
+  const {nb,runs}=advanceOn(G.bases,at); G.bases=nb; G.score.us+=runs; G.inRuns+=runs; G.hits++; G.strikes=0;
+  const ext=Math.max(0,at-r.res.bases), cr=5+ext*5+(at>=4?5:0); addCredits(cr); G.earned+=cr;
+  let label=at>=4?'INSIDE-THE-PARK HOME RUN!':['','Single!','Double!','Triple!'][at];
+  if(ext>0&&at<4) label=`Stretched it to a ${['','single','double','triple'][at]}!`;
+  if(at>=4){ sfx.hr(); for(let i=0;i<4;i++) later(()=>burst(R(FW*.2,FW*.8),R(FH*.1,FH*.4),24,['#FFC547','#FF6F59','#43E5B0','#5FD8FF','#FF8AD8']),i*220); } else sfx.right();
+  toast(label,'gold',(runs?`+${runs} run${runs>1?'s':''} `:'')+`+${cr} credits`); updateHUD(); later(nextPitch,at>=4?2100:1600);
+}
+$('#runPad').addEventListener('click',e=>{const b=e.target.closest('button[data-r]'); if(!b) return; if(b.dataset.r==='go') runGo(); else runStop(false);});
+function drawRunning(now){
+  const r=G.run; if(!r||!P) return; const s=P.s;
+  const prog=r.deciding?0:Math.min(1,(now-r.t)/(r.leg*1000)), f=r.deciding?r.at:r.from+prog;
+  G.bases.forEach((on,i)=>{ if(!on) return; const ff=Math.min(4,i+1+(f)); if(ff>=4) return; const rp=posAlong(ff); circle(rp.x,rp.y-s*.16,s*.09,knightBlade()); circle(rp.x,rp.y-s*.16,s*.05,'#EADFC8'); });
+  if(r.deciding&&r.at<4){ const nb=BASEPOS(r.at+1); cx.save(); cx.setLineDash([5,5]); cx.strokeStyle='rgba(67,229,176,.9)'; cx.lineWidth=3; cx.beginPath(); cx.arc(nb.x,nb.y,s*.2,0,Math.PI*2); cx.stroke(); cx.restore(); }
+  const me=posAlong(Math.min(3.999,f)), kn=knightOf();
+  cx.save(); cx.strokeStyle='#FFC547'; cx.lineWidth=3; cx.beginPath(); cx.ellipse(me.x,me.y,s*.17,s*.08,0,0,Math.PI*2); cx.stroke(); cx.restore();
+  drawMate(me.x,me.y,s*.22,kn,Math.sin(now*.02)*2);
+  cx.fillStyle='#FFC547'; cx.font=`800 ${Math.max(10,s*.14)}px "Baloo 2",sans-serif`; cx.textAlign='center'; cx.fillText('YOU',me.x,me.y-s*.48);
+  if(r.throwTo&&now>=r.throwT0){ const t=Math.min(1,(now-r.throwT0)/r.throwDur), b=BASEPOS(r.throwTo); cx.shadowColor='#fff'; cx.shadowBlur=8; circle(r.fielder.x+(b.x-r.fielder.x)*t,r.fielder.y+(b.y-r.fielder.y)*t-Math.sin(Math.PI*t)*s*.3,s*.05,'#fff'); cx.shadowBlur=0; }
+  else circle(r.fielder.x+s*.08,r.fielder.y-s*.18,s*.05,'#fff');
+  if(r.deciding){ const left=1-(now-r.decideT)/r.window, w=s*1.6, x0=P.plate.x-w/2, y0=P.plate.y+s*.55; cx.fillStyle='rgba(10,15,36,.8)'; roundRect(x0,y0,w,8,4); cx.fill(); cx.fillStyle=left<.35?'#FF6F59':'#43E5B0'; roundRect(x0,y0,w*Math.max(0,left),8,4); cx.fill(); }
 }
 function endBatHalf(){
   G.lineUs.push(G.inRuns); G.bases=[0,0,0]; setControls('none'); updateHUD();
@@ -1803,7 +1887,7 @@ function drawField(now){
   // bases and runners
   const bz=s*.075, onB=G.half==='bat'?G.bases:G.obases;
   [P.b1,P.b2,P.b3].forEach((b,i)=>{cx.save(); cx.translate(b.x,b.y); cx.rotate(Math.PI/4); cx.fillStyle='#fff'; cx.fillRect(-bz,-bz,bz*2,bz*2); cx.restore();
-    if(onB&&onB[i]&&!(G.half!=='bat'&&G.field)){ if(G.half==='bat'){circle(b.x,b.y-s*.16,s*.09,knightBlade()); circle(b.x,b.y-s*.16,s*.05,'#EADFC8');} else drawTrooper(b.x+s*.12,b.y,s*.14,0,G.team); }});
+    if(onB&&onB[i]&&!(G.half!=='bat'&&G.field)&&!(G.half==='bat'&&G.run)){ if(G.half==='bat'){circle(b.x,b.y-s*.16,s*.09,knightBlade()); circle(b.x,b.y-s*.16,s*.05,'#EADFC8');} else drawTrooper(b.x+s*.12,b.y,s*.14,0,G.team); }});
   cx.beginPath(); cx.moveTo(plate.x-bz,plate.y-bz*.6); cx.lineTo(plate.x+bz,plate.y-bz*.6); cx.lineTo(plate.x+bz,plate.y+bz*.3); cx.lineTo(plate.x,plate.y+bz); cx.lineTo(plate.x-bz,plate.y+bz*.3); cx.closePath(); cx.fillStyle='#fff'; cx.fill();
   const k=s*.2;
   const fpos=(f,i)=>{ let x=f.x,y=f.y;
@@ -1814,7 +1898,7 @@ function drawField(now){
     P.fielders.forEach((f,i)=>{const p=fpos(f,i); drawTrooper(p.x,p.y,k,Math.sin(now*.004+i)*1.5,G.team);});
     let wind=0; if(G.phase==='pitch'&&now<G.pitch.t0) wind=Math.sin((1-(G.pitch.t0-now)/750)*Math.PI)*s*.08;
     drawTrooper(P.mound.x,P.mound.y,k*1.05,-wind,G.team);
-    drawBatter(now);
+    if(!G.run) drawBatter(now); else drawRunning(now);
     if(G.pitch&&G.phase!=='fly'){ const t=(now-G.pitch.t0)/G.pitch.flight;
       if(t>=0&&t<1.25){ const e=Math.min(t,1.25), x=P.mound.x, y=P.mound.y+(plate.y-s*.12-P.mound.y)*e, r=s*(.035+.04*Math.min(e,1)), drop=Math.sin(Math.min(e,1)*Math.PI)*s*.06;
         ell(x,y+s*.04,r*1.1,r*.45,'rgba(0,0,0,.35)'); cx.shadowColor='#5FD8FF'; cx.shadowBlur=12; circle(x,y-drop,r,'#fff'); cx.shadowBlur=0; } }
@@ -1886,6 +1970,7 @@ function loop(){
   const now=performance.now();
   if(G.active&&P){
     if(G.half==='bat'&&G.phase==='pitch'&&!G.swung&&G.pitch&&now>G.pitch.arrive+260) lookingStrike();
+    if(G.phase==='running'&&G.run) runTick(now);
     if(G.half==='def'&&G.phase==='dpitch'&&G.dp&&!G.dp.done&&now>=G.dp.arrive){G.dp.done=true; resolveDef();}
     if(G.phase==='field'&&G.field&&now-G.field.t0>=G.field.dur){ G.phase='throwing'; setControls('none'); fieldResolve(true); }
     if(G.controls==='meter'&&G.meter){$('#mMark').style.left=(meterPos(now)*100)+'%';}
