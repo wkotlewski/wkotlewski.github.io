@@ -292,6 +292,14 @@ p{margin:0}
 #runPad [data-r="go"]{border-color:var(--mint);color:var(--mint)}
 #runPad [data-r="stop"]{border-color:var(--coral);color:var(--coral)}
 
+.playerchip{display:flex;align-items:center;gap:6px;height:44px;padding:0 12px;border-radius:14px;background:var(--panel);border:2px solid var(--line);color:var(--ink);font-family:var(--display);font-size:15px;cursor:pointer;flex:none;max-width:34vw}
+.playerchip svg{width:18px;height:18px;flex:none}
+.playerchip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.signin{max-width:440px;margin:0 auto;padding-top:18px}
+.signlist{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px}
+.signlist button{min-height:44px;padding:6px 16px;border-radius:14px;border:2px solid var(--line);background:var(--panel-2);color:var(--ink);font-family:var(--display);font-size:16px;cursor:pointer}
+@media (max-width:480px){ .brand{display:none} }
+
 /* results */
 .result-head{text-align:center;display:grid;gap:8px;justify-items:center}
 .result-head .big{font-family:var(--display);font-size:clamp(30px,8vw,46px);line-height:1;color:var(--gold);text-shadow:0 4px 0 var(--coral-deep)}
@@ -387,6 +395,7 @@ textarea.text-in{min-height:120px;font-size:17px;font-weight:600;resize:vertical
     </button>
     <div class="brand">Star Knight League</div>
     <div class="spacer"></div>
+    <button class="playerchip" id="playerBtn" hidden aria-label="Switch player"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="#5FD8FF"/><path d="M4 21a8 8 0 0116 0z" fill="#5FD8FF"/></svg><span id="playerName"></span></button>
     <div class="credits" id="creditChip" title="Credits">
       <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17l-6.1 3.4 1.5-6.8L2.2 9l6.9-.7z" fill="#FFC547"/></svg>
       <span id="creditVal">0</span>
@@ -399,6 +408,22 @@ textarea.text-in{min-height:120px;font-size:17px;font-weight:600;resize:vertical
   </header>
 
   <main>
+    <!-- SIGN IN -->
+    <section class="screen gut" id="s-signin" hidden>
+      <div class="wrap signin">
+        <h2>Who's playing?</h2>
+        <p class="note" id="signNote">Type your username to load your game.</p>
+        <div id="signList" class="signlist"></div>
+        <form id="signForm" autocomplete="off">
+          <label class="field-label" for="signIn">Username</label>
+          <input class="text-in" id="signIn" maxlength="16" placeholder="Your username" autocomplete="off" autocapitalize="words" spellcheck="false">
+          <p class="note" id="signErr" style="margin-top:6px;color:var(--coral)" hidden></p>
+          <div class="row" style="margin-top:14px"><button class="btn" type="submit">Sign in</button></div>
+        </form>
+        <p class="note" style="margin-top:14px">Each username has its own points, trophies, and progress on this device. No password needed.</p>
+      </div>
+    </section>
+
     <!-- TITLE -->
     <section class="screen gut" id="s-title">
       <div class="wrap">
@@ -787,7 +812,8 @@ const SKILLS={mult:'Multiplication',div:'Division',addsub:'Add & subtract to 1,0
 const FREQ={light:0.3,normal:0.5,lots:0.8};
 
 /* ---------- save ---------- */
-const KEY='star-knight-league-v1';
+const LEGACY='star-knight-league-v1', REG='skl-players';
+let KEY='skl-none', PLAYER=null;
 const DEFAULT={profile:null,ship:{frame:'scout',cargo:'rescue',paint:'teal',droidHead:'dome',droidColor:'gold',crew:[0,1]},credits:0,unlocked:{paint:['white','teal','gold'],droid:['dome','square']},stats:{},review:[],missed:[],settings:{level:'on',freq:'normal',dailyCap:'30',wrongCost:'2',skills:{mult:true,div:true,addsub:true,round:true,fraction:true,area:true,time:true,word:true}},spelling:'',trophy:0,claims:[],contacts:[{name:'Mom',phone:''},{name:'Dad',phone:''}],progress:{games:0,wins:0,storySeen:false,best:0},sound:true};
 function load(){
   let d={}; try{d=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){d={}}
@@ -801,7 +827,32 @@ function load(){
   return s;
 }
 let S=load();
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function save(){ if(!PLAYER) return; try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){} }
+
+/* ---------- players (username only) ---------- */
+const normName=v=>String(v||'').replace(/\s+/g,' ').trim();
+const nameKey=v=>normName(v).toLowerCase();
+function players(){ try{ return JSON.parse(localStorage.getItem(REG)||'{}')||{}; }catch(e){ return {}; } }
+function hasLegacy(){ try{ return !!localStorage.getItem(LEGACY); }catch(e){ return false; } }
+function createPlayer(display){
+  const k=nameKey(display), reg=players(), first=!Object.keys(reg).length;
+  reg[k]={display:normName(display),created:Date.now()};
+  try{
+    localStorage.setItem(REG,JSON.stringify(reg));
+    // the first player on this device keeps the progress saved before usernames existed (the old save stays as a backup)
+    if(first&&hasLegacy()&&!localStorage.getItem(LEGACY+':'+k)) localStorage.setItem(LEGACY+':'+k,localStorage.getItem(LEGACY));
+  }catch(e){}
+}
+function signIn(k){
+  const reg=players(); if(!reg[k]) return false;
+  PLAYER={key:k,display:reg[k].display}; KEY=LEGACY+':'+k;
+  try{ sessionStorage.setItem('skl-current',k); }catch(e){}
+  S=load(); return true;
+}
+function signOut(){
+  PLAYER=null; KEY='skl-none'; try{ sessionStorage.removeItem('skl-current'); }catch(e){}
+  S=load(); openSignin();
+}
 
 /* ---------- sound ---------- */
 let actx=null;
@@ -966,7 +1017,8 @@ function shipSVG(o,cls='ship'){
 let cur='title';
 function show(id){
   $$('.screen').forEach(s=>{s.hidden=(s.id!=='s-'+id)});
-  cur=id; $('#homeBtn').hidden=(id==='title');
+  cur=id; $('#homeBtn').hidden=(id==='title'||id==='signin');
+  { const off=id==='signin'; $('#creditChip').hidden=off; $('#trophyChip').hidden=off; $('#playerBtn').hidden=off||!PLAYER; }
   if(id!=='game'){G.active=false}
   if(id!=='soccer'&&typeof SG!=='undefined'){SG.active=false}
   if(id!=='hoops'&&typeof HG!=='undefined'){HG.active=false}
@@ -3822,6 +3874,7 @@ function openParent(){
   const seg=(name,opts,val)=>`<div class="seg" data-set="${name}">${opts.map(([v,l])=>`<button data-v="${v}" aria-pressed="${val===v}">${l}</button>`).join('')}</div>`;
   $('#parentWrap').innerHTML=`
     <h2>Grown-ups corner</h2>
+    <p class="note">Player: <b>${esc(PLAYER?PLAYER.display:'')}</b>. Settings, resets, and prizes here are for this player only.</p>
     <div class="statgrid">
       <div class="stat"><div class="v">${S.progress.games}</div><div class="l">Games played</div></div>
       <div class="stat"><div class="v">${(S.progress.beaten||0)+(S.progress.soccerBeaten||0)+(S.progress.hoopsBeaten||0)+(S.progress.ambushBeaten||0)+(S.progress.rescueBeaten||0)}/25</div><div class="l">Levels won</div></div>
@@ -3858,7 +3911,7 @@ $('#s-parent').addEventListener('click',e=>{
   const rb=e.target.closest('[data-reset]');
   if(rb){ const g=rb.dataset.reset, nm={baseball:'Baseball',soccer:'Soccer',hoops:'Basketball',ambush:'Space Battle',rescue:'Rescue'}[g];
     showMsg({title:`Reset ${nm}?`,body:`This locks the ${nm} teams again and clears its learning history. Her Star Knight, ship, and credits stay.`,btn:'Reset',alt:'Cancel',cb:()=>{ resetGame(g); openParent(); showMsg({title:`${nm} reset`,body:'Start it again from the title screen.',btn:'OK'}); }}); return; }
-  if(e.target.id==='resetBtn'){ showMsg({title:'Reset everything?',body:'This clears progress on this device. It cannot be undone.',btn:'Reset',alt:'Cancel',cb:()=>{try{localStorage.removeItem(KEY)}catch(err){} S=load(); S.profile=null; save(); setCredits(); setTrophy(); renderSoundBtn(); show('title'); renderTitle();}}); }
+  if(e.target.id==='resetBtn'){ showMsg({title:'Reset everything?',body:`This clears all of ${esc(PLAYER?PLAYER.display:'this player')}'s progress on this device. Other players are not changed. It cannot be undone.`,btn:'Reset',alt:'Cancel',cb:()=>{try{localStorage.removeItem(KEY)}catch(err){} S=load(); S.profile=null; save(); setCredits(); setTrophy(); renderSoundBtn(); show('title'); renderTitle();}}); }
 });
 function resetGame(g){
   const P=S.progress;
@@ -3891,7 +3944,32 @@ function drawStars(t){
 function starLoop(t){ if(cur!=='game') drawStars(t); requestAnimationFrame(starLoop); }
 
 /* ---------- boot ---------- */
-sizeStars(); renderSoundBtn(); setCredits(); setTrophy(); renderTitle(); show('title');
+function afterSignIn(){
+  $('#playerName').textContent=PLAYER.display;
+  renderSoundBtn(); setCredits(); setTrophy(); show('title'); renderTitle();
+}
+function openSignin(){
+  const reg=players(), names=Object.keys(reg);
+  $('#signErr').hidden=true; $('#signIn').value='';
+  $('#signNote').textContent=!names.length&&hasLegacy()
+    ? 'New: each player now signs in with a username. The game already saved on this device goes to the first username you make, so the main player should make theirs first.'
+    : names.length?'Type your username to load your game.':'Make a username to start. Use the same one every time to keep your points.';
+  $('#signList').innerHTML='';
+  show('signin');
+}
+$('#signForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const v=normName($('#signIn').value), k=nameKey(v), err=$('#signErr');
+  if(v.length<2||!/^[A-Za-z0-9 ]+$/.test(v)){ err.textContent='Use 2 to 16 letters or numbers.'; err.hidden=false; return; }
+  err.hidden=true; sfx.tap();
+  if(players()[k]){ signIn(k); afterSignIn(); return; }
+  const fresh=!Object.keys(players()).length;
+  showMsg({title:`New player "${v}"?`,body:fresh&&hasLegacy()?`No player has that name yet. ${esc(v)} will keep the points and progress already saved on this device.`:`No player has that name yet. Check the spelling. If it's right, make a new player with a fresh game.`,btn:'Make new player',alt:'Try again',cb:()=>{ createPlayer(v); signIn(k); afterSignIn(); }});
+});
+$('#playerBtn').addEventListener('click',()=>{ sfx.tap(); showMsg({title:'Switch player?',body:`${esc(PLAYER?PLAYER.display:'')}'s game is saved. Sign in again with the same username to keep playing.`,btn:'Switch',alt:'Cancel',cb:signOut}); });
+sizeStars(); renderSoundBtn();
+{ let k=null; try{ k=sessionStorage.getItem('skl-current'); }catch(e){}
+  if(k&&signIn(k)) afterSignIn(); else openSignin(); }
 if(!reduced) requestAnimationFrame(starLoop);
 })();
 </script>
