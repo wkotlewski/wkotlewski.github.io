@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20,500,0,0&icon_names=arrow_downward,arrow_outward,play_arrow&display=block" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20,500,0,0&icon_names=arrow_downward,arrow_outward,chevron_left,chevron_right,play_arrow&display=block" rel="stylesheet" />
   <link rel="preload" as="image" href="assets/whitney-headshot.jpg" fetchpriority="high" />
   <style>
     :root {
@@ -233,6 +233,84 @@
 
     section.builds {
       padding: 0 0 clamp(2.5rem, 6vw, 4rem);
+    }
+
+    .build-track {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      gap: 1rem;
+      border-radius: clamp(0.9rem, 2vw, 1.15rem);
+    }
+
+    .build-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    .build-track > .build {
+      flex: 0 0 100%;
+      scroll-snap-align: start;
+    }
+
+    .build-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .build-dots {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .build-dot {
+      width: 0.55rem;
+      height: 0.55rem;
+      padding: 0;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(238, 242, 245, 0.25);
+      cursor: pointer;
+      transition: width 0.3s var(--ease), background 0.25s ease;
+    }
+
+    .build-dot[aria-current="true"] {
+      width: 1.5rem;
+      background: var(--accent);
+    }
+
+    .build-arrows {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .build-arrow {
+      display: grid;
+      place-items: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      padding: 0;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: rgba(238, 242, 245, 0.03);
+      color: var(--ink);
+      font-size: 1.4rem;
+      cursor: pointer;
+      transition: border-color 0.25s ease, color 0.25s ease, opacity 0.25s ease;
+    }
+
+    .build-arrow:hover:not(:disabled) {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .build-arrow:disabled {
+      opacity: 0.35;
+      cursor: default;
     }
 
     .build {
@@ -1125,28 +1203,92 @@
     <div class="wrap">
       <div class="section-head">
         <h2 id="builds-heading">Recent builds</h2>
-        <p>Products I’m designing and shipping hands-on with AI.</p>
+        <p>Products I’m designing and shipping hands-on.</p>
       </div>
 
-      <article class="build">
-        <a class="build-shot" href="https://wkotlewski.github.io/star-knight-league/" target="_blank" rel="noopener" aria-label="Play Star Knight League">
-          <img src="assets/thumb-star-knight.jpg" alt="Star Knight League: an asteroid baseball field with a Star Knight at bat" width="960" height="600" loading="lazy" decoding="async" />
-        </a>
-        <div class="build-meta">
-          <h3>Star Knight League</h3>
-          <p class="blurb">An adaptive learning game I designed and built with AI for my 3rd grader. Kids bat, pitch, and catch in a space baseball league, dodge, shoot, and save in hover-soccer, shoot hoops in zero gravity, battle a space fleet, and follow a rescue trail. Math, spelling, vocabulary, and reading challenges aligned to California Common Core power up each play, and wins earn real-life prizes. Missed skills come back more often, and a grown-ups view tracks accuracy by skill. It runs in any phone, tablet, or desktop browser and works offline.</p>
-          <ul class="build-tags">
-            <li>Product design</li>
-            <li>AI-assisted build</li>
-            <li>Adaptive learning</li>
-            <li>Mobile web</li>
-          </ul>
-          <div class="build-links">
-            <a class="btn btn-company" href="https://wkotlewski.github.io/star-knight-league/" target="_blank" rel="noopener">Play the current build</a>
-            <a class="btn btn-ghost" href="https://github.com/wkotlewski/star-knight-league" target="_blank" rel="noopener">View source</a>
+      <div class="build-slider" role="region" aria-roledescription="carousel" aria-label="Recent builds">
+        <div class="build-track" id="build-track">
+        <article class="build" aria-roledescription="slide" aria-label="1 of 4">
+          <a class="build-shot" href="https://wkotlewski.github.io/skyground/" target="_blank" rel="noopener" aria-label="Open SkyGround">
+            <img src="assets/thumb-skyground.jpg" alt="SkyGround: a night sky map with constellation lines, planets, and labeled satellites" width="960" height="600" loading="lazy" decoding="async" />
+          </a>
+          <div class="build-meta">
+            <h3>SkyGround</h3>
+            <p class="blurb">A phone-first sky explorer I designed and built for curious students. Point your phone at the sky to find satellites, planets, the Moon, and bright stars, then tap one to learn what it does, how high and fast it orbits, and what place on Earth is below it right now. Orbits, ground tracks, and place stories connect space to the ground, and everything is calculated on the device from real orbital data, so a student's location never leaves their phone.</p>
+            <ul class="build-tags">
+              <li>Product design</li>
+                <li>Space data</li>
+              <li>Mobile web</li>
+            </ul>
+            <div class="build-links">
+              <a class="btn btn-company" href="https://wkotlewski.github.io/skyground/" target="_blank" rel="noopener">Open SkyGround</a>
+              <a class="btn btn-ghost" href="https://github.com/wkotlewski/skyground" target="_blank" rel="noopener">View source</a>
+            </div>
+          </div>
+        </article>
+        <article class="build" aria-roledescription="slide" aria-label="2 of 4">
+          <a class="build-shot" href="https://wkotlewski.github.io/star-knight-league/" target="_blank" rel="noopener" aria-label="Play Star Knight League">
+            <img src="assets/thumb-star-knight.jpg" alt="Star Knight League: an asteroid baseball field with a Star Knight at bat" width="960" height="600" loading="lazy" decoding="async" />
+          </a>
+          <div class="build-meta">
+            <h3>Star Knight League</h3>
+            <p class="blurb">An adaptive learning game I designed and built for my 3rd grader. Kids bat, pitch, and catch in a space baseball league, dodge, shoot, and save in hover-soccer, shoot hoops in zero gravity, battle a space fleet, and follow a rescue trail. Math, spelling, vocabulary, and reading challenges aligned to California Common Core power up each play, and wins earn real-life prizes. Missed skills come back more often, and a grown-ups view tracks accuracy by skill. It runs in any phone, tablet, or desktop browser and works offline.</p>
+            <ul class="build-tags">
+              <li>Product design</li>
+                <li>Adaptive learning</li>
+              <li>Mobile web</li>
+            </ul>
+            <div class="build-links">
+              <a class="btn btn-company" href="https://wkotlewski.github.io/star-knight-league/" target="_blank" rel="noopener">Play the current build</a>
+              <a class="btn btn-ghost" href="https://github.com/wkotlewski/star-knight-league" target="_blank" rel="noopener">View source</a>
+            </div>
+          </div>
+        </article>
+        <article class="build" aria-roledescription="slide" aria-label="3 of 4">
+          <a class="build-shot" href="https://wkotlewski.github.io/Dress-Up-Learning-Games-/" target="_blank" rel="noopener" aria-label="Play Dress-Up Learning Games">
+            <img src="assets/thumb-dress-up.jpg" alt="Dress-Up Learning Games: a cartoon girl in a pink heart top and purple skirt beside big clothing buttons" width="960" height="600" loading="lazy" decoding="async" />
+          </a>
+          <div class="build-meta">
+            <h3>Dress-Up Learning Games</h3>
+            <p class="blurb">A tap-to-play dress-up game I designed and built for my 4-year-old. She dresses a character in themed outfits, paints nails, and picks hairstyles, while the game says every color, shape, number, and letter out loud. Learning questions pop up as she plays, and she can tap an answer or say it out loud. Hints appear after two misses, and a grown-ups menu sets how often questions show up. It runs in any phone, tablet, or desktop browser.</p>
+            <ul class="build-tags">
+              <li>Product design</li>
+                <li>Early learning</li>
+              <li>Voice interaction</li>
+            </ul>
+            <div class="build-links">
+              <a class="btn btn-company" href="https://wkotlewski.github.io/Dress-Up-Learning-Games-/" target="_blank" rel="noopener">Play the game</a>
+              <a class="btn btn-ghost" href="https://github.com/wkotlewski/Dress-Up-Learning-Games-" target="_blank" rel="noopener">View source</a>
+            </div>
+          </div>
+        </article>
+        <article class="build" aria-roledescription="slide" aria-label="4 of 4">
+          <a class="build-shot" href="https://wkotlewski.github.io/songbird-studio/" target="_blank" rel="noopener" aria-label="Open Songbird">
+            <img src="assets/thumb-songbird.jpg" alt="Songbird: a song timeline beside a Make a sound panel with tempo controls and a pink record button" width="960" height="600" loading="lazy" decoding="async" />
+          </a>
+          <div class="build-meta">
+            <h3>Songbird</h3>
+            <p class="blurb">A pocket music studio I designed and built for anyone with a hum or a song in their heart. Hum, sing, clap, or play a few bars, and it loops on the beat like a loop pedal so you can stack layers into a full band. Plain-language Magic edits turn requests like “add a horn section” or “make it tight” into changes, with genre and era sounds from the 1920s to today. Every change can be undone, and the finished song downloads from any phone, tablet, or desktop browser.</p>
+            <ul class="build-tags">
+              <li>Product design</li>
+                <li>Music creation</li>
+              <li>Natural-language editing</li>
+            </ul>
+            <div class="build-links">
+              <a class="btn btn-company" href="https://wkotlewski.github.io/songbird-studio/" target="_blank" rel="noopener">Open Songbird</a>
+              <a class="btn btn-ghost" href="https://github.com/wkotlewski/songbird-studio" target="_blank" rel="noopener">View source</a>
+            </div>
+          </div>
+        </article>
+        </div>
+        <div class="build-controls">
+          <div class="build-dots" id="build-dots"></div>
+          <div class="build-arrows">
+            <button type="button" class="build-arrow material-symbols-rounded" id="build-prev" aria-label="Previous build">chevron_left</button>
+            <button type="button" class="build-arrow material-symbols-rounded" id="build-next" aria-label="Next build">chevron_right</button>
           </div>
         </div>
-      </article>
+      </div>
     </div>
   </section>
 
@@ -1580,6 +1722,45 @@
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape" && modal.classList.contains("is-open")) closeModal();
       });
+    })();
+  </script>
+  <script>
+    (function () {
+      const track = document.getElementById("build-track");
+      if (!track) return;
+      const slides = [...track.querySelectorAll(".build")];
+      const dots = document.getElementById("build-dots");
+      const prev = document.getElementById("build-prev");
+      const next = document.getElementById("build-next");
+      let current = 0;
+
+      slides.forEach((slide, i) => {
+        slide.setAttribute("aria-label", `${i + 1} of ${slides.length}`);
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "build-dot";
+        dot.setAttribute("aria-label", `Show ${slide.querySelector("h3").textContent}`);
+        dot.addEventListener("click", () => go(i));
+        dots.appendChild(dot);
+      });
+
+      function go(i) {
+        const target = Math.max(0, Math.min(slides.length - 1, i));
+        track.scrollTo({ left: slides[target].offsetLeft - slides[0].offsetLeft });
+      }
+
+      function update() {
+        current = Math.round(track.scrollLeft / track.clientWidth);
+        [...dots.children].forEach((dot, i) => dot.setAttribute("aria-current", i === current ? "true" : "false"));
+        prev.disabled = current === 0;
+        next.disabled = current === slides.length - 1;
+      }
+
+      prev.addEventListener("click", () => go(current - 1));
+      next.addEventListener("click", () => go(current + 1));
+      track.addEventListener("scroll", update, { passive: true });
+      window.addEventListener("resize", update, { passive: true });
+      update();
     })();
   </script>
 </body>
