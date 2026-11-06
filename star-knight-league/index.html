@@ -833,9 +833,13 @@ function save(){ if(!PLAYER) return; try{localStorage.setItem(KEY,JSON.stringify
 const normName=v=>String(v||'').replace(/\s+/g,' ').trim();
 const nameKey=v=>normName(v).toLowerCase();
 function players(){ try{ return JSON.parse(localStorage.getItem(REG)||'{}')||{}; }catch(e){ return {}; } }
+// a name counts as taken if it matches a player once spaces and numbers are ignored ("Amaya 2", "A maya")
+const coreName=v=>nameKey(v).replace(/[\s0-9]/g,'');
+function takenBy(v){ const c=coreName(v), reg=players(); const k=Object.keys(reg).find(x=>coreName(x)===c&&x!==nameKey(v)); return k?reg[k].display:null; }
 function hasLegacy(){ try{ return !!localStorage.getItem(LEGACY); }catch(e){ return false; } }
 function createPlayer(display){
   const k=nameKey(display), reg=players(), first=!Object.keys(reg).length;
+  if(reg[k]||takenBy(display)) return false;
   reg[k]={display:normName(display),created:Date.now()};
   try{
     localStorage.setItem(REG,JSON.stringify(reg));
@@ -3963,8 +3967,10 @@ $('#signForm').addEventListener('submit',e=>{
   if(v.length<2||!/^[A-Za-z0-9 ]+$/.test(v)){ err.textContent='Use 2 to 16 letters or numbers.'; err.hidden=false; return; }
   err.hidden=true; sfx.tap();
   if(players()[k]){ signIn(k); afterSignIn(); return; }
+  if(coreName(v).length<2){ err.textContent='Use at least 2 letters.'; err.hidden=false; return; }
+  if(takenBy(v)){ err.textContent='That name is taken. Pick a different username.'; err.hidden=false; sfx.wrong&&sfx.wrong(); return; }
   const fresh=!Object.keys(players()).length;
-  showMsg({title:`New player "${v}"?`,body:fresh&&hasLegacy()?`No player has that name yet. ${esc(v)} will keep the points and progress already saved on this device.`:`No player has that name yet. Check the spelling. If it's right, make a new player with a fresh game.`,btn:'Make new player',alt:'Try again',cb:()=>{ createPlayer(v); signIn(k); afterSignIn(); }});
+  showMsg({title:`New player "${v}"?`,body:fresh&&hasLegacy()?`No player has that name yet. ${esc(v)} will keep the points and progress already saved on this device.`:`No player has that name yet. Check the spelling. If it's right, make a new player with a fresh game.`,btn:'Make new player',alt:'Try again',cb:()=>{ if(createPlayer(v)===false){ err.textContent='That name is taken. Pick a different username.'; err.hidden=false; return; } signIn(k); afterSignIn(); }});
 });
 $('#playerBtn').addEventListener('click',()=>{ sfx.tap(); showMsg({title:'Switch player?',body:`${esc(PLAYER?PLAYER.display:'')}'s game is saved. Sign in again with the same username to keep playing.`,btn:'Switch',alt:'Cancel',cb:signOut}); });
 sizeStars(); renderSoundBtn();
