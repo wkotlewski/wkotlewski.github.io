@@ -310,6 +310,13 @@ p{margin:0}
 .numrow{display:grid;grid-template-columns:minmax(80px,1fr) 2fr;gap:8px;margin-bottom:8px}
 .phone-display.learn{font-size:clamp(28px,8vw,40px)}
 
+.pin-dots{display:flex;justify-content:center;gap:14px;margin:6px 0 12px}
+.pin-dots i{width:22px;height:22px;border-radius:50%;border:3px solid var(--cyan);display:block}
+.pin-dots i.on{background:var(--cyan)}
+.pin-dots.long i{width:14px;height:14px;border-width:2px}
+.pin-dots.shake{animation:pinshake .35s}
+@keyframes pinshake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
 /* results */
 .result-head{text-align:center;display:grid;gap:8px;justify-items:center}
 .result-head .big{font-family:var(--display);font-size:clamp(30px,8vw,46px);line-height:1;color:var(--gold);text-shadow:0 4px 0 var(--coral-deep)}
@@ -430,7 +437,15 @@ textarea.text-in{min-height:120px;font-size:17px;font-weight:600;resize:vertical
           <p class="note" id="signErr" style="margin-top:6px;color:var(--coral)" hidden></p>
           <div class="row" style="margin-top:14px"><button class="btn" type="submit">Sign in</button></div>
         </form>
-        <p class="note" style="margin-top:14px">Each username has its own points, trophies, and progress on this device. No password needed.</p>
+        <div id="pinStep" hidden>
+          <h3 id="pinTitle" style="margin-bottom:4px"></h3>
+          <p class="note" id="pinNote" style="margin-bottom:10px"></p>
+          <div class="pin-dots" id="pinDots"></div>
+          <div class="fb bad" id="pinErr" hidden></div>
+          <div class="keypad dialpad" id="pinPad"><button type="button" data-p="1">1</button><button type="button" data-p="2">2</button><button type="button" data-p="3">3</button><button type="button" data-p="4">4</button><button type="button" data-p="5">5</button><button type="button" data-p="6">6</button><button type="button" data-p="7">7</button><button type="button" data-p="8">8</button><button type="button" data-p="9">9</button><span></span><button type="button" data-p="0">0</button><button type="button" class="back" data-p="back" aria-label="Delete">⌫</button></div>
+          <div class="row" style="margin-top:10px;justify-content:space-between"><button class="btn alt small" id="pinBack" type="button">Back</button><button class="btn alt small" id="pinForgot" type="button" hidden>Forgot PIN?</button></div>
+        </div>
+        <p class="note" id="signFoot" style="margin-top:14px">Each username has its own points, trophies, and progress on this device, protected by a 4-number PIN.</p>
       </div>
     </section>
 
@@ -3925,7 +3940,7 @@ function openParent(){
   const seg=(name,opts,val)=>`<div class="seg" data-set="${name}">${opts.map(([v,l])=>`<button data-v="${v}" aria-pressed="${val===v}">${l}</button>`).join('')}</div>`;
   $('#parentWrap').innerHTML=`
     <h2>Grown-ups corner</h2>
-    <p class="note">Player: <b>${esc(PLAYER?PLAYER.display:'')}</b>. Settings, resets, and prizes here are for this player only.</p>
+    <p class="note">Player: <b>${esc(PLAYER?PLAYER.display:'')}</b>. Settings, resets, and prizes here are for this player only. <button class="btn alt small" id="changePin" type="button" style="margin-top:6px">Change ${esc(PLAYER?PLAYER.display:'')}'s PIN</button></p>
     <div class="statgrid">
       <div class="stat"><div class="v">${S.progress.games}</div><div class="l">Games played</div></div>
       <div class="stat"><div class="v">${(S.progress.beaten||0)+(S.progress.soccerBeaten||0)+(S.progress.hoopsBeaten||0)+(S.progress.ambushBeaten||0)+(S.progress.rescueBeaten||0)}/25</div><div class="l">Levels won</div></div>
@@ -3962,6 +3977,7 @@ $('#s-parent').addEventListener('click',e=>{
   const rb=e.target.closest('[data-reset]');
   if(rb){ const g=rb.dataset.reset, nm={baseball:'Baseball',soccer:'Soccer',hoops:'Basketball',ambush:'Space Battle',rescue:'Rescue'}[g];
     showMsg({title:`Reset ${nm}?`,body:`This locks the ${nm} teams again and clears its learning history. Her Star Knight, ship, and credits stay.`,btn:'Reset',alt:'Cancel',cb:()=>{ resetGame(g); openParent(); showMsg({title:`${nm} reset`,body:'Start it again from the title screen.',btn:'OK'}); }}); return; }
+  if(e.target.id==='changePin'&&PLAYER){ sfx.tap(); pinMode('set',PLAYER.key,{then:'parent'}); return; }
   if(e.target.id==='resetBtn'){ showMsg({title:'Reset everything?',body:`This clears all of ${esc(PLAYER?PLAYER.display:'this player')}'s progress on this device. Other players are not changed. It cannot be undone.`,btn:'Reset',alt:'Cancel',cb:()=>{try{localStorage.removeItem(KEY)}catch(err){} S=load(); S.profile=null; save(); setCredits(); setTrophy(); renderSoundBtn(); show('title'); renderTitle();}}); }
 });
 function resetGame(g){
@@ -4000,6 +4016,7 @@ function afterSignIn(){
   renderSoundBtn(); setCredits(); setTrophy(); show('title'); renderTitle();
 }
 function openSignin(){
+  if(PIN||!$('#pinStep').hidden) pinExit();
   const reg=players(), names=Object.keys(reg);
   $('#signErr').hidden=true; $('#signIn').value='';
   $('#signNote').textContent=!names.length&&hasLegacy()
@@ -4008,16 +4025,70 @@ function openSignin(){
   $('#signList').innerHTML='';
   show('signin');
 }
+/* PIN: 4 numbers, stored (scrambled) with the username */
+const pinHash=(k,pin)=>{ let h=2166136261; for(const ch of 'skl|'+k+'|'+pin){ h^=ch.charCodeAt(0); h=Math.imul(h,16777619)>>>0; } return h.toString(36); };
+function setPlayerPin(k,pin){ const reg=players(); if(!reg[k]) return; reg[k].pin=pinHash(k,pin); try{ localStorage.setItem(REG,JSON.stringify(reg)); }catch(e){} }
+let PIN=null;
+function pinMode(mode,k,opts){
+  const reg=players(), nm=reg[k]?reg[k].display:'';
+  PIN=Object.assign({mode,k,typed:'',first:'',tries:0},opts||{});
+  $('#signForm').hidden=true; $('#signNote').hidden=true; $('#signFoot').hidden=true; $('#pinStep').hidden=false; $('#pinErr').hidden=true;
+  const T={enter:[`Hi, ${nm}!`,'Type your PIN.'],
+    set:[`Make a PIN for ${nm}`,'Pick 4 numbers you can remember. You will type them every time you sign in. Don\'t tell other kids!'],
+    confirm:['Type it one more time','Type the same 4 numbers again.'],
+    reset:['Grown-up check',`To make a new PIN, a grown-up types ${PIN.names||'a parent'}'s phone number.`]}[mode];
+  $('#pinTitle').textContent=T[0]; $('#pinNote').textContent=T[1];
+  $('#pinForgot').hidden=mode!=='enter';
+  if(cur!=='signin') show('signin');
+  renderPin();
+}
+function renderPin(){ const n=PIN.mode==='reset'?10:4, d=$('#pinDots'); d.classList.toggle('long',n>4); d.innerHTML=Array.from({length:n},(_,i)=>`<i class="${i<PIN.typed.length?'on':''}"></i>`).join(''); }
+function pinFail(msg){ const d=$('#pinDots'), e=$('#pinErr'); sfx.wrong(); e.hidden=false; e.innerHTML=msg; PIN.typed=''; d.classList.remove('shake'); void d.offsetWidth; d.classList.add('shake'); renderPin(); }
+function pinDone(){
+  const P0=PIN;
+  if(P0.mode==='enter'){
+    if(players()[P0.k].pin===pinHash(P0.k,P0.typed)){ sfx.right(); PIN=null; signIn(P0.k); afterSignIn(); return; }
+    P0.tries++; pinFail(`<strong>That PIN isn't right</strong>${P0.tries>=3?'Ask a grown-up to help, or tap Forgot PIN.':'Try again.'}`); return;
+  }
+  if(P0.mode==='set'){ const t=P0.typed; pinMode('confirm',P0.k,{first:t,then:P0.then}); return; }
+  if(P0.mode==='confirm'){
+    if(P0.typed!==P0.first){ sfx.wrong(); pinMode('set',P0.k,{then:P0.then}); const e=$('#pinErr'); e.hidden=false; e.innerHTML='<strong>Those didn\'t match</strong>Pick your 4 numbers again.'; return; }
+    setPlayerPin(P0.k,P0.typed); sfx.right(); PIN=null;
+    if(P0.then==='parent'){ afterSignIn(); openParent(); showMsg({title:'PIN changed',body:'Use the new PIN next time you sign in.',btn:'OK'}); return; }
+    signIn(P0.k); afterSignIn(); showMsg({title:'PIN saved!',body:'Remember your 4 numbers. You will need them to sign in.',btn:'OK'}); return;
+  }
+  if(P0.mode==='reset'){
+    if(P0.phones.includes(P0.typed)){ sfx.right(); pinMode('set',P0.k); return; }
+    pinFail('<strong>That number doesn\'t match</strong>Type a parent\'s phone number saved for this player.'); return;
+  }
+}
+function pinForgot(){
+  const k=PIN.k; let d={}; try{ d=JSON.parse(localStorage.getItem(LEGACY+':'+k)||'{}')||{}; }catch(e){}
+  const cs=(d.contacts||[]).filter(c=>tenOf(c.phone).length===10);
+  if(cs.length){ pinMode('reset',k,{phones:cs.map(c=>tenOf(c.phone)),names:cs.map(c=>c.name||'a parent').join(' or ')}); return; }
+  showMsg({title:'Forgot the PIN?',body:'No parent phone number is saved for this player yet. A grown-up can press and hold <b>Reset PIN</b> for 3 seconds to make a new one.',btn:'OK'});
+  $('#pinForgot').textContent='Reset PIN (hold)'; $('#pinForgot').dataset.hold='1';
+}
+function pinExit(){ PIN=null; $('#pinStep').hidden=true; $('#signForm').hidden=false; $('#signNote').hidden=false; $('#signFoot').hidden=false; $('#pinForgot').textContent='Forgot PIN?'; delete $('#pinForgot').dataset.hold; }
+$('#pinPad').addEventListener('click',e=>{ const b=e.target.closest('button[data-p]'); if(!b||!PIN) return; const v=b.dataset.p, n=PIN.mode==='reset'?10:4;
+  if(v==='back'){ PIN.typed=PIN.typed.slice(0,-1); renderPin(); return; }
+  if(PIN.typed.length>=n) return; PIN.typed+=v; sfx.tap(); renderPin(); if(PIN.typed.length===n) pinDone(); });
+document.addEventListener('keydown',e=>{ if(!PIN||cur!=='signin') return; if(/^[0-9]$/.test(e.key)){ const b=$(`#pinPad [data-p="${e.key}"]`); b&&b.click(); } else if(e.key==='Backspace'){ $('#pinPad [data-p="back"]').click(); } });
+$('#pinBack').addEventListener('click',()=>{ sfx.tap(); if(PIN&&PIN.then==='parent'){ PIN=null; pinExit(); afterSignIn(); openParent(); return; } pinExit(); openSignin(); });
+{ let ht=null; const fb=$('#pinForgot');
+  fb.addEventListener('click',()=>{ if(fb.dataset.hold) return; sfx.tap(); pinForgot(); });
+  fb.addEventListener('pointerdown',()=>{ if(!fb.dataset.hold) return; ht=setTimeout(()=>{ const k=PIN&&PIN.k; pinExit(); if(k) pinMode('set',k); },3000); });
+  ['pointerup','pointerleave','pointercancel'].forEach(t=>fb.addEventListener(t,()=>clearTimeout(ht))); }
 $('#signForm').addEventListener('submit',e=>{
   e.preventDefault();
   const v=normName($('#signIn').value), k=nameKey(v), err=$('#signErr');
   if(v.length<2||!/^[A-Za-z0-9 ]+$/.test(v)){ err.textContent='Use 2 to 16 letters or numbers.'; err.hidden=false; return; }
   err.hidden=true; sfx.tap();
-  if(players()[k]){ signIn(k); afterSignIn(); return; }
+  if(players()[k]){ if(players()[k].pin) pinMode('enter',k); else pinMode('set',k); return; }
   if(coreName(v).length<2){ err.textContent='Use at least 2 letters.'; err.hidden=false; return; }
   if(takenBy(v)){ err.textContent='That name is taken. Pick a different username.'; err.hidden=false; sfx.wrong&&sfx.wrong(); return; }
   const fresh=!Object.keys(players()).length;
-  showMsg({title:`New player "${v}"?`,body:fresh&&hasLegacy()?`No player has that name yet. ${esc(v)} will keep the points and progress already saved on this device.`:`No player has that name yet. Check the spelling. If it's right, make a new player with a fresh game.`,btn:'Make new player',alt:'Try again',cb:()=>{ if(createPlayer(v)===false){ err.textContent='That name is taken. Pick a different username.'; err.hidden=false; return; } signIn(k); afterSignIn(); }});
+  showMsg({title:`New player "${v}"?`,body:fresh&&hasLegacy()?`No player has that name yet. ${esc(v)} will keep the points and progress already saved on this device.`:`No player has that name yet. Check the spelling. If it's right, make a new player with a fresh game.`,btn:'Make new player',alt:'Try again',cb:()=>{ if(createPlayer(v)===false){ err.textContent='That name is taken. Pick a different username.'; err.hidden=false; return; } pinMode('set',k); }});
 });
 $('#playerBtn').addEventListener('click',()=>{ sfx.tap(); showMsg({title:'Switch player?',body:`${esc(PLAYER?PLAYER.display:'')}'s game is saved. Sign in again with the same username to keep playing.`,btn:'Switch',alt:'Cancel',cb:signOut}); });
 sizeStars(); renderSoundBtn();
