@@ -307,6 +307,9 @@ p{margin:0}
   .playerchip svg{width:15px;height:15px}
 }
 
+.numrow{display:grid;grid-template-columns:minmax(80px,1fr) 2fr;gap:8px;margin-bottom:8px}
+.phone-display.learn{font-size:clamp(28px,8vw,40px)}
+
 /* results */
 .result-head{text-align:center;display:grid;gap:8px;justify-items:center}
 .result-head .big{font-family:var(--display);font-size:clamp(30px,8vw,46px);line-height:1;color:var(--gold);text-shadow:0 4px 0 var(--coral-deep)}
@@ -3265,13 +3268,44 @@ const tenOf=s=>{const d=digitsOf(s); return d.length===11&&d[0]==='1'?d.slice(1)
 const fmtPhone=d=>{ if(d.length<=3) return d; if(d.length<=6) return `(${d.slice(0,3)}) ${d.slice(3)}`; return `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6,10)}`; };
 function contacts(){ return (S.contacts||[]).filter(c=>tenOf(c.phone).length>=7); }
 $('#sendBtn').addEventListener('click',()=>{
-  sfx.tap(); const cs=contacts(), sp=$('#sendPanel'); sp.hidden=false; $('#sendBtn').hidden=true;
-  if(!cs.length){ sp.innerHTML=`<p style="font-weight:700">Ask a grown-up to add your parent's phone number in the Grown-ups corner first.</p>`; return; }
-  if(cs.length===1){ startDial(cs[0]); return; }
-  sp.innerHTML=`<h3 style="margin-bottom:10px">Who do you want to send it to?</h3><div class="row">${cs.map((c,i)=>`<button class="btn" data-who="${i}">${esc(c.name||'Parent '+(i+1))}</button>`).join('')}</div>`;
+  sfx.tap(); $('#sendPanel').hidden=false; $('#sendBtn').hidden=true;
+  if(!contacts().length) askNumbers(); else pickWho();
+  setTimeout(()=>$('#sendPanel').scrollIntoView({behavior:'smooth',block:'start'}),60);
 });
+/* no numbers yet: collect them right here (a grown-up can help) */
+function askNumbers(){
+  const cs=(S.contacts&&S.contacts.length?S.contacts:[{name:'Mom',phone:''},{name:'Dad',phone:''}]).slice(0,2);
+  while(cs.length<2) cs.push({name:cs.length?'Dad':'Mom',phone:''});
+  $('#sendPanel').innerHTML=`<h3 style="margin-bottom:4px">Add your parents' phone numbers</h3>
+    <p class="note" style="margin-bottom:10px">Ask a grown-up to help. Then you'll learn the number and type it yourself. Numbers stay on this device only.</p>
+    ${cs.map((c,i)=>`<div class="numrow"><input class="text-in" data-cn="${i}" maxlength="12" value="${esc(c.name||'')}" placeholder="Name" aria-label="Parent ${i+1} name"><input class="text-in" data-cp="${i}" type="tel" inputmode="tel" maxlength="16" value="${esc(c.phone||'')}" placeholder="Phone number" aria-label="Parent ${i+1} phone"></div>`).join('')}
+    <div class="fb bad" id="numErr" hidden></div>
+    <div class="row" style="margin-top:12px"><button class="btn" id="saveNums">Save numbers</button></div>`;
+}
+function saveNumbers(){
+  const out=[0,1].map(i=>({name:normName($(`[data-cn="${i}"]`).value)||(i?'Dad':'Mom'),phone:$(`[data-cp="${i}"]`).value.trim()}));
+  const bad=out.filter(c=>c.phone&&tenOf(c.phone).length!==10);
+  if(!out.some(c=>tenOf(c.phone).length===10)||bad.length){ const e=$('#numErr'); e.hidden=false; e.innerHTML=`<strong>Check the number</strong>Phone numbers have 10 digits, like (909) 555-1234.`; sfx.wrong(); return; }
+  S.contacts=out; save(); sfx.right(); pickWho();
+}
+function pickWho(){
+  const cs=contacts();
+  if(cs.length===1){ startSend([cs[0]]); return; }
+  $('#sendPanel').innerHTML=`<h3 style="margin-bottom:10px">Who do you want to send it to?</h3><div class="row">${cs.map((c,i)=>`<button class="btn" data-who="${i}">${esc(c.name||'Parent '+(i+1))}</button>`).join('')}<button class="btn" data-who="all">Both</button></div>`;
+}
+function startSend(list){ SEND={list,i:0,done:[]}; learnNumber(); }
+/* show the number first so she can learn it, then hide it and she types it */
+function learnNumber(){
+  const c=SEND.list[SEND.i], t=tenOf(c.phone); SEND.c=c; SEND.target=t; SEND.typed=''; SEND.tries=0; SEND.marked=false;
+  const who=esc(c.name||'your parent');
+  $('#sendPanel').innerHTML=`<h3 style="margin-bottom:4px">${SEND.list.length>1?`${SEND.i+1} of ${SEND.list.length}: `:''}Learn ${who}'s phone number</h3>
+    <p class="note" style="margin-bottom:10px">Read it out loud three times. When you think you know it, hide it and type it yourself.</p>
+    <div class="phone-display peek learn">${fmtPhone(t)}</div>
+    <div class="row" style="margin-top:12px"><button class="btn" id="hideNum">I know it. Hide it!</button></div>`;
+  say(`${c.name||''}. ${[...t].join(' ')}`);
+}
 function startDial(c){
-  SEND={c,typed:'',tries:0,target:tenOf(c.phone)};
+  SEND=Object.assign(SEND||{list:[c],i:0,done:[]},{c,typed:'',tries:0,target:tenOf(c.phone),marked:false});
   const who=esc(c.name||'your parent');
   $('#sendPanel').innerHTML=`<h3 style="margin-bottom:4px">Type ${who}'s phone number</h3><p class="note" style="margin-bottom:10px">Can you remember it? Type it in with the number pad.</p>
     <div class="phone-display" id="phoneDisp" aria-live="polite"></div>
@@ -3287,14 +3321,20 @@ function renderDial(state){
 }
 function checkDial(){
   const ok=SEND.typed===SEND.target, fb=$('#dialFb'); fb.hidden=false;
-  if(ok){ sfx.right(); fb.className='fb good'; fb.innerHTML=`<strong>You know it!</strong>That's ${esc(SEND.c.name||'your parent')}'s number.`; $('#dialPad').hidden=true; showShare(); return; }
+  if(ok){ sfx.right(); fb.className='fb good'; fb.innerHTML=`<strong>You know it!</strong>That's ${esc(SEND.c.name||'your parent')}'s number.`; $('#dialPad').hidden=true;
+    SEND.done.push(SEND.c);
+    if(SEND.i<SEND.list.length-1){ const nx=SEND.list[SEND.i+1]; $('#dialExtra').innerHTML=`<button class="btn" id="nextNum">Next: ${esc(nx.name||'next parent')}'s number</button>`; return; }
+    showShare(); return; }
   SEND.tries++; sfx.wrong(); fb.className='fb bad';
   if(SEND.tries===1){ fb.innerHTML='<strong>Not quite</strong>Check each number and try again.'; SEND.typed=''; renderDial(); }
   else { fb.innerHTML='<strong>Almost!</strong>Green numbers are right. Red numbers need to change.'; renderDial('marks'); SEND.marked=true; }
   if(SEND.tries>=3&&!$('#peekNum')){ $('#dialExtra').innerHTML='<button class="btn alt small" id="peekNum">Peek at the number</button>'; }
 }
 $('#sendPanel').addEventListener('click',e=>{
-  const w=e.target.closest('[data-who]'); if(w){ sfx.tap(); startDial(contacts()[+w.dataset.who]); return; }
+  const w=e.target.closest('[data-who]'); if(w){ sfx.tap(); startSend(w.dataset.who==='all'?contacts():[contacts()[+w.dataset.who]]); return; }
+  if(e.target.id==='saveNums'){ saveNumbers(); return; }
+  if(e.target.id==='hideNum'){ sfx.tap(); try{ speechSynthesis.cancel(); }catch(err){} startDial(SEND.c); return; }
+  if(e.target.id==='nextNum'){ sfx.tap(); SEND.i++; learnNumber(); return; }
   if(e.target.id==='peekNum'){ const el=$('#phoneDisp'); el.textContent=fmtPhone(SEND.target); el.classList.add('peek'); e.target.disabled=true;
     setTimeout(()=>{ if(!SEND) return; el.classList.remove('peek'); SEND.typed=''; renderDial(); e.target.disabled=false; },3000); return; }
   const k=e.target.closest('#dialPad button'); if(k&&SEND){ const v=k.dataset.k;
@@ -3307,9 +3347,8 @@ $('#sendPanel').addEventListener('click',e=>{
 });
 function certText(){ const nm=(S.profile&&S.profile.name)||'Your Star Knight'; return `${nm} earned "${CERT.c.name}" in Star Knight League! Here is the certificate.`; }
 function showShare(){
-  const sms=`sms:${SEND.target}?&body=${encodeURIComponent(certText())}`;
+  SEND.sms=SEND.done.map(c=>({name:c.name||'Parent',url:`sms:${tenOf(c.phone)}?&body=${encodeURIComponent(certText())}`}));
   $('#dialExtra').innerHTML=`<button class="btn" id="shareBtn">Send the certificate</button>`;
-  SEND.sms=sms;
 }
 function doShare(){
   const cv=$('#certCanvas');
@@ -3320,10 +3359,11 @@ function doShare(){
       if(navigator.canShare&&navigator.canShare({files:[file]})){ await navigator.share({files:[file],text:certText(),title:'Star Knight prize'}); shared=true; }
     }catch(err){ if(err&&err.name==='AbortError') return; }
     const ex=$('#dialExtra');
-    if(shared){ ex.innerHTML=`<p style="font-weight:700">Shared! Pick Messages and type ${esc(SEND.c.name||'your parent')}'s number if it asks.</p>`; return; }
+    const names=SEND.done.map(c=>esc(c.name||'your parent')).join(' and ');
+    if(shared){ ex.innerHTML=`<p style="font-weight:700">Shared! Pick Messages and send it to ${names}. Type the number if it asks.</p>`; return; }
     let url=''; try{ url=URL.createObjectURL(blob); }catch(e){}
     ex.innerHTML=`<p class="note" style="width:100%">If Messages opens without the picture, save the picture first and add it to the message.</p>
-      <a class="btn" href="${esc(SEND.sms)}">Open Messages</a>${url?`<a class="btn alt" href="${url}" download="star-knight-prize.png">Save the picture</a>`:''}`;
+      ${SEND.sms.map(m=>`<a class="btn" href="${esc(m.url)}">Message ${esc(m.name)}</a>`).join('')}${url?`<a class="btn alt" href="${url}" download="star-knight-prize.png">Save the picture</a>`:''}`;
   },'image/png');
 }
 /* grown-ups: prize settings */
