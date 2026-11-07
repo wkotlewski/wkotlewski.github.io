@@ -299,6 +299,13 @@ p{margin:0}
 .signlist{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px}
 .signlist button{min-height:44px;padding:6px 16px;border-radius:14px;border:2px solid var(--line);background:var(--panel-2);color:var(--ink);font-family:var(--display);font-size:16px;cursor:pointer}
 @media (max-width:480px){ .brand{display:none} }
+@media (max-width:430px){
+  .topbar{gap:6px}
+  .topbar .credits{padding:0 9px;font-size:15px;gap:4px}
+  .topbar .iconbtn{width:40px;height:40px}
+  .playerchip{padding:0 8px;font-size:13px;max-width:28vw;gap:4px}
+  .playerchip svg{width:15px;height:15px}
+}
 
 /* results */
 .result-head{text-align:center;display:grid;gap:8px;justify-items:center}
@@ -3185,7 +3192,7 @@ function trophyPanel(){
 function openPrizes(){
   const pts=S.trophy||0, list=prizeList().filter(p=>p.name&&p.cost>0).slice().sort((a,b)=>a.cost-b.cost), day=dayEarned(), cap=+S.settings.dailyCap||0;
   const tier=c=>c<100?'Quick treats':c<250?'Fun times':'Big adventures';
-  let html=`<div class="prize-head">${trophySVG(64)}<div><h2>Prize Shop</h2><p class="dim" style="font-size:18px">You have <b class="gold">${pts}</b> trophy points</p></div></div>
+  let html=`<div class="prize-head">${trophySVG(64)}<div><h2>Prize Shop</h2><p class="dim" style="font-size:18px">You have <b class="gold">${pts}</b> trophy points</p>${(()=>{const spent=(S.claims||[]).reduce((t,c)=>t+(+c.cost||0),0); return spent?`<p class="note">You've spent ${spent} on ${(S.claims||[]).length} prize${(S.claims||[]).length>1?'s':''} so far. Getting a prize uses its points, so the bars below count from what's left.</p>`:'';})()}</div></div>
     <div class="panel howto"><h3>How to earn trophy points</h3><p>Win games. Tougher teams give more points:</p>
       <div class="ptsrow">${TEAMS.map((t,i)=>`<span class="ptchip"><b>${TEAM_PTS[i]}</b>${esc(t.short)}</span>`).join('')}</div>
       <p class="note">The first time you beat a team, you get double points. Winning the final the first time adds 20 more.${cap?` You can earn up to ${cap} points a day. Today you have earned ${day.n}.`:''}</p></div>`;
