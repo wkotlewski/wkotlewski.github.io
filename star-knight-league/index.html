@@ -405,6 +405,7 @@ textarea.text-in{min-height:120px;font-size:17px;font-weight:600;resize:vertical
 </head>
 <body>
 <canvas id="stars" aria-hidden="true"></canvas>
+<input type="file" id="restoreFile" accept=".txt,.json,text/plain,application/json" hidden>
 <div id="app">
   <header class="topbar gut">
     <button id="homeBtn" class="iconbtn" aria-label="Back to start" hidden>
@@ -435,7 +436,7 @@ textarea.text-in{min-height:120px;font-size:17px;font-weight:600;resize:vertical
           <label class="field-label" for="signIn">Username</label>
           <input class="text-in" id="signIn" maxlength="16" placeholder="Your username" autocomplete="off" autocapitalize="words" spellcheck="false">
           <p class="note" id="signErr" style="margin-top:6px;color:var(--coral)" hidden></p>
-          <div class="row" style="margin-top:14px"><button class="btn" type="submit">Sign in</button></div>
+          <div class="row" style="margin-top:14px"><button class="btn" type="submit">Sign in</button><button class="btn alt small" type="button" id="restoreSign">Restore a backup</button></div>
         </form>
         <div id="pinStep" hidden>
           <h3 id="pinTitle" style="margin-bottom:4px"></h3>
@@ -3932,6 +3933,66 @@ function penalty(){
   const lost=Math.min(+c||0,S.credits||0); if(!lost) return '';
   S.credits-=lost; save(); setCredits(); return `<span class="pen">−${lost} ★</span>`;
 }
+/* ---------- backup & restore (a game file grown-ups keep, e.g. in email) ---------- */
+function backupHTML(){
+  const nm=esc(PLAYER?PLAYER.display:''), last=S.lastBackup?`Last backup: ${esc(S.lastBackup)}.`:'No backup yet.';
+  return `<div class="panel" style="display:grid;gap:10px"><h3>Back up ${nm}'s game</h3>
+    <p class="note">Makes a small game file with ${nm}'s points, trophy points, prizes, PIN, and progress. Email it to yourself. If this device is cleared or you get a new one, use <b>Restore a backup</b> to load it again. ${last}</p>
+    <label class="field-label" for="backupEmail" style="margin:0">Parent email (optional)</label>
+    <input class="text-in" id="backupEmail" type="email" inputmode="email" autocomplete="email" placeholder="parent@example.com" value="${esc(S.backupEmail||'')}">
+    <div class="row"><button class="btn small" id="backupBtn">Back up and send</button><button class="btn alt small" id="restoreBtn">Restore a backup</button></div>
+    <div id="backupOut"></div></div>`;
+}
+function backupData(){
+  const reg=players()[PLAYER.key]||{display:PLAYER.display};
+  return {app:'star-knight-league',kind:'backup',v:1,made:new Date().toISOString(),player:{key:PLAYER.key,display:reg.display,pin:reg.pin||null,created:reg.created||Date.now()},save:S};
+}
+function backupName(){ const d=new Date(); return `${PLAYER.display.replace(/\s+/g,'-')}-star-knight-backup-${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}.txt`; }
+async function doBackup(){
+  if(!PLAYER) return;
+  const em=$('#backupEmail').value.trim(); S.backupEmail=em; S.lastBackup=niceDate(); save();
+  const text=JSON.stringify(backupData()), name=backupName(), out=$('#backupOut');
+  const subj=`Star Knight League backup: ${PLAYER.display} (${niceDate()})`;
+  const body=`Keep this email. The attached file is ${PLAYER.display}'s Star Knight League game. To get it back, open the game, tap "Restore a backup", and pick this file.`;
+  let shared=false;
+  try{ const f=new File([text],name,{type:'text/plain'});
+    if(navigator.canShare&&navigator.canShare({files:[f]})){ await navigator.share({files:[f],title:subj,text:body}); shared=true; } }
+  catch(err){ if(err&&err.name==='AbortError'){ out.innerHTML='<p class="note">Backup not sent. Tap the button again when you are ready.</p>'; return; } }
+  if(shared){ out.innerHTML=`<p style="font-weight:700">Pick <b>Mail</b> and send it to ${em?esc(em):'your email'}. Keep that email.</p>`; return; }
+  let url=''; try{ url=URL.createObjectURL(new Blob([text],{type:'text/plain'})); }catch(e){}
+  const mail=`mailto:${em.replace(/[^\w.@+-]/g,'')}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body+'\n\n(Attach the backup file you just saved.)')}`;
+  out.innerHTML=`<p class="note">This browser can't email files directly. 1) Save the file. 2) Open email and attach it.</p>
+    <div class="row">${url?`<a class="btn small" href="${url}" download="${esc(name)}">1. Save the file</a>`:''}<a class="btn alt small" href="${esc(mail)}">2. Open email</a></div>`;
+  refreshBackupNote();
+}
+function refreshBackupNote(){ const p=$('#backupOut'); if(p&&S.lastBackup){ const n=p.parentNode.querySelector('.note'); if(n) n.innerHTML=n.innerHTML.replace(/Last backup: [^.]*\.|No backup yet\./,`Last backup: ${esc(S.lastBackup)}.`); } }
+function pickRestore(){ const f=$('#restoreFile'); f.value=''; f.click(); }
+$('#restoreFile').addEventListener('change',e=>{
+  const file=e.target.files&&e.target.files[0]; if(!file) return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    let d=null; try{ d=JSON.parse(rd.result); }catch(err){}
+    if(!d||d.app!=='star-knight-league'||d.kind!=='backup'||!d.player||!d.player.key||!d.save||typeof d.save!=='object'){
+      showMsg({title:'That file is not a game backup',body:'Pick the Star Knight League backup file from your email. Its name ends in <b>-star-knight-backup-(date).txt</b>.',btn:'OK'}); return; }
+    const k=nameKey(d.player.key), reg=players(), have=reg[k], nm=esc(d.player.display||k);
+    const when=d.made?new Date(d.made).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'';
+    let cur0=null; try{ cur0=JSON.parse(localStorage.getItem(LEGACY+':'+k)||'null'); }catch(err){}
+    const body=`Backup from <b>${esc(when)}</b>: ${d.save.trophy||0} trophy points, ${d.save.credits||0} ★.`+(have&&cur0?`<br><br>This device already has ${nm} with ${cur0.trophy||0} trophy points and ${cur0.credits||0} ★. Restoring <b>replaces</b> it with the backup.`:'');
+    showMsg({title:`Restore ${d.player.display||k}'s game?`,body,btn:'Restore',alt:'Cancel',cb:()=>{
+      const clash=takenBy(d.player.display||k);
+      if(!have&&clash){ showMsg({title:'Name is taken',body:`This device has a player named ${esc(clash)}, which is too close to ${nm}. Restore on another device, or ask a grown-up to reset that player.`,btn:'OK'}); return; }
+      const r=players(); r[k]={display:normName(d.player.display||k),created:d.player.created||Date.now()}; if(d.player.pin) r[k].pin=d.player.pin;
+      try{ localStorage.setItem(REG,JSON.stringify(r)); localStorage.setItem(LEGACY+':'+k,JSON.stringify(d.save)); }
+      catch(err){ showMsg({title:'Could not restore',body:'This device would not save the game. Try again, or use another browser.',btn:'OK'}); return; }
+      if(PIN) pinExit();
+      signIn(k); afterSignIn(); sfx.win();
+      showMsg({title:`${d.player.display||k}'s game is back!`,body:`${S.trophy||0} trophy points and ${S.credits||0} ★ restored.${d.player.pin?' Sign in with the same PIN as before.':''}`,btn:'OK'});
+    }});
+  };
+  rd.readAsText(file);
+});
+$('#restoreSign').addEventListener('click',()=>{ sfx.tap(); pickRestore(); });
+
 /* ---------- grown-ups ---------- */
 function openParent(){
   sfx.tap();
@@ -3966,6 +4027,7 @@ function openParent(){
       <textarea class="text-in" id="spellIn" placeholder="One word per line, from her teacher's list">${esc(S.spelling)}</textarea>
       <p class="note" style="margin-top:6px">Saved on this device. Hover-Soccer (Chapter 2) uses these words. Without a list, it uses a built-in 3rd-grade word bank.</p></div>
     ${prizeSettingsHTML()}
+    ${backupHTML()}
     <div class="panel" style="display:grid;gap:10px"><h3>Reset one game</h3><p class="note">Locks that game's teams again, replays its story, and clears its learning history. Her Star Knight, ship, credits, and trophy points stay.</p>
       <div class="resetrow"><button class="btn alt small" data-reset="baseball">Reset Baseball</button><button class="btn alt small" data-reset="soccer">Reset Soccer</button><button class="btn alt small" data-reset="hoops">Reset Basketball</button><button class="btn alt small" data-reset="ambush">Reset Space Battle</button><button class="btn alt small" data-reset="rescue">Reset Rescue</button></div></div>
     <div class="panel" style="display:grid;gap:10px"><h3>Start over</h3><p class="note">Clears everything on this device: her Star Knight, ship, credits, trophy points, prizes, phone numbers, and all five chapters.</p>
@@ -3977,6 +4039,8 @@ $('#s-parent').addEventListener('click',e=>{
   const rb=e.target.closest('[data-reset]');
   if(rb){ const g=rb.dataset.reset, nm={baseball:'Baseball',soccer:'Soccer',hoops:'Basketball',ambush:'Space Battle',rescue:'Rescue'}[g];
     showMsg({title:`Reset ${nm}?`,body:`This locks the ${nm} teams again and clears its learning history. Her Star Knight, ship, and credits stay.`,btn:'Reset',alt:'Cancel',cb:()=>{ resetGame(g); openParent(); showMsg({title:`${nm} reset`,body:'Start it again from the title screen.',btn:'OK'}); }}); return; }
+  if(e.target.id==='backupBtn'){ sfx.tap(); doBackup(); return; }
+  if(e.target.id==='restoreBtn'){ sfx.tap(); pickRestore(); return; }
   if(e.target.id==='changePin'&&PLAYER){ sfx.tap(); pinMode('set',PLAYER.key,{then:'parent'}); return; }
   if(e.target.id==='resetBtn'){ showMsg({title:'Reset everything?',body:`This clears all of ${esc(PLAYER?PLAYER.display:'this player')}'s progress on this device. Other players are not changed. It cannot be undone.`,btn:'Reset',alt:'Cancel',cb:()=>{try{localStorage.removeItem(KEY)}catch(err){} S=load(); S.profile=null; save(); setCredits(); setTrophy(); renderSoundBtn(); show('title'); renderTitle();}}); }
 });
