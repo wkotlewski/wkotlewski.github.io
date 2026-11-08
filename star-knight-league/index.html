@@ -317,6 +317,15 @@ p{margin:0}
 .pin-dots.shake{animation:pinshake .35s}
 @keyframes pinshake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 
+.tracker .trendrow{font-size:13px;color:var(--ink-dim);margin:-4px 0 8px}
+.trend.up{color:var(--mint);font-weight:700}.trend.down{color:var(--coral);font-weight:700}
+.sugbox{margin:10px 0;padding:12px 14px;border-radius:14px;background:rgba(255,197,71,.1);border:2px solid rgba(255,197,71,.45);line-height:1.45}
+.weaklist li span:last-child{color:var(--coral)}
+.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
+.tgrid h4{margin:0 0 6px;font-family:var(--display);font-size:15px}
+@media (max-width:560px){ .tgrid{grid-template-columns:1fr} }
+.linkbtn{background:none;border:0;padding:4px 2px;color:var(--cyan);font:inherit;font-weight:700;text-decoration:underline;cursor:pointer}
+
 /* results */
 .result-head{text-align:center;display:grid;gap:8px;justify-items:center}
 .result-head .big{font-family:var(--display);font-size:clamp(30px,8vw,46px);line-height:1;color:var(--gold);text-shadow:0 4px 0 var(--coral-deep)}
@@ -1506,18 +1515,18 @@ function nextPitch(){
   // her runner can try to steal
   const sr=stealable(G.bases);
   if(sr>=0&&Math.random()<.3){ offerSteal(sr); return; }
-  if(mathDue()){G.mathUsed=true; G.phase='math'; openMath('power',ok=>{G.boost=G.boost||!!ok; if(ok) G.boostX=perkC('sports'); updateHUD(); later(windup,350);});}
+  if(mathDue()){G.mathUsed=true; G.phase='math'; askQ('math',G,'power',ok=>{G.boost=G.boost||!!ok; if(ok) G.boostX=perkC('sports'); updateHUD(); later(windup,350);});}
   else windup();
 }
 function offerSteal(i){
   G.phase='math'; const base=['second','third'][i];
   showMsg({title:'Steal chance!',art:person(knightOf()),body:`Your runner has a big lead. Try to steal ${base} base?`,btn:'Steal!',alt:'Stay',
-    cb:()=>{G.mathUsed=true; openMath('runsteal',ok=>{
+    cb:()=>{G.mathUsed=true; askQ('math',G,'runsteal',ok=>{
       if(ok){G.bases[i]=0; G.bases[i+1]=1; toast('Safe!','gold',`Stole ${base} base!`);}
       else toast('Back to the base!','coral','The throw beat you there.');
-      updateHUD(); later(()=>{ if(mathDue()){G.mathUsed=true; openMath('power',ok2=>{G.boost=G.boost||!!ok2; if(ok2) G.boostX=perkC('sports'); updateHUD(); later(windup,350);});} else windup(); },1600);
+      updateHUD(); later(()=>{ if(mathDue()){G.mathUsed=true; askQ('math',G,'power',ok2=>{G.boost=G.boost||!!ok2; if(ok2) G.boostX=perkC('sports'); updateHUD(); later(windup,350);});} else windup(); },1600);
     });},
-    altCb:()=>{ if(mathDue()){G.mathUsed=true; openMath('power',ok=>{G.boost=G.boost||!!ok; if(ok) G.boostX=perkC('sports'); updateHUD(); later(windup,350);});} else windup(); }});
+    altCb:()=>{ if(mathDue()){G.mathUsed=true; askQ('math',G,'power',ok=>{G.boost=G.boost||!!ok; if(ok) G.boostX=perkC('sports'); updateHUD(); later(windup,350);});} else windup(); }});
 }
 function windup(){
   if(!G.active) return;
@@ -1683,12 +1692,12 @@ function defNext(){
     const sr=stealable(G.obases);
     if(sr>=0&&Math.random()<.3){ G.mathUsed=true; stealAlert(sr); return; }
   }
-  if(mathDue()){ G.mathUsed=true; openMath(G.role==='pitch'?'star':'call',ok=>{G.star=G.star||!!ok; if(ok) G.starX=perkC('sports'); updateHUD(); later(defPitchStart,300);}); }
+  if(mathDue()){ G.mathUsed=true; askQ('math',G,G.role==='pitch'?'star':'call',ok=>{G.star=G.star||!!ok; if(ok) G.starX=perkC('sports'); updateHUD(); later(defPitchStart,300);}); }
   else defPitchStart();
 }
 function stealAlert(i){
   setControls('none');
-  openMath('steal',ok=>{
+  askQ('math',G,'steal',ok=>{
     if(ok){ G.obases[i]=0; toast('Out! Great throw!','gold'); G.outs++; updateHUD(); if(G.outs>=3) later(endDefHalf,1500); else later(defNext,1500); }
     else { G.obases[i]=0; G.obases[i+1]=1; toast('Safe!','coral','They stole a base.'); updateHUD(); later(defNext,1500); }
   });
@@ -1865,7 +1874,7 @@ function endGame(){
     </table></div>
     <div class="statgrid">
       <div class="stat"><div class="v">${G.hits}</div><div class="l">Hits</div></div>
-      <div class="stat"><div class="v">${G.right}/${G.asked}</div><div class="l">Problems solved</div></div>
+      <div class="stat"><div class="v">${G.right}/${G.asked}</div><div class="l">Questions right</div></div>
       <div class="stat"><div class="v">+${G.earned}</div><div class="l">Credits</div></div>
     </div>
     <div class="row" style="justify-content:center">
@@ -2319,10 +2328,10 @@ function runUpdate(dt){
     }
   });
   if(SG.phase!=='run') return;
-  if(SG.plan==='mid'&&!SG.midDone&&p.y<=.8){ SG.midDone=true; SG.spellUsed=true; openSpell('hover',ok=>{SG.hover=SG.hover||!!ok; if(ok) SG.hoverX=perkC('sports'); sHUD();}); return; }
+  if(SG.plan==='mid'&&!SG.midDone&&p.y<=.8){ SG.midDone=true; SG.spellUsed=true; askQ('spell',SG,'hover',ok=>{SG.hover=SG.hover||!!ok; if(ok) SG.hoverX=perkC('sports'); sHUD();}); return; }
   if(p.y<=.3){ p.y=.3; SG.phase='aimwait';
     const go=()=>{ SG.phase='aim'; SG.aimT=0; setPad('shoot'); $('#sHint').textContent='Tap SHOOT when the arrow points at an open corner'; $('#sHint').hidden=SG.tips>1; };
-    if(SG.plan==='kick'&&!SG.kickDone){ SG.kickDone=true; SG.spellUsed=true; setPad('none'); openSpell('kick',ok=>{SG.power=SG.power||!!ok; if(ok) SG.powerX=perkC('sports'); sHUD(); go();}); }
+    if(SG.plan==='kick'&&!SG.kickDone){ SG.kickDone=true; SG.spellUsed=true; setPad('none'); askQ('spell',SG,'kick',ok=>{SG.power=SG.power||!!ok; if(ok) SG.powerX=perkC('sports'); sHUD(); go();}); }
     else go();
   }
 }
@@ -2390,7 +2399,7 @@ function sDefTurn(){
   SG.phase='intro'; sHUD();
   setPad('lanes',SG.role==='goalie'?'Dive: left, middle or right':'Block: left, middle or right');
   const go=()=>slater(()=>{SG.phase='drun';},500);
-  if(spellDue()){ SG.spellUsed=true; openSpell(SG.role==='goalie'?'save':'slide',ok=>{ if(SG.role==='goalie'){ SG.superSave=SG.superSave||!!ok; if(ok) SG.saveX=perkC('sports'); } else { SG.slide=SG.slide||!!ok; if(ok) SG.slideX=perkC('sports'); } sHUD(); go(); }); }
+  if(spellDue()){ SG.spellUsed=true; askQ('spell',SG,SG.role==='goalie'?'save':'slide',ok=>{ if(SG.role==='goalie'){ SG.superSave=SG.superSave||!!ok; if(ok) SG.saveX=perkC('sports'); } else { SG.slide=SG.slide||!!ok; if(ok) SG.slideX=perkC('sports'); } sHUD(); go(); }); }
   else { stoast(`Their turn ${SG.turn+1} of 3`); go(); }
 }
 function defUpdate(dt){
@@ -2490,7 +2499,7 @@ function sEnd(){
     <div class="panel finalscore"><div><span class="fs-n">${esc((S.profile&&S.profile.name)||'Star')} Knights</span><span class="fs-v">${us}</span></div><span class="fs-dash">–</span><div><span class="fs-v">${them}</span><span class="fs-n">${esc(T.short)}</span></div></div>
     <div class="statgrid">
       <div class="stat"><div class="v">${SG.goals}</div><div class="l">Goals</div></div>
-      <div class="stat"><div class="v">${SG.right}/${SG.asked}</div><div class="l">Words spelled</div></div>
+      <div class="stat"><div class="v">${SG.right}/${SG.asked}</div><div class="l">Questions right</div></div>
       <div class="stat"><div class="v">+${SG.earned}</div><div class="l">Credits</div></div>
     </div>
     <div class="row" style="justify-content:center">
@@ -2877,7 +2886,7 @@ function hOffTurn(){
   const L=S.settings.level;
   const start=()=>{ HG.shotEnd=HG.clock+(L==='easy'?16:L==='hard'?10:13)+(perkF('scout')?3:0); HG.holdT=0; HG.phase='play'; hPad('shoot');
     htoast(HG.ot?'Overtime!':`Possession ${HG.turn+1} of 3`,'gold','Find an open spot or pass to a teammate, then shoot!'); };
-  if(HG.plan==='laser'){ HG.qUsed=true; HG.phase='q'; hlater(()=>openVocab('laser',ok=>{HG.laser=HG.laser||!!ok; if(ok) HG.laserX=perkC('sports'); hHUD(); start();}),500); return; }
+  if(HG.plan==='laser'){ HG.qUsed=true; HG.phase='q'; hlater(()=>askQ('vocab',HG,'laser',ok=>{HG.laser=HG.laser||!!ok; if(ok) HG.laserX=perkC('sports'); hHUD(); start();}),500); return; }
   if(HG.plan==='double') HG.dblAt=R(25,45)/10;
   hlater(start,400);
 }
@@ -2957,7 +2966,7 @@ function offUpdate(dt){
   if(HG.phase!=='play') return;
   HG.holdT+=dt;
   if(HG.dblAt!==null&&HG.holdT>=HG.dblAt){ HG.dblAt=null; HG.qUsed=true; HG.phase='q'; hPad('none');
-    openVocab('double',ok=>{ if(ok){ let best=1,bd=-1; HG.ours.forEach((p,i)=>{ if(i===HG.holder) return; const dd=dist(HG.theirs[i],p); if(dd>bd){bd=dd;best=i;} }); HG.theirs[best].frozen=1.6; HG.phase='play'; HG.ball=null; const from=HG.ours[HG.holder]; HG.phase='pass'; HG.ball={kind:'pass',from:{x:from.x,y:from.y},to:best,t:0,dur:.38,stolen:false}; HG.passes++; }
+    askQ('vocab',HG,'double',ok=>{ if(ok){ let best=1,bd=-1; HG.ours.forEach((p,i)=>{ if(i===HG.holder) return; const dd=dist(HG.theirs[i],p); if(dd>bd){bd=dd;best=i;} }); HG.theirs[best].frozen=1.6; HG.phase='play'; HG.ball=null; const from=HG.ours[HG.holder]; HG.phase='pass'; HG.ball={kind:'pass',from:{x:from.x,y:from.y},to:best,t:0,dur:.38,stolen:false}; HG.passes++; }
       else { HG.phase='result'; sfx.strike(); htoast('The double-team stole it!','coral'); hNextOff(1800); } }); return; }
   if(HG.clock>=HG.shotEnd){ htoast('Shot clock!','coral','Shoot before the clock runs out.'); hStartMeter(); }
 }
@@ -2973,8 +2982,8 @@ function hDefTurn(){
   hHUD(); hPad('none');
   const go=()=>hlater(()=>{ HG.phase='dplay'; HG.decideAt=HG.clock+R(15,25)/10; HG.drib={t0:HG.clock,period:(S.settings.level==='easy'?.95:S.settings.level==='hard'?.62:.78)-hSkill()*.18}; hPad('def'); },500);
   if(qDue()){ HG.qUsed=true;
-    if(Math.random()<.3){ openVocab('loose',ok=>{ if(ok){ HG.steals++; addCredits(5); HG.earned+=5; htoast('Ball is yours!','gold','+5 credits'); hNextDef(1700);} else { htoast('They picked it back up.','coral'); go(); } }); }
-    else openVocab('block',ok=>{HG.boost=HG.boost||!!ok; if(ok) HG.boostX=perkC('sports'); hHUD(); go();});
+    if(Math.random()<.3){ askQ('vocab',HG,'loose',ok=>{ if(ok){ HG.steals++; addCredits(5); HG.earned+=5; htoast('Ball is yours!','gold','+5 credits'); hNextDef(1700);} else { htoast('They picked it back up.','coral'); go(); } }); }
+    else askQ('vocab',HG,'block',ok=>{HG.boost=HG.boost||!!ok; if(ok) HG.boostX=perkC('sports'); hHUD(); go();});
   } else { htoast(`Their possession ${HG.turn+1} of 3`,'','Stay close to the ball!'); go(); }
 }
 const dribPhase=()=>((HG.clock-HG.drib.t0)/HG.drib.period)%1;
@@ -3453,10 +3462,48 @@ function bHUD(){
   $('#bMegaBtn').textContent=BG.mega>1?`Mega ×${BG.mega}`:'Mega';
   const bd=$('#bBadge'); bd.hidden=!(BG.blasters>0); bd.textContent=`Blasters level ${BG.blasters+1}`;
 }
+/* ---------- mixed subjects: every chapter mixes math, spelling, words, and reading,
+   with more questions from the subjects she's weakest in ---------- */
+const SUBJ={
+  math:{open:(k,cb)=>openMath(k,cb),tbl:()=>MATHKIND,verb:'Solve it',keys:()=>Object.keys(SKILLS)},
+  spell:{open:(k,cb)=>openSpell(k,cb),tbl:()=>SPELLKIND,verb:'Spell it right',keys:()=>['spell']},
+  vocab:{open:(k,cb)=>openVocab(k,cb),tbl:()=>VKIND,verb:'Answer it',keys:()=>Object.keys(VTYPES).map(t=>'v_'+t)},
+  read:{open:(k,cb)=>openRead(k,cb),tbl:()=>RKIND,verb:'Read it and answer right',keys:()=>Object.keys(RTYPES).map(t=>'r_'+t)}
+};
+function subjStats(sub){ let r=0,w=0; SUBJ[sub].keys().forEach(k=>{ const st=S.stats[k]; if(st){ r+=st.r||0; w+=st.w||0; } }); return {r,w,n:r+w,acc:(r+1)/(r+w+2)}; }
+function subjWeight(sub){ const st=subjStats(sub); let wt=Math.max(.15,1.15-st.acc); if(st.n<12) wt*=1.6; return wt; }
+function pickSubject(home){
+  const f=S.settings.focus; if(f&&SUBJ[f]&&Math.random()<.5) return f;
+  if(S.settings.mix==='home'&&!f&&SUBJ[home]) return home;
+  const subs=Object.keys(SUBJ), ws=subs.map(subjWeight), tot=ws.reduce((a,b)=>a+b,0);
+  const homeShare=SUBJ[home]?.3:0;
+  let x=Math.random();
+  if(x<homeShare) return home;
+  x=Math.random()*tot; for(let i=0;i<subs.length;i++){ x-=ws[i]; if(x<=0) return subs[i]; }
+  return subs[0];
+}
+function kindFor(sub,kind){
+  const t=SUBJ[sub].tbl(); if(t[kind]) return;
+  const src=Object.values(SUBJ).map(o=>o.tbl()).find(tb=>tb[kind]); if(!src) return;
+  const e=src[kind];
+  t[kind]={t:e.t,ok:e.ok,s:e.s.replace(/Read the clue\. Answer right|Read it and answer right|Spell it right|Solve it|Answer right|Answer it/,SUBJ[sub].verb)};
+}
+function logQ(sub,ok){ if(!S.qlog) S.qlog=[]; S.qlog.push({s:sub,ok:ok?1:0,t:Date.now()}); if(S.qlog.length>600) S.qlog.splice(0,S.qlog.length-600); save(); }
+function askQ(home,game,kind,cb0){
+  const sub=pickSubject(home); kindFor(sub,kind);
+  const cb=ok=>{ logQ(sub,ok); cb0(ok); };
+  if(sub===home){ SUBJ[sub].open(kind,cb); return; }
+  const managePause=game&&game!==G;
+  if(managePause) game.paused=true;
+  SUBJ[sub].open(kind,ok=>{
+    if(managePause) game.paused=false;
+    if(game){ game.asked=(game.asked||0)+1; if(ok){ game.right=(game.right||0)+1; game.earned=(game.earned||0)+3; } }
+    cb(ok);
+  });
+  if(managePause) game.paused=true;
+}
 function askMixed(kind,cb,game){
-  game.paused=true; const r=Math.random();
-  const done=ok=>{ game.paused=false; game.asked++; if(ok){game.right++; game.earned+=3;} cb(ok); };
-  if(r<.4) openMath(kind,done); else if(r<.7) openSpell(kind,done); else openVocab(kind,done);
+  askQ('mixed',game,kind,cb);
 }
 function bMatch(t){
   resetPerks();
@@ -3558,7 +3605,7 @@ function bEnd(win){
     </div>
     <div class="statgrid">
       <div class="stat"><div class="v">${BG.kills}</div><div class="l">Ships beaten</div></div>
-      <div class="stat"><div class="v">${BG.right}/${BG.asked}</div><div class="l">Questions</div></div>
+      <div class="stat"><div class="v">${BG.right}/${BG.asked}</div><div class="l">Questions right</div></div>
       <div class="stat"><div class="v">+${BG.earned}</div><div class="l">Credits</div></div>
     </div>
     <div class="row" style="justify-content:center">
@@ -3777,7 +3824,7 @@ function rLeg(){
   RG.legDur=(L==='easy'?16:L==='hard'?22:19); RG.legT=0; RG.obs=[]; RG.items=[]; RG.spawnT=1.2;
   RG.extraAt=Math.random()<EXTRA[S.settings.freq]+.15?R(60,120)/10:null;
   RG.phase='clue'; rHUD();
-  rlater(()=>{ RG.paused=true; openRead('clue',ok=>{ if(ok){ RG.beam=perkC('sports')?12:8; } rHUD(); rStartRun(); }); },600);
+  rlater(()=>{ RG.paused=true; askQ('read',RG,'clue',ok=>{ if(ok){ RG.beam=perkC('sports')?12:8; } rHUD(); rStartRun(); }); },600);
 }
 function rStartRun(){ RG.phase='run'; rPad('lanes'); rtoast(`Leg ${RG.leg+1} of 3`,'gold',RG.path==='sky'?'Sky bridge: fewer rocks.':'Cave tunnel: more gears!'); }
 function setRLane(l){ if(!RG.active||RG.paused||RG.phase!=='run') return; RG.lane=l; sfx.tap(); rMark(); }
@@ -3788,7 +3835,7 @@ function rUpdate(dt){
   const T=rSkill(), cave=RG.path==='cave';
   const spd=Math.min(RF.w,560)*(.34+T*.3)*(perkF('scout')?.87:1)*(cave?1.08:.95);
   RG.legT+=dt; RG.dist+=spd*dt; if(RG.beam>0){ RG.beam-=dt; if(RG.beam<=0) rHUD(); }
-  if(RG.extraAt!==null&&RG.legT>=RG.extraAt){ RG.extraAt=null; RG.paused=true; openRead('rock',ok=>{ if(ok){ RG.bubble=true; } rHUD(); }); return; }
+  if(RG.extraAt!==null&&RG.legT>=RG.extraAt){ RG.extraAt=null; RG.paused=true; askQ('read',RG,'rock',ok=>{ if(ok){ RG.bubble=true; } rHUD(); }); return; }
   RG.spawnT-=dt;
   if(RG.spawnT<=0&&RG.legT<RG.legDur-1.5){
     RG.spawnT=(1.25-T*.45)*(cave?.95:1.3)*(.85+Math.random()*.3);
@@ -3842,7 +3889,7 @@ function rEnd(win){
     </div>
     <div class="statgrid">
       <div class="stat"><div class="v">${RG.gears}</div><div class="l">Gears found</div></div>
-      <div class="stat"><div class="v">${RG.right}/${RG.asked}</div><div class="l">Clues solved</div></div>
+      <div class="stat"><div class="v">${RG.right}/${RG.asked}</div><div class="l">Questions right</div></div>
       <div class="stat"><div class="v">+${RG.earned}</div><div class="l">Credits</div></div>
     </div>
     <div class="row" style="justify-content:center">
@@ -3993,6 +4040,59 @@ $('#restoreFile').addEventListener('change',e=>{
 });
 $('#restoreSign').addEventListener('click',()=>{ sfx.tap(); pickRestore(); });
 
+/* ---------- learning tracker ---------- */
+const SUBJNAME={math:'Math',spell:'Spelling',vocab:'Word meanings',read:'Reading'};
+function allTypes(){
+  const out=[];
+  Object.keys(SKILLS).forEach(k=>{ if(S.settings.skills[k]!==false) out.push({sub:'math',key:k,label:SKILLS[k]}); });
+  out.push({sub:'spell',key:'spell',label:'Spelling words'});
+  Object.keys(VTYPES).forEach(t=>out.push({sub:'vocab',key:'v_'+t,label:VTYPES[t]}));
+  Object.keys(RTYPES).forEach(t=>out.push({sub:'read',key:'r_'+t,label:RTYPES[t]}));
+  return out.map(o=>{ const st=S.stats[o.key]||{r:0,w:0}, n=(st.r||0)+(st.w||0); return Object.assign(o,{r:st.r||0,n,acc:n?st.r/n:0}); });
+}
+function recentAcc(sub,fromDays,toDays){
+  const now=Date.now(), a=now-fromDays*864e5, b=now-toDays*864e5;
+  const xs=(S.qlog||[]).filter(q=>q.s===sub&&q.t>=a&&q.t<b); return xs.length?{n:xs.length,acc:xs.reduce((t,q)=>t+q.ok,0)/xs.length}:null;
+}
+function trackerHTML(){
+  const pc=x=>Math.round(x*100)+'%', cls=a=>a>=.8?'':a>=.6?'mid':'low';
+  const subs=Object.keys(SUBJ).map(k=>{ const st=subjStats(k); return {k,n:st.n,r:st.r,acc:st.n?st.r/st.n:0,now:recentAcc(k,14,0),before:recentAcc(k,60,14)}; });
+  const rows=subs.map(o=>{
+    let trend='';
+    if(o.now&&o.before&&o.now.n>=5&&o.before.n>=5){ const d=Math.round((o.now.acc-o.before.acc)*100); trend=d>=5?`<span class="trend up">▲ ${d}%</span>`:d<=-5?`<span class="trend down">▼ ${-d}%</span>`:'<span class="trend">steady</span>'; }
+    else if(o.now) trend=`<span class="trend">${o.now.n} in 2 wks</span>`;
+    return `<div class="skillrow"><span>${SUBJNAME[o.k]}</span><div class="bar"><i class="${cls(o.acc)}" style="width:${o.n?Math.round(o.acc*100):0}%"></i></div><span class="n">${o.n?pc(o.acc):'—'}</span></div>${trend?`<div class="trendrow">${o.n} questions · ${trend}</div>`:''}`;
+  }).join('');
+  const T=allTypes();
+  const strong=T.filter(t=>t.n>=5&&t.acc>=.8).sort((a,b)=>b.acc-a.acc||b.n-a.n).slice(0,5);
+  const weak=T.filter(t=>t.n>=3&&t.acc<.7).sort((a,b)=>a.acc-b.acc).slice(0,5);
+  const fresh=T.filter(t=>t.n===0);
+  const li=t=>`<li><span>${esc(t.label)}${t.label!==SUBJNAME[t.sub]&&t.sub!=='spell'?` <small class="dim">(${SUBJNAME[t.sub]})</small>`:''}</span><span>${pc(t.acc)} of ${t.n}</span></li>`;
+  // suggestion: weakest practiced subject, else least practiced
+  const practiced=subs.filter(o=>o.n>=8).sort((a,b)=>a.acc-b.acc);
+  const least=subs.slice().sort((a,b)=>a.n-b.n)[0];
+  let sug=null;
+  if(practiced.length&&practiced[0].acc<.8) sug={k:practiced[0].k,why:`She gets ${pc(practiced[0].acc)} right in ${SUBJNAME[practiced[0].k]} (${practiced[0].n} questions), her lowest subject.`};
+  else if(least&&least.n<Math.max(8,(subs.reduce((t,o)=>t+o.n,0)/4)*.4)) sug={k:least.k,why:`She has only answered ${least.n} ${SUBJNAME[least.k]} question${least.n===1?'':'s'}, much fewer than the others.`};
+  const f=S.settings.focus, fname=f?SUBJNAME[f]:'';
+  const weakTypes=sug?weak.filter(t=>t.sub===sug.k).map(t=>t.label):[];
+  const sugHTML=f
+    ? `<div class="sugbox"><b>Focus on: ${fname}.</b> About half of all questions in every game are ${fname} right now. Within ${fname}, the types she misses most come up most. <div class="row" style="margin-top:8px"><button class="btn alt small" data-focus="">Stop focusing</button></div></div>`
+    : sug?`<div class="sugbox"><b>Suggestion: more ${SUBJNAME[sug.k]}.</b> ${sug.why}${weakTypes.length?` Hardest for her: ${esc(weakTypes.join(', '))}.`:''}<div class="row" style="margin-top:8px"><button class="btn small" data-focus="${sug.k}">Practice more ${SUBJNAME[sug.k]} in every game</button></div></div>`
+    : `<div class="sugbox">${subs.some(o=>o.n)?'<b>Nice and even.</b> She is doing well across all four subjects. Keep the mix as it is.':'<b>Not enough answers yet.</b> Suggestions show up after she has answered some questions.'}</div>`;
+  const other=Object.keys(SUBJ).filter(k=>k!==f&&!(sug&&!f&&k===sug.k));
+  return `<div class="panel tracker"><h3 style="margin-bottom:8px">Learning tracker</h3>
+    ${rows}
+    ${sugHTML}
+    <div class="tgrid">
+      <div><h4>Doing great</h4>${strong.length?`<ul class="missed">${strong.map(li).join('')}</ul>`:'<p class="dim">Shows after 5+ answers of a type with 80% right.</p>'}</div>
+      <div><h4>Needs practice</h4>${weak.length?`<ul class="missed weaklist">${weak.map(li).join('')}</ul>`:'<p class="dim">Nothing under 70% right yet.</p>'}</div>
+    </div>
+    ${fresh.length?`<p class="note" style="margin-top:8px"><b>Not tried yet:</b> ${esc(fresh.map(t=>t.label).join(', '))}.</p>`:''}
+    <p class="note" style="margin-top:8px">Focus on one subject: ${other.map(k=>`<button class="linkbtn" data-focus="${k}">${SUBJNAME[k]}</button>`).join(' · ')}. Every game already mixes subjects and asks the question types she misses more often.</p>
+  </div>`;
+}
+
 /* ---------- grown-ups ---------- */
 function openParent(){
   sfx.tap();
@@ -4007,6 +4107,7 @@ function openParent(){
       <div class="stat"><div class="v">${(S.progress.beaten||0)+(S.progress.soccerBeaten||0)+(S.progress.hoopsBeaten||0)+(S.progress.ambushBeaten||0)+(S.progress.rescueBeaten||0)}/25</div><div class="l">Levels won</div></div>
       <div class="stat"><div class="v">${S.credits}</div><div class="l">Credits</div></div>
     </div>
+    ${trackerHTML()}
     <div class="panel"><h3 style="margin-bottom:6px">Math accuracy by skill</h3>${rows}
       <p class="note" style="margin-top:8px">Skills she misses come up more often. Missed problems come back later for practice.</p></div>
     <div class="panel"><h3 style="margin-bottom:6px">Spelling</h3>${(()=>{const st=S.stats.spell||{r:0,w:0}, t=st.r+st.w, pct=t?Math.round(st.r/t*100):0; return `<div class="skillrow"><span>Words spelled right</span><div class="bar"><i class="${pct>=80?'':pct>=60?'mid':'low'}" style="width:${t?pct:0}%"></i></div><span class="n">${t?`${st.r}/${t}`:'—'}</span></div>`;})()}
@@ -4020,6 +4121,7 @@ function openParent(){
     <div class="panel" style="display:grid;gap:14px">
       <div><h3 style="margin-bottom:8px">Level</h3>${seg('level',[['easy','Easier'],['on','3rd grade'],['hard','Challenge']],S.settings.level)}</div>
       <div><h3 style="margin-bottom:8px">Wrong answers cost</h3>${seg('wrongCost',[['0','Nothing'],['1','1 ★'],['2','2 ★'],['t','1 trophy point']],String(S.settings.wrongCost))}<p class="note" style="margin-top:6px">Taken away when she gets a question wrong (never below zero). A Rescue Pod retry doesn't cost anything.</p></div>
+      <div><h3 style="margin-bottom:8px">Which subjects each game asks</h3>${seg('mix',[['mixed','Mix them up'],['home','Each game\'s own subject']],S.settings.mix||'mixed')}<p class="note" style="margin-top:6px">Mix them up: every chapter asks math, spelling, word meanings, and reading. Subjects she gets wrong more often, or hasn't practiced much, come up more.</p></div>
       <div><h3 style="margin-bottom:8px">How often questions pop up</h3>${seg('freq',[['light','Once per turn'],['normal','Once, plus a few'],['lots','Lots']],S.settings.freq)}</div>
       <div><h3 style="margin-bottom:8px">Skills to practice</h3><div class="checks">${Object.keys(SKILLS).map(k=>`<label><input type="checkbox" id="sk-${k}" data-skill="${k}" ${S.settings.skills[k]?'checked':''}>${SKILLS[k]}</label>`).join('')}</div></div>
     </div>
@@ -4035,10 +4137,11 @@ function openParent(){
   show('parent');
 }
 $('#s-parent').addEventListener('click',e=>{
-  const b=e.target.closest('.seg button'); if(b){const set=b.parentElement.dataset.set; S.settings[set]=b.dataset.v; save(); $$(`[data-set="${set}"] button`).forEach(x=>x.setAttribute('aria-pressed',x===b)); sfx.tap(); return;}
+  const b=e.target.closest('.seg button'); if(b){const set=b.parentElement.dataset.set; S.settings[set]=b.dataset.v; if(set==='mix'&&b.dataset.v==='home') S.settings.focus=''; save(); $$(`[data-set="${set}"] button`).forEach(x=>x.setAttribute('aria-pressed',x===b)); sfx.tap(); return;}
   const rb=e.target.closest('[data-reset]');
   if(rb){ const g=rb.dataset.reset, nm={baseball:'Baseball',soccer:'Soccer',hoops:'Basketball',ambush:'Space Battle',rescue:'Rescue'}[g];
     showMsg({title:`Reset ${nm}?`,body:`This locks the ${nm} teams again and clears its learning history. Her Star Knight, ship, and credits stay.`,btn:'Reset',alt:'Cancel',cb:()=>{ resetGame(g); openParent(); showMsg({title:`${nm} reset`,body:'Start it again from the title screen.',btn:'OK'}); }}); return; }
+  const fb=e.target.closest('[data-focus]'); if(fb){ sfx.tap(); S.settings.focus=fb.dataset.focus; if(fb.dataset.focus) S.settings.mix='mixed'; save(); const y=window.scrollY; openParent(); window.scrollTo(0,y); return; }
   if(e.target.id==='backupBtn'){ sfx.tap(); doBackup(); return; }
   if(e.target.id==='restoreBtn'){ sfx.tap(); pickRestore(); return; }
   if(e.target.id==='changePin'&&PLAYER){ sfx.tap(); pinMode('set',PLAYER.key,{then:'parent'}); return; }
